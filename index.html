@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAIRÓS | PSIC. CARLOS AGUILAR SÁNCHEZ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kairos: {
+                            deep: '#1e2a4a',
+                            teal: '#469da3',
+                            dark: '#020617',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .text-justify { text-align: justify; text-justify: inter-word; }
+        .glass-panel {
+            background: rgba(30, 42, 74, 0.4);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(70, 157, 163, 0.15);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+        
+        /* Contenedor del logo optimizado */
+        .logo-box {
+            background: white;
+            padding: 1rem;
+            border-radius: 50%;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 40px rgba(70, 157, 163, 0.4);
+            margin: 0 auto;
+            overflow: hidden;
+            border: 4px solid rgba(70, 157, 163, 0.1);
+        }
+        .logo-box img { width: 100%; height: 100%; object-fit: contain; }
+        
+        input, textarea, select {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1rem;
+            color: white;
+            outline: none;
+            text-transform: uppercase;
+        }
+        input:focus, textarea:focus { border-color: #469da3; background: rgba(255, 255, 255, 0.08); }
+        
+        .chat-hidden { transform: translateY(120%); opacity: 0; pointer-events: none; }
+        #chat-window { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .print-area { display: block !important; padding: 40px; text-transform: uppercase; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- PANTALLA DE BIENVENIDA CON ACCESO ADMIN INTEGRADO -->
+    <div id="welcome-screen" class="fixed inset-0 z-[60] flex items-center justify-center bg-kairos-dark overflow-y-auto py-10">
+        <div class="max-w-md w-full px-10 text-center animate-[fadeIn_0.5s]">
+            <div class="logo-box mb-8">
+                <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w1000" 
+                     alt="KAIRÓS" 
+                     onerror="this.src='https://placehold.co/200x200/ffffff/1e2a4a?text=KAIRÓS'">
+            </div>
+            <h1 class="text-[10px] font-black tracking-[0.8em] text-kairos-teal mb-4 uppercase">PSICOLOGÍA ESPECIALIZADA</h1>
+            <p class="text-[9px] font-bold text-white/40 mb-10 uppercase italic">PSIC. CARLOS AGUILAR SÁNCHEZ</p>
+            
+            <div class="space-y-4">
+                <input type="text" id="patient-name-input" placeholder="INGRESA TU NOMBRE" class="w-full text-center text-lg tracking-[0.3em] mb-4">
+                <button onclick="accessPortal()" class="w-full bg-kairos-teal font-black py-6 rounded-3xl shadow-2xl tracking-[0.4em] text-[12px] hover:scale-105 transition-all uppercase">INGRESAR AL PORTAL</button>
+                
+                <div class="pt-8 border-t border-white/5 mt-8">
+                    <button onclick="toggleAuth(true)" class="text-[9px] font-black tracking-[0.5em] text-kairos-teal/60 hover:text-kairos-teal transition-all flex items-center justify-center gap-2 mx-auto uppercase">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i> ACCESO CLÍNICO (ADMIN)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UI PRINCIPAL -->
+    <main id="main-ui" class="hidden min-h-screen pt-24 pb-20">
+        <nav class="fixed top-0 w-full z-50 bg-kairos-dark/90 backdrop-blur-xl border-b border-white/5">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="bg-white p-1 rounded-lg w-10 h-10 flex items-center justify-center overflow-hidden">
+                        <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w200" class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                        <p class="text-xs font-black tracking-widest text-kairos-teal uppercase leading-none">KAIRÓS</p>
+                        <p class="text-[7px] font-bold text-slate-500 uppercase mt-1">CARLOS AGUILAR SÁNCHEZ</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span id="user-display" class="hidden md:inline text-[9px] font-black opacity-40 tracking-widest uppercase"></span>
+                    <button onclick="exitToWelcome()" class="bg-white/5 p-3 rounded-xl text-slate-400 border border-white/5"><i data-lucide="log-out" class="w-4 h-4"></i></button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- VISTA PACIENTE -->
+        <div id="view-patient" class="hidden px-6 max-w-7xl mx-auto space-y-12 animate-[fadeIn_0.5s]">
+            <section class="glass-panel rounded-[4rem] p-12 md:p-20 relative overflow-hidden text-center">
+                <div class="max-w-3xl mx-auto relative z-10">
+                    <div class="bg-white p-4 rounded-3xl w-24 h-24 mx-auto mb-8 shadow-2xl flex items-center justify-center overflow-hidden">
+                        <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w500" class="w-full h-full object-contain">
+                    </div>
+                    <h2 class="text-kairos-teal font-black tracking-[0.8em] text-[10px] mb-6 uppercase">ESPACIO DE CRECIMIENTO</h2>
+                    <h1 class="text-4xl md:text-6xl font-black mb-10 leading-none uppercase tracking-tighter">TU BIENESTAR <br><span class="text-kairos-teal">NUESTRA MISIÓN</span></h1>
+                    <p class="text-justify text-slate-400 text-sm md:text-base leading-relaxed mb-12 uppercase">
+                        BIENVENIDO A TU PORTAL DE ACOMPAÑAMIENTO PERSONALIZADO. AQUÍ ENCONTRARÁS RECURSOS DE APOYO Y UN CANAL DIRECTO PARA TU EVOLUCIÓN TERAPÉUTICA CON EL PSIC. CARLOS AGUILAR SÁNCHEZ.
+                    </p>
+                </div>
+            </section>
+
+            <!-- ACTIVIDAD ASIGNADA (DINÁMICA) -->
+            <section id="patient-task-section" class="hidden animate-[fadeIn_0.5s]">
+                <div class="glass-panel p-10 rounded-[3rem] border-kairos-teal/30 bg-kairos-teal/5">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="bg-kairos-teal p-3 rounded-2xl text-white shadow-lg"><i data-lucide="sparkles"></i></div>
+                        <h3 class="text-xl font-black tracking-widest uppercase">TU ACTIVIDAD ASIGNADA</h3>
+                    </div>
+                    <div class="bg-black/20 p-8 rounded-[2rem] border border-white/5">
+                        <p id="patient-task-content" class="text-lg md:text-xl font-bold text-slate-200 text-justify uppercase italic leading-relaxed"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="library-section" class="py-6">
+                <h3 class="text-xl font-black mb-10 tracking-widest text-center uppercase">RECURSOS Y MATERIALES DE APOYO</h3>
+                <div id="patient-resources" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+            </section>
+
+            <section id="agenda-section" class="max-w-3xl mx-auto py-10 pb-40">
+                <div class="glass-panel p-10 rounded-[3rem] text-center border-kairos-teal/20">
+                    <h3 class="text-2xl font-black mb-8 text-kairos-teal uppercase">RESERVAR CONSULTA</h3>
+                    <input type="date" id="booking-date" class="w-full mb-8 text-center font-black">
+                    <div id="time-slots" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8"></div>
+                    <button id="final-booking" disabled class="w-full bg-kairos-teal py-6 rounded-3xl font-black opacity-30 tracking-widest uppercase shadow-2xl">SOLICITAR POR WHATSAPP</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- VISTA ADMIN -->
+        <div id="view-admin" class="hidden px-6 max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 border-b border-white/5 pb-10">
+                <div>
+                    <h2 class="text-4xl font-black tracking-tighter text-white uppercase">CONTROL CLÍNICO</h2>
+                    <p class="text-[9px] font-bold text-kairos-teal uppercase tracking-[0.5em] mt-2">PSIC. CARLOS AGUILAR SÁNCHEZ</p>
+                    <div class="flex gap-6 mt-8 overflow-x-auto pb-4">
+                        <button onclick="switchTab('expedientes')" id="tab-expedientes" class="text-[10px] font-black text-kairos-teal border-b-2 border-kairos-teal pb-1 uppercase">PACIENTES</button>
+                        <button onclick="switchTab('notas')" id="tab-notas" class="text-[10px] font-black text-slate-500 uppercase">NOTAS CLÍNICAS</button>
+                        <button onclick="switchTab('citas')" id="tab-citas" class="text-[10px] font-black text-slate-500 uppercase flex items-center gap-2">AGENDA <span id="citas-alert" class="hidden w-2 h-2 bg-red-500 rounded-full animate-pulse"></span></button>
+                        <button onclick="switchTab('biblioteca')" id="tab-biblioteca" class="text-[10px] font-black text-slate-500 uppercase">BIBLIOTECA</button>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="exitToWelcome()" class="bg-red-500/10 text-red-500 p-4 rounded-2xl hover:bg-red-500/20"><i data-lucide="power"></i></button>
+                </div>
+            </div>
+
+            <!-- PANEL: PACIENTES (FOLIOS) -->
+            <div id="panel-expedientes" class="space-y-8 animate-[fadeIn_0.3s]">
+                <div class="glass-panel p-10 rounded-[3rem] max-w-xl border-white/5">
+                    <h3 class="text-sm font-black mb-8 text-kairos-teal uppercase">REGISTRAR NUEVO PACIENTE</h3>
+                    <div class="space-y-6">
+                        <input type="text" id="new-p-name" class="w-full" placeholder="NOMBRE COMPLETO">
+                        <input type="date" id="new-p-date" class="w-full">
+                        <button onclick="registerPatient()" class="w-full bg-kairos-teal py-5 rounded-2xl font-black text-[10px] uppercase shadow-xl">GENERAR FOLIO ÚNICO</button>
+                    </div>
+                </div>
+                <div id="admin-patients-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- PANEL: NOTAS CLÍNICAS -->
+            <div id="panel-notas" class="hidden grid grid-cols-1 lg:grid-cols-4 gap-10">
+                <div class="lg:col-span-1 glass-panel p-6 rounded-[2.5rem] h-[650px] overflow-y-auto space-y-3" id="notas-sidebar-list"></div>
+                <div class="lg:col-span-3 glass-panel p-10 rounded-[3rem] min-h-[650px]" id="notes-workspace">
+                    <div class="h-full flex flex-col items-center justify-center opacity-20 italic">
+                        <i data-lucide="notebook-tabs" class="w-20 h-20 mb-6"></i>
+                        <p class="uppercase font-black text-xs tracking-widest text-center">SELECCIONA UN PACIENTE PARA TRABAJAR</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL: AGENDA -->
+            <div id="panel-citas" class="hidden space-y-8 animate-[fadeIn_0.3s]">
+                <h3 class="text-xl font-black uppercase text-kairos-teal tracking-widest">SOLICITUDES DE WHATSAPP</h3>
+                <div id="admin-citas-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- PANEL: BIBLIOTECA -->
+            <div id="panel-biblioteca" class="hidden grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="glass-panel p-12 rounded-[3.5rem] space-y-6">
+                    <h3 class="text-sm font-black text-kairos-teal uppercase tracking-widest">PUBLICAR RECURSO</h3>
+                    <input type="text" id="res-title" class="w-full" placeholder="TÍTULO">
+                    <select id="res-type" class="w-full bg-kairos-dark" onchange="handleResTypeChange()">
+                        <option value="video">YOUTUBE</option>
+                        <option value="link">LINK WEB</option>
+                        <option value="file">ARCHIVO (LOCAL)</option>
+                    </select>
+                    <div id="res-input-container">
+                        <input type="url" id="res-url" class="w-full" placeholder="URL">
+                    </div>
+                    <button onclick="addResource()" class="w-full bg-kairos-teal py-5 rounded-2xl font-black text-[10px] uppercase">SUBIR A BIBLIOTECA</button>
+                </div>
+                <div class="glass-panel p-10 rounded-[3rem] h-[500px] overflow-y-auto" id="admin-resources-list"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODALES -->
+    <div id="auth-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/95 backdrop-blur-3xl">
+        <div class="glass-panel p-12 rounded-[3rem] max-w-sm w-full text-center border-white/5">
+            <h2 class="text-xl font-black mb-10 tracking-[0.4em] text-kairos-teal uppercase">ACCESO CLÍNICO</h2>
+            <input type="password" id="admin-pass" placeholder="CLAVE" class="w-full text-center mb-8 tracking-[1em]">
+            <div class="flex gap-4">
+                <button onclick="toggleAuth(false)" class="flex-1 py-4 text-[10px] font-black opacity-30 uppercase">VOLVER</button>
+                <button onclick="validateAdmin()" class="flex-1 bg-kairos-teal py-4 rounded-2xl font-black text-[10px] uppercase">VALIDAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHAT WIDGET -->
+    <div id="patient-chat-widget" class="fixed bottom-8 right-8 z-40 hidden">
+        <button onclick="toggleChat()" class="bg-kairos-teal w-16 h-16 rounded-full shadow-2xl flex items-center justify-center text-white border-4 border-kairos-dark relative hover:scale-110 transition-all">
+            <i data-lucide="message-circle-more"></i>
+        </button>
+        <div id="chat-window" class="chat-hidden absolute bottom-20 right-0 w-[320px] md:w-[380px] h-[500px] glass-panel rounded-[2.5rem] flex flex-col border border-kairos-teal/30 overflow-hidden">
+            <div class="p-6 border-b border-white/10 flex items-center gap-4 bg-kairos-teal/10">
+                <div class="w-10 h-10 bg-white rounded-full p-1 flex items-center justify-center overflow-hidden">
+                    <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w200" class="w-8 h-8 object-contain">
+                </div>
+                <div>
+                    <h4 class="text-[10px] font-black text-white uppercase leading-none">CARLOS AGUILAR S.</h4>
+                    <p class="text-[7px] text-green-400 font-bold uppercase mt-1">EN LÍNEA</p>
+                </div>
+                <button onclick="toggleChat()" class="ml-auto opacity-40"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 text-[10px]"></div>
+            <div class="p-4 border-t border-white/5 bg-black/20 flex gap-2">
+                <input type="text" id="chat-input" class="flex-1 text-[10px] p-3" placeholder="ESCRIBE TU DUDA...">
+                <button onclick="sendMessage()" class="bg-kairos-teal p-3 rounded-xl"><i data-lucide="send" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let patients = JSON.parse(localStorage.getItem('kairos_db_p7')) || [];
+        let resources = JSON.parse(localStorage.getItem('kairos_db_r7')) || [];
+        let citas = JSON.parse(localStorage.getItem('kairos_db_c7')) || [];
+        let portalUser = "";
+        let activePatientId = null;
+
+        const refreshIcons = () => { if(window.lucide) setTimeout(() => lucide.createIcons(), 50); };
+
+        window.accessPortal = () => {
+            const name = document.getElementById('patient-name-input').value.trim().toUpperCase();
+            if(name.length < 3) return;
+            portalUser = name;
+            
+            const pData = patients.find(p => p.name === name);
+            if(pData && pData.task) {
+                document.getElementById('patient-task-section').classList.remove('hidden');
+                document.getElementById('patient-task-content').innerText = pData.task;
+            } else {
+                document.getElementById('patient-task-section').classList.add('hidden');
+            }
+
+            document.getElementById('user-display').innerText = "HOLA, " + name;
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('main-ui').classList.remove('hidden');
+            document.getElementById('view-patient').classList.remove('hidden');
+            document.getElementById('patient-chat-widget').classList.remove('hidden');
+            renderPatientResources();
+            refreshIcons();
+        };
+
+        window.toggleAuth = (show) => document.getElementById('auth-modal').classList.toggle('hidden', !show);
+        
+        window.validateAdmin = () => {
+            if(document.getElementById('admin-pass').value === "1015") {
+                toggleAuth(false);
+                document.getElementById('welcome-screen').classList.add('hidden');
+                document.getElementById('main-ui').classList.remove('hidden');
+                document.getElementById('view-patient').classList.add('hidden');
+                document.getElementById('view-admin').classList.remove('hidden');
+                document.getElementById('patient-chat-widget').classList.add('hidden');
+                switchTab('expedientes');
+            } else { alert("CLAVE INCORRECTA"); }
+        };
+
+        window.exitToWelcome = () => location.reload();
+
+        window.switchTab = (tab) => {
+            ['expedientes', 'notas', 'citas', 'biblioteca'].forEach(p => {
+                document.getElementById('panel-'+p).classList.add('hidden');
+                document.getElementById('tab-'+p).className = "text-[10px] font-black text-slate-500 uppercase";
+            });
+            document.getElementById('panel-'+tab).classList.remove('hidden');
+            document.getElementById('tab-'+tab).className = "text-[10px] font-black text-kairos-teal border-b-2 border-kairos-teal pb-1 uppercase";
+            
+            if(tab === 'expedientes') renderAdminPatients();
+            if(tab === 'notas') renderNotasSidebar();
+            if(tab === 'biblioteca') renderAdminResources();
+            if(tab === 'citas') renderAdminCitas();
+            refreshIcons();
+        };
+
+        window.registerPatient = () => {
+            const name = document.getElementById('new-p-name').value.trim().toUpperCase();
+            const date = document.getElementById('new-p-date').value;
+            if(!name || !date) return;
+            const folio = "KAI-" + Math.floor(100000 + Math.random() * 900000);
+            patients.unshift({ id: folio, name, date, notes: [], task: "" });
+            localStorage.setItem('kairos_db_p7', JSON.stringify(patients));
+            document.getElementById('new-p-name').value = "";
+            renderAdminPatients();
+        };
+
+        window.renderAdminPatients = () => {
+            const list = document.getElementById('admin-patients-list');
+            list.innerHTML = patients.map(p => `
+                <div class="glass-panel p-6 rounded-[2rem] border-white/5">
+                    <span class="text-[8px] font-black text-kairos-teal tracking-widest uppercase">${p.id}</span>
+                    <h4 class="text-xs font-black text-white mb-2 uppercase">${p.name}</h4>
+                    <p class="text-[7px] text-slate-500 font-bold uppercase">INICIO: ${p.date}</p>
+                </div>
+            `).join('') || "<p class='col-span-full py-20 text-center opacity-20 font-black uppercase'>SIN PACIENTES</p>";
+            refreshIcons();
+        };
+
+        window.renderNotasSidebar = () => {
+            const list = document.getElementById('notas-sidebar-list');
+            list.innerHTML = patients.map(p => `
+                <button onclick="openNoteWorkspace('${p.id}')" class="w-full text-left p-5 rounded-2xl border transition-all ${activePatientId === p.id ? 'bg-kairos-teal/10 border-kairos-teal' : 'bg-white/5 border-white/5'}">
+                    <p class="text-[7px] text-kairos-teal font-black mb-1">${p.id}</p>
+                    <p class="text-[9px] font-black text-white truncate uppercase">${p.name}</p>
+                </button>
+            `).join('');
+        };
+
+        window.openNoteWorkspace = (id) => {
+            activePatientId = id;
+            renderNotasSidebar();
+            const p = patients.find(pat => pat.id === id);
+            const ws = document.getElementById('notes-workspace');
+            ws.innerHTML = `
+                <div class="animate-[fadeIn_0.3s]">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-6 mb-8 uppercase">
+                        <div>
+                            <span class="bg-kairos-teal text-white px-3 py-1 rounded-full text-[8px] font-black">${p.id}</span>
+                            <h3 class="text-2xl font-black mt-2 text-white">${p.name}</h3>
+                        </div>
+                    </div>
+                    <div class="bg-kairos-teal/5 border border-kairos-teal/20 p-8 rounded-[2.5rem] mb-10">
+                        <h4 class="text-[10px] font-black text-kairos-teal mb-4 uppercase tracking-widest">ASIGNAR ACTIVIDAD ACTUAL</h4>
+                        <div class="flex gap-4">
+                            <input type="text" id="task-input" class="flex-1 text-[11px]" placeholder="ESCRIBE LA TAREA..." value="${p.task || ''}">
+                            <button onclick="updatePatientTask()" class="bg-kairos-teal px-6 py-4 rounded-xl text-[9px] font-black uppercase">ASIGNAR</button>
+                        </div>
+                    </div>
+                    <textarea id="note-input" class="w-full h-32 text-xs p-6 mb-6" placeholder="REPORTE DE EVOLUCIÓN..."></textarea>
+                    <button onclick="saveClinicalNote()" class="w-full bg-white text-kairos-dark py-5 rounded-2xl font-black text-[10px] uppercase shadow-lg mb-10 tracking-widest">GUARDAR NOTA</button>
+                    <div class="space-y-4">
+                        ${p.notes.map(n => `
+                            <div class="bg-white/5 p-6 rounded-3xl border-l-4 border-kairos-teal">
+                                <p class="text-[8px] font-black text-kairos-teal uppercase mb-2">${n.date}</p>
+                                <p class="text-[11px] text-slate-300 text-justify uppercase leading-relaxed font-medium">${n.text}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            refreshIcons();
+        };
+
+        window.updatePatientTask = () => {
+            const p = patients.find(pat => pat.id === activePatientId);
+            p.task = document.getElementById('task-input').value.toUpperCase();
+            localStorage.setItem('kairos_db_p7', JSON.stringify(patients));
+            alert("TAREA ASIGNADA CON ÉXITO");
+        };
+
+        window.saveClinicalNote = () => {
+            const txt = document.getElementById('note-input').value.trim();
+            if(!txt) return;
+            const p = patients.find(pat => pat.id === activePatientId);
+            p.notes.unshift({ date: new Date().toLocaleString().toUpperCase(), text: txt.toUpperCase() });
+            localStorage.setItem('kairos_db_p7', JSON.stringify(patients));
+            openNoteWorkspace(activePatientId);
+        };
+
+        window.renderAdminCitas = () => {
+            const list = document.getElementById('admin-citas-list');
+            list.innerHTML = citas.map((c, i) => `
+                <div class="glass-panel p-6 rounded-3xl border-white/5">
+                    <p class="text-[8px] font-black text-kairos-teal mb-3 uppercase">${c.timestamp}</p>
+                    <h4 class="text-xs font-black text-white uppercase mb-2">${c.patient}</h4>
+                    <p class="text-[9px] text-slate-400 font-bold uppercase">${c.date} | ${c.time}</p>
+                    <div class="flex gap-2 mt-6">
+                        <button onclick="reagendar('${c.patient}', '${c.date} ${c.time}')" class="flex-1 bg-white/10 py-3 rounded-xl text-[8px] font-black uppercase hover:bg-kairos-teal transition-all">REAGENDAR</button>
+                        <button onclick="borrarCita(${i})" class="flex-1 bg-red-500/10 text-red-500 py-3 rounded-xl text-[8px] font-black uppercase">BORRAR</button>
+                    </div>
+                </div>
+            `).join('') || "<p class='col-span-full py-10 text-center opacity-10 uppercase'>SIN CITAS PENDIENTES</p>";
+        };
+
+        window.reagendar = (n, d) => window.open(`https://wa.me/2381239088?text=HOLA ${n}, SOY EL PSIC. CARLOS AGUILAR. RESPECTO A TU CITA (${d}), NECESITO REAGENDARLA POR UN IMPREVISTO. ¿CUÁNDO TIENES DISPONIBILIDAD?`);
+        window.borrarCita = (i) => { citas.splice(i, 1); localStorage.setItem('kairos_db_c7', JSON.stringify(citas)); renderAdminCitas(); };
+
+        window.handleResTypeChange = () => {
+            const type = document.getElementById('res-type').value;
+            const container = document.getElementById('res-input-container');
+            container.innerHTML = type === 'file' ? `<input type="file" id="res-file" class="w-full text-[10px]">` : `<input type="url" id="res-url" class="w-full" placeholder="URL">`;
+        };
+
+        window.addResource = () => {
+            const title = document.getElementById('res-title').value.trim().toUpperCase();
+            const type = document.getElementById('res-type').value;
+            if(!title) return;
+            if(type === 'file') {
+                const f = document.getElementById('res-file').files[0];
+                if(!f) return;
+                const r = new FileReader();
+                r.onload = (e) => { resources.unshift({ id: Date.now(), title, type, content: e.target.result, name: f.name }); saveRes(); };
+                r.readAsDataURL(f);
+            } else {
+                const u = document.getElementById('res-url').value.trim();
+                resources.unshift({ id: Date.now(), title, type, content: u });
+                saveRes();
+            }
+        };
+
+        const saveRes = () => { localStorage.setItem('kairos_db_r7', JSON.stringify(resources)); renderAdminResources(); renderPatientResources(); alert("PUBLICADO"); };
+
+        window.renderAdminResources = () => {
+            const list = document.getElementById('admin-resources-list');
+            list.innerHTML = resources.map(r => `<div class="bg-white/5 p-4 rounded-xl flex justify-between items-center mb-2"><p class="text-[9px] font-black uppercase">${r.title}</p></div>`).join('');
+        };
+
+        window.renderPatientResources = () => {
+            const grid = document.getElementById('patient-resources');
+            grid.innerHTML = resources.map(r => `
+                <div class="glass-panel p-10 rounded-[3rem] text-center">
+                    <h4 class="text-[10px] font-black mb-8 uppercase tracking-widest">${r.title}</h4>
+                    <a href="${r.content}" ${r.type === 'file' ? `download="${r.name}"` : 'target="_blank"'} class="bg-kairos-teal/20 text-kairos-teal px-8 py-3 rounded-full text-[8px] font-black uppercase">ABRIR RECURSO</a>
+                </div>
+            `).join('') || "<p class='col-span-full py-10 text-center opacity-10 uppercase'>BIBLIOTECA VACÍA</p>";
+            refreshIcons();
+        };
+
+        /* AGENDA PACIENTE */
+        const slots = ["17:00 PM", "18:00 PM", "19:00 PM", "20:00 PM"];
+        let selectedTime = "";
+        const gridSlots = document.getElementById('time-slots');
+        if(gridSlots) gridSlots.innerHTML = slots.map(t => `<button onclick="selectTime('${t}', this)" class="py-4 rounded-2xl border border-white/5 bg-white/5 text-[9px] font-black uppercase transition-all">${t}</button>`).join('');
+
+        window.selectTime = (t, btn) => {
+            selectedTime = t;
+            document.querySelectorAll('#time-slots button').forEach(b => b.classList.remove('bg-kairos-teal', 'text-white'));
+            btn.classList.add('bg-kairos-teal', 'text-white');
+            document.getElementById('final-booking').disabled = false;
+            document.getElementById('final-booking').classList.remove('opacity-30');
+        };
+
+        document.getElementById('final-booking')?.addEventListener('click', () => {
+            const date = document.getElementById('booking-date').value;
+            if(!date) return;
+            const msg = `SOLICITUD: ${portalUser} - ${date} A LAS ${selectedTime}`;
+            citas.unshift({ patient: portalUser, date, time: selectedTime, timestamp: new Date().toLocaleString() });
+            localStorage.setItem('kairos_db_c7', JSON.stringify(citas));
+            window.open(`https://wa.me/2381239088?text=${encodeURIComponent(msg)}`);
+        });
+
+        window.toggleChat = () => document.getElementById('chat-window').classList.toggle('chat-hidden');
+        window.sendMessage = () => {
+            const input = document.getElementById('chat-input');
+            if(!input.value.trim()) return;
+            document.getElementById('chat-messages').innerHTML += `<div class="ml-auto bg-kairos-teal/30 p-4 rounded-3xl max-w-[85%] uppercase text-justify border border-white/10">${input.value.toUpperCase()}</div>`;
+            input.value = "";
+        };
+
+        refreshIcons();
+    </script>
+</body>
+</html>
