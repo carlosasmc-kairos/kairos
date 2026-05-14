@@ -61,7 +61,7 @@
             }
             .note-card { 
                 border-bottom: 1px solid #e2e8f0 !important; 
-                margin-bottom: 2.5rem !important;
+                margin-bottom: 2rem !important;
                 padding-bottom: 2rem !important;
                 page-break-inside: avoid;
             }
@@ -73,23 +73,23 @@
         /* Modal de Recurso Expandido */
         #resource-modal-overlay {
             transition: all 0.3s ease-in-out;
-            background: rgba(2, 6, 23, 0.95);
-            backdrop-filter: blur(12px);
+            background: rgba(2, 6, 23, 0.98);
+            backdrop-filter: blur(20px);
         }
     </style>
 </head>
 <body class="antialiased custom-scroll">
 
     <!-- MODAL DE RECURSO EXPANDIDO -->
-    <div id="resource-modal-overlay" class="fixed inset-0 z-[300] hidden flex items-center justify-center p-4 md:p-10">
-        <div class="relative w-full max-w-6xl h-full flex flex-col items-center justify-center animate-reveal">
-            <button onclick="window.closeResourceModal()" class="absolute -top-12 right-0 text-white hover:text-kairos-teal transition-all flex items-center gap-2 font-black text-xs uppercase tracking-widest">
-                <i data-lucide="x-circle" class="w-8 h-8"></i> Cerrar Vista
+    <div id="resource-modal-overlay" class="fixed inset-0 z-[400] hidden flex items-center justify-center p-4 md:p-10" onclick="if(event.target === this) window.closeResourceModal()">
+        <div class="relative w-full max-w-5xl h-full flex flex-col items-center justify-center animate-reveal pointer-events-none">
+            <button onclick="window.closeResourceModal()" class="pointer-events-auto absolute -top-14 right-0 bg-white/10 hover:bg-red-500/20 text-white hover:text-red-400 px-6 py-3 rounded-2xl transition-all flex items-center gap-3 font-black text-xs uppercase tracking-widest border border-white/10">
+                <i data-lucide="x-circle" class="w-5 h-5"></i> CERRAR Y VOLVER
             </button>
-            <div id="modal-content-container" class="w-full h-[80vh] bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/10">
-                <!-- El contenido dinámico (iframe o img) se inyecta aquí -->
+            <div id="modal-content-container" class="pointer-events-auto w-full h-[75vh] bg-black rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-white/10">
+                <!-- Contenido dinámico -->
             </div>
-            <h3 id="modal-resource-title" class="mt-6 text-xl font-black text-white uppercase italic tracking-tighter text-center"></h3>
+            <h3 id="modal-resource-title" class="mt-8 text-xl font-black text-kairos-teal uppercase italic tracking-tighter text-center"></h3>
         </div>
     </div>
 
@@ -102,7 +102,7 @@
             <div class="space-y-4">
                 <h1 class="text-kairos-teal font-black tracking-widest uppercase text-xs md:text-sm">BIENVENIDO A KAIRÓS PSICOLOGÍA ESPECIALIZADA</h1>
                 <h2 class="text-2xl md:text-4xl font-extrabold text-white leading-tight uppercase">PSIC. CARLOS <br><span class="text-kairos-teal">AGUILAR SÁNCHEZ</span></h2>
-                <p class="text-slate-400 text-sm md:text-base font-medium leading-relaxed uppercase">Gestión de horarios, biblioteca digital y seguimiento clínico.</p>
+                <p class="text-slate-400 text-sm md:text-base font-medium leading-relaxed uppercase tracking-wide">Plataforma clínica integral</p>
             </div>
             <div class="w-full space-y-4">
                 <input type="text" id="visitor-name-gate" autocomplete="one-time-code" class="w-full input-premium p-5 rounded-2xl text-center text-lg font-bold uppercase" placeholder="INGRESA TU NOMBRE" onkeypress="if(event.key === 'Enter') window.enterPortal()">
@@ -332,13 +332,6 @@
             }
         };
 
-        window.updateAdminPin = () => {
-            const p = document.getElementById('new-admin-pin').value.trim();
-            if(!p || p.length < 4) return;
-            APP_DATA.adminPin = p; saveToCloud(APP_DATA);
-            document.getElementById('new-admin-pin').value = "";
-        };
-
         window.switchTab = (tab) => {
             ['expedientes', 'agenda', 'biblioteca', 'config'].forEach(p => {
                 document.getElementById('panel-'+p)?.classList.add('hidden');
@@ -377,15 +370,6 @@
             document.getElementById('new-p-name').value = "";
         };
 
-        window.deletePatient = (id) => {
-            if(!confirm("¿CONFIRMAS ELIMINAR ESTE EXPEDIENTE? SE BORRARÁN NOTAS Y ARCHIVOS ASOCIADOS.")) return;
-            APP_DATA.patients = APP_DATA.patients.filter(p => p.id !== id);
-            if(activePatientId === id) activePatientId = null;
-            saveToCloud(APP_DATA);
-            if(!activePatientId) document.getElementById('clinical-workspace').innerHTML = '<p class="text-center py-40 opacity-20 uppercase font-black tracking-widest text-xs">Selecciona un expediente</p>';
-            lucide.createIcons();
-        };
-
         window.openWorkspace = (id) => {
             activePatientId = id;
             editingNoteIdx = null;
@@ -418,7 +402,7 @@
 
                     <div class="glass-panel p-6 space-y-6 no-print border-white/5">
                         <div class="flex items-center justify-between">
-                             <h4 class="text-[9px] font-black text-kairos-teal uppercase tracking-widest flex items-center gap-2"><i data-lucide="paperclip" class="w-4 h-4"></i> Anexos Documentales (PDF / Scans)</h4>
+                             <h4 class="text-[9px] font-black text-kairos-teal uppercase tracking-widest flex items-center gap-2"><i data-lucide="paperclip" class="w-4 h-4"></i> Anexos Documentales</h4>
                         </div>
                         <div class="flex gap-4">
                             <input type="text" id="anexo-title" class="flex-1 input-premium p-3 rounded-xl text-[10px] uppercase" placeholder="Título del Documento">
@@ -497,6 +481,68 @@
             `;
             lucide.createIcons();
         };
+
+        window.openResourceModal = (type, content, title) => {
+            const overlay = document.getElementById('resource-modal-overlay');
+            const container = document.getElementById('modal-content-container');
+            const titleEl = document.getElementById('modal-resource-title');
+            
+            titleEl.innerText = title;
+            container.innerHTML = "";
+            
+            if(type === 'youtube') {
+                const vidId = content.split('v=')[1]?.split('&')[0] || content.split('/').pop();
+                container.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${vidId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            } else if(type === 'drive') {
+                const driveEmbed = content.replace('/view', '/preview');
+                container.innerHTML = `<iframe class="w-full h-full" src="${driveEmbed}" frameborder="0"></iframe>`;
+            } else {
+                container.innerHTML = `<div class="w-full h-full flex items-center justify-center p-4 bg-white/5"><img src="${content}" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl border border-white/5"></div>`;
+            }
+            
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        };
+
+        window.closeResourceModal = () => {
+            const overlay = document.getElementById('resource-modal-overlay');
+            const container = document.getElementById('modal-content-container');
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+            container.innerHTML = ""; // DETIENE EL VIDEO AL BORRAR EL IFRAME
+            document.body.style.overflow = 'auto';
+        };
+
+        function renderPublicResources() {
+            const l = document.getElementById('patient-resources');
+            l.innerHTML = (APP_DATA.resources || []).map(r => {
+                let poster = "https://placehold.co/600x400/020617/469da3?text=KAIRÓS+CONTENIDO";
+                if(r.type === 'youtube') {
+                    const vidId = r.content.split('v=')[1]?.split('&')[0] || r.content.split('/').pop();
+                    poster = `https://img.youtube.com/vi/${vidId}/mqdefault.jpg`;
+                }
+                
+                return `
+                <div class="glass-panel p-6 flex flex-col space-y-4 hover:scale-[1.02] transition-all group cursor-pointer" onclick="window.openResourceModal('${r.type}', '${r.content}', '${r.title}')">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[8px] font-black text-kairos-teal uppercase tracking-widest">${r.type}</span>
+                        <div class="p-2 bg-white/5 rounded-lg border border-white/5 text-slate-400 group-hover:text-kairos-teal transition-all flex items-center gap-2 text-[8px] font-black uppercase"><i data-lucide="maximize" class="w-3 h-3"></i> Ampliar</div>
+                    </div>
+                    <h4 class="text-sm font-bold text-white uppercase leading-tight">${r.title}</h4>
+                    <div class="w-full aspect-video rounded-2xl overflow-hidden bg-black/40 border border-white/5 relative">
+                        <img src="${poster}" class="w-full h-full object-cover opacity-60">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-12 h-12 bg-kairos-teal/80 text-white rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-all">
+                                <i data-lucide="${r.type === 'youtube' ? 'play' : 'file-text'}" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('') || '<p class="col-span-full py-20 opacity-20 text-[10px] font-black uppercase text-center tracking-[0.4em]">En proceso de actualización...</p>';
+            lucide.createIcons();
+        }
 
         window.saveNote = () => {
             const p = APP_DATA.patients.find(x => x.id === activePatientId);
@@ -614,39 +660,6 @@
             lucide.createIcons();
         };
 
-        window.openResourceModal = (type, content, title) => {
-            const overlay = document.getElementById('resource-modal-overlay');
-            const container = document.getElementById('modal-content-container');
-            const titleEl = document.getElementById('modal-resource-title');
-            
-            titleEl.innerText = title;
-            container.innerHTML = "";
-            
-            if(type === 'youtube') {
-                const vidId = content.split('v=')[1]?.split('&')[0] || content.split('/').pop();
-                container.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${vidId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-            } else if(type === 'drive') {
-                const driveEmbed = content.replace('/view', '/preview');
-                container.innerHTML = `<iframe class="w-full h-full" src="${driveEmbed}" frameborder="0"></iframe>`;
-            } else {
-                container.innerHTML = `<div class="w-full h-full flex items-center justify-center p-4 bg-white/5"><img src="${content}" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl border border-white/5"></div>`;
-            }
-            
-            overlay.classList.remove('hidden');
-            overlay.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-            lucide.createIcons();
-        };
-
-        window.closeResourceModal = () => {
-            const overlay = document.getElementById('resource-modal-overlay');
-            const container = document.getElementById('modal-content-container');
-            overlay.classList.add('hidden');
-            overlay.classList.remove('flex');
-            container.innerHTML = ""; // Detener reproducción de videos
-            document.body.style.overflow = 'auto';
-        };
-
         function renderAdminSidebar() {
             const s = document.getElementById('sidebar-patients');
             s.innerHTML = (APP_DATA.patients || []).map(p => `
@@ -658,24 +671,6 @@
                     <button onclick="window.deletePatient('${p.id}')" class="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white p-2 rounded-full shadow-xl transition-all hover:scale-110"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
                 </div>
             `).join('');
-            lucide.createIcons();
-        }
-
-        function renderPublicResources() {
-            const l = document.getElementById('patient-resources');
-            l.innerHTML = (APP_DATA.resources || []).map(r => `
-                <div class="glass-panel p-6 flex flex-col space-y-4 hover:scale-[1.02] transition-all group">
-                    <div class="flex justify-between items-center">
-                        <span class="text-[8px] font-black text-kairos-teal uppercase tracking-widest">${r.type}</span>
-                        <button onclick="window.openResourceModal('${r.type}', '${r.content}', '${r.title}')" class="p-2 bg-white/5 rounded-lg border border-white/5 text-slate-400 hover:text-kairos-teal transition-all flex items-center gap-2 text-[8px] font-black uppercase"><i data-lucide="maximize" class="w-3 h-3"></i> Ampliar</button>
-                    </div>
-                    <h4 class="text-sm font-bold text-white uppercase leading-tight">${r.title}</h4>
-                    <div class="w-full aspect-video rounded-2xl overflow-hidden bg-black/40 border border-white/5 relative">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-                        ${r.type === 'youtube' ? `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${r.content.split('v=')[1]?.split('&')[0] || r.content.split('/').pop()}"></iframe>` : r.type === 'drive' ? `<iframe class="w-full h-full" src="${r.content.replace('/view', '/preview')}"></iframe>` : `<img src="${r.content}" class="w-full h-full object-cover">`}
-                    </div>
-                </div>
-            `).join('') || '<p class="col-span-full py-20 opacity-20 text-[10px] font-black uppercase text-center tracking-[0.4em]">En proceso de actualización...</p>';
             lucide.createIcons();
         }
 
