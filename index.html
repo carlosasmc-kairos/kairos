@@ -85,7 +85,8 @@
                 <p class="text-slate-400 text-sm md:text-base font-medium leading-relaxed uppercase">Plataforma clínica para consulta de horarios, recursos y contacto directo.</p>
             </div>
             <div class="w-full space-y-4">
-                <input type="text" id="visitor-name-gate" class="w-full input-premium p-5 rounded-2xl text-center text-lg font-bold uppercase text-white" placeholder="INGRESA TU NOMBRE" onkeypress="if(event.key === 'Enter') window.enterPortal()">
+                <!-- Autocomplete off para asegurar que el campo esté siempre limpio para el usuario -->
+                <input type="text" id="visitor-name-gate" autocomplete="off" class="w-full input-premium p-5 rounded-2xl text-center text-lg font-bold uppercase text-white" placeholder="INGRESA TU NOMBRE" onkeypress="if(event.key === 'Enter') window.enterPortal()">
                 <button type="button" onclick="window.enterPortal()" class="w-full bg-kairos-teal text-white py-5 rounded-2xl font-black tracking-widest text-xs uppercase shadow-xl hover:brightness-110 active:scale-95 transition-all">ACCEDER AL PORTAL</button>
                 <button type="button" onclick="window.toggleAuth(true)" class="text-[10px] font-black text-slate-600 hover:text-kairos-teal transition-all tracking-[0.2em] uppercase pt-4 flex items-center justify-center gap-2 mx-auto"><i data-lucide="shield-check" class="w-4 h-4"></i> ACCESO PROFESIONAL</button>
             </div>
@@ -145,9 +146,9 @@
                     <div id="time-slots-container" class="hidden animate-reveal space-y-6">
                         <div id="time-slots" class="grid grid-cols-2 gap-3"></div>
                         <div id="booking-details-form" class="hidden space-y-4 pt-6 border-t border-white/5 animate-reveal">
-                            <input type="text" id="patient-full-name" class="w-full input-premium p-4 rounded-xl text-sm font-bold uppercase text-white" placeholder="NOMBRE COMPLETO">
-                            <input type="tel" id="patient-phone" class="w-full input-premium p-4 rounded-xl text-sm font-bold uppercase text-white" placeholder="TELÉFONO DE CONTACTO">
-                            <button type="button" onclick="window.confirmBooking()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[11px] uppercase shadow-lg">Confirmar Cita</button>
+                            <input type="text" id="patient-full-name" autocomplete="off" class="w-full input-premium p-4 rounded-xl text-sm font-bold uppercase text-white" placeholder="NOMBRE COMPLETO">
+                            <input type="tel" id="patient-phone" autocomplete="off" class="w-full input-premium p-4 rounded-xl text-sm font-bold uppercase text-white" placeholder="TELÉFONO DE CONTACTO">
+                            <button type="button" onclick="window.confirmBooking()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[11px] uppercase shadow-lg hover:brightness-110 transition-all">Confirmar Cita</button>
                         </div>
                     </div>
                 </div>
@@ -178,7 +179,7 @@
                 <div class="lg:col-span-3 space-y-4 no-print">
                     <div class="glass-panel p-5 space-y-4">
                         <h3 class="text-[9px] font-black text-kairos-teal uppercase tracking-widest">Registrar Paciente</h3>
-                        <input type="text" id="new-p-name" class="input-premium w-full p-3 rounded-lg text-xs font-bold uppercase text-white" placeholder="Nombre Completo">
+                        <input type="text" id="new-p-name" autocomplete="off" class="input-premium w-full p-3 rounded-lg text-xs font-bold uppercase text-white" placeholder="Nombre Completo">
                         <input type="date" id="new-p-date" class="input-premium w-full p-3 rounded-lg text-xs text-white">
                         <button type="button" onclick="window.registerPatient()" class="w-full bg-kairos-teal py-3 rounded-lg font-black text-[9px] uppercase">Crear Expediente</button>
                     </div>
@@ -218,7 +219,7 @@
             <div id="panel-biblioteca" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-8 animate-reveal">
                 <div class="glass-panel p-6 space-y-5">
                     <h3 class="text-[9px] font-black text-kairos-teal tracking-widest uppercase">Publicar Material</h3>
-                    <input type="text" id="res-title" class="input-premium w-full p-4 rounded-xl text-xs font-bold uppercase text-white" placeholder="Título">
+                    <input type="text" id="res-title" autocomplete="off" class="input-premium w-full p-4 rounded-xl text-xs font-bold uppercase text-white" placeholder="Título">
                     <select id="res-type" class="input-premium w-full p-4 rounded-xl text-xs bg-kairos-deep font-bold text-white">
                         <option value="youtube">YouTube</option>
                         <option value="drive">Drive (PDF/Video)</option>
@@ -272,6 +273,10 @@
         async function init() {
             try {
                 await signInAnonymously(auth);
+                // Asegurar que el campo de nombre esté limpio al iniciar
+                const nameGate = document.getElementById('visitor-name-gate');
+                if(nameGate) nameGate.value = "";
+
                 onSnapshot(mainDocRef, (docSnap) => {
                     if (docSnap.exists()) {
                         APP_DATA = docSnap.data();
@@ -298,7 +303,16 @@
             document.getElementById('view-admin').classList.add('hidden');
             document.getElementById('main-content').classList.add('hidden');
             document.getElementById('welcome-gate').classList.remove('hidden');
+            
+            // Limpieza absoluta de campos de entrada al salir
             document.getElementById('visitor-name-gate').value = "";
+            const phoneField = document.getElementById('patient-phone');
+            if(phoneField) phoneField.value = "";
+            const fullNameField = document.getElementById('patient-full-name');
+            if(fullNameField) fullNameField.value = "";
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('visitor-name-gate').focus();
         };
 
         window.toggleAuth = (show) => document.getElementById('auth-modal').classList.toggle('hidden', !show);
@@ -521,11 +535,20 @@
             if(!window.selectedSlot || !n || !p) return;
             APP_DATA.appointments.push({ date: document.getElementById('booking-date').value, time: window.selectedSlot, patient: n, phone: p });
             saveToCloud(APP_DATA);
-            document.getElementById('booking-card-content').innerHTML = '<div class="py-10 text-center"><i data-lucide="check-circle" class="w-12 h-12 text-green-500 mx-auto mb-4"></i><h3 class="text-xl font-black uppercase">Cita Agendada</h3><button onclick="window.resetBookingUI()" class="mt-6 text-[10px] font-black text-slate-500 uppercase">Volver</button></div>';
+            document.getElementById('booking-card-content').innerHTML = `
+                <div class="py-10 text-center animate-reveal">
+                    <i data-lucide="check-circle" class="w-12 h-12 text-green-500 mx-auto mb-4"></i>
+                    <h3 class="text-xl font-black uppercase">Cita Agendada</h3>
+                    <p class="text-[10px] text-slate-500 uppercase mt-2">Folio de registro confirmado</p>
+                    <button onclick="window.resetBookingUI()" class="mt-10 px-8 py-3 bg-kairos-teal text-white rounded-xl text-[9px] font-black uppercase shadow-lg">Finalizar y Volver</button>
+                </div>`;
             lucide.createIcons();
         };
 
-        window.resetBookingUI = () => { location.reload(); };
+        window.resetBookingUI = () => {
+            // Limpiar datos y regresar al inicio
+            window.fullLogout();
+        };
 
         function renderAdminSidebar() {
             const s = document.getElementById('sidebar-patients');
@@ -562,7 +585,10 @@
                     <div class="flex items-center gap-2 px-3 py-1 bg-kairos-teal/10 rounded-full border border-kairos-teal/20 w-max">
                          <span class="text-[8px] font-black text-kairos-teal uppercase">${a.date} | ${a.time}</span>
                     </div>
-                    <h4 class="text-sm font-black text-white uppercase tracking-tight">${a.patient}</h4>
+                    <div class="space-y-1">
+                        <h4 class="text-sm font-black text-white uppercase tracking-tight">${a.patient}</h4>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest"><i data-lucide="phone" class="w-3 h-3 inline mr-1"></i> ${a.phone || 'SIN TELÉFONO'}</p>
+                    </div>
                     <a href="https://wa.me/${(a.phone || '').replace(/\D/g,'')}" target="_blank" class="block w-full py-2.5 bg-kairos-whatsapp/10 rounded-xl text-[9px] font-black text-kairos-whatsapp text-center border border-kairos-whatsapp/20 uppercase">Contactar WhatsApp</a>
                 </div>
             `).join('') || '<p class="col-span-full py-20 opacity-20 text-[10px] text-center uppercase font-black">Agenda vacía</p>';
