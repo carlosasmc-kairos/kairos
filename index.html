@@ -72,7 +72,6 @@
                 <i data-lucide="x-circle" class="w-5 h-5"></i> CERRAR Y VOLVER
             </button>
             <div id="modal-content-container" class="pointer-events-auto w-full h-[75vh] bg-black rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-white/10">
-                <!-- El video real se inyecta aquí solo al ampliar -->
             </div>
             <h3 id="modal-resource-title" class="mt-8 text-xl font-black text-kairos-teal uppercase italic tracking-tighter text-center"></h3>
         </div>
@@ -161,10 +160,11 @@
                 <button type="button" onclick="window.switchTab('biblioteca')" id="tab-biblioteca" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5">Recursos Biblioteca</button>
             </div>
 
+            <!-- PANEL: EXPEDIENTES -->
             <div id="panel-expedientes" class="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-reveal">
                 <div class="lg:col-span-3 space-y-4 no-print">
                     <div class="glass-panel p-5 space-y-4">
-                        <input type="text" id="new-p-name" autocomplete="off" class="input-premium w-full p-3 rounded-lg text-xs font-bold uppercase" placeholder="Nombre Completo">
+                        <input type="text" id="new-p-name" autocomplete="new-password" class="input-premium w-full p-3 rounded-lg text-xs font-bold uppercase" placeholder="Nombre Completo">
                         <input type="date" id="new-p-date" class="input-premium w-full p-3 rounded-lg text-xs">
                         <button type="button" onclick="window.registerPatient()" class="w-full bg-kairos-teal py-3 rounded-lg font-black text-[9px] uppercase shadow-lg">Crear Expediente</button>
                     </div>
@@ -204,6 +204,7 @@
         </div>
     </div>
 
+    <!-- MODAL DE ACCESO -->
     <div id="auth-modal" class="fixed inset-0 z-[220] hidden flex items-center justify-center bg-black/95 backdrop-blur-2xl px-6">
         <div class="glass-panel p-10 max-w-xs w-full text-center space-y-8">
             <h2 class="text-lg font-black tracking-widest text-kairos-teal uppercase italic">Acceso Clínico</h2>
@@ -215,7 +216,6 @@
         </div>
     </div>
 
-    <!-- BOTÓN WHATSAPP -->
     <a href="https://wa.me/522381239088" target="_blank" class="fixed bottom-6 right-6 z-[100] w-14 h-14 bg-kairos-whatsapp rounded-2xl shadow-xl flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all border-2 border-kairos-deep no-print">
         <i data-lucide="message-circle" class="w-7 h-7"></i>
     </a>
@@ -249,6 +249,9 @@
             try {
                 await signInAnonymously(auth);
                 document.getElementById('visitor-name-gate').value = "";
+                if(document.getElementById('new-p-name')) document.getElementById('new-p-name').value = "";
+                if(document.getElementById('new-p-date')) document.getElementById('new-p-date').value = "";
+
                 onSnapshot(mainDocRef, (docSnap) => {
                     if (docSnap.exists()) {
                         APP_DATA = docSnap.data();
@@ -284,8 +287,9 @@
             document.getElementById('main-content').classList.add('hidden');
             document.getElementById('welcome-gate').classList.remove('hidden');
             document.getElementById('visitor-name-gate').value = "";
+            if(document.getElementById('new-p-name')) document.getElementById('new-p-name').value = "";
+            if(document.getElementById('new-p-date')) document.getElementById('new-p-date').value = "";
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            document.getElementById('visitor-name-gate').focus();
         };
 
         window.toggleAuth = (show) => document.getElementById('auth-modal').classList.toggle('hidden', !show);
@@ -303,6 +307,20 @@
             }
         };
 
+        const refreshUI = () => {
+            renderPublicResources(); // DEFINICIÓN INCLUIDA ABAJO
+            if(isAdminActive) {
+                renderAdminSidebar();
+                renderAdminResources();
+                renderAdminAgenda();
+                const countBadge = document.getElementById('count-agenda');
+                const count = (APP_DATA.appointments || []).length;
+                if(countBadge) { countBadge.innerText = count; countBadge.classList.toggle('hidden', count === 0); }
+                if(activePatientId) window.openWorkspace(activePatientId);
+            }
+            lucide.createIcons();
+        };
+
         window.switchTab = (tab) => {
             ['expedientes', 'agenda', 'biblioteca', 'config'].forEach(p => {
                 document.getElementById('panel-'+p)?.classList.add('hidden');
@@ -317,199 +335,95 @@
             lucide.createIcons();
         };
 
-        const refreshUI = () => {
-            renderPublicResources();
-            if(isAdminActive) {
-                renderAdminSidebar();
-                renderAdminResources();
-                renderAdminAgenda();
-                const countBadge = document.getElementById('count-agenda');
-                const count = (APP_DATA.appointments || []).length;
-                if(countBadge) { countBadge.innerText = count; countBadge.classList.toggle('hidden', count === 0); }
-                if(activePatientId) window.openWorkspace(activePatientId);
-            }
+        function renderPublicResources() {
+            const list = document.getElementById('patient-resources');
+            if(!list) return;
+            list.innerHTML = (APP_DATA.resources || []).map(r => {
+                let thumb = "https://placehold.co/600x400/020617/469da3?text=KAIRÓS";
+                if(r.type === 'youtube') {
+                    const vidId = r.content.split('v=')[1]?.split('&')[0] || r.content.split('/').pop();
+                    thumb = `https://img.youtube.com/vi/${vidId}/maxresdefault.jpg`;
+                }
+                return `
+                    <div class="glass-panel p-6 flex flex-col space-y-4 hover:scale-[1.02] transition-all group">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[8px] font-black text-kairos-teal uppercase tracking-widest">${r.type}</span>
+                            <button onclick="window.openResourceModal('${r.type}', '${r.content}', '${r.title}')" class="p-2 bg-white/5 rounded-lg border border-white/10 text-slate-400 hover:text-kairos-teal transition-all flex items-center gap-2 text-[8px] font-black uppercase"><i data-lucide="maximize" class="w-3 h-3"></i> Ampliar</button>
+                        </div>
+                        <h4 class="text-sm font-bold text-white uppercase leading-tight">${r.title}</h4>
+                        <div class="w-full aspect-video rounded-2xl overflow-hidden bg-black/40 border border-white/5 relative group cursor-pointer" onclick="window.openResourceModal('${r.type}', '${r.content}', '${r.title}')">
+                            <img src="${thumb}" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-500" onerror="this.src='https://placehold.co/600x400/020617/469da3?text=DOC'">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-12 h-12 bg-kairos-teal/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 group-hover:scale-125 transition-all">
+                                    <i data-lucide="play" class="w-6 h-6 text-white fill-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('') || '<p class="col-span-full py-20 opacity-20 text-[10px] font-black uppercase text-center tracking-[0.4em]">Sin materiales disponibles</p>';
             lucide.createIcons();
-        };
+        }
 
         window.openResourceModal = (type, content, title) => {
-            const overlay = document.getElementById('resource-modal-overlay');
             const container = document.getElementById('modal-content-container');
-            const titleEl = document.getElementById('modal-resource-title');
-            
-            titleEl.innerText = title;
+            document.getElementById('modal-resource-title').innerText = title;
             container.innerHTML = "";
-            
-            // Inyectamos el video SOLO AQUÍ, evitando que corra en segundo plano
             if(type === 'youtube') {
                 const vidId = content.split('v=')[1]?.split('&')[0] || content.split('/').pop();
                 container.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${vidId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
             } else if(type === 'drive') {
-                const driveEmbed = content.replace('/view', '/preview');
-                container.innerHTML = `<iframe class="w-full h-full" src="${driveEmbed}" frameborder="0"></iframe>`;
+                container.innerHTML = `<iframe class="w-full h-full" src="${content.replace('/view', '/preview')}" frameborder="0"></iframe>`;
             } else {
-                container.innerHTML = `<div class="w-full h-full flex items-center justify-center p-4 bg-white/5"><img src="${content}" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl border border-white/5"></div>`;
+                container.innerHTML = `<div class="w-full h-full flex items-center justify-center p-4"><img src="${content}" class="max-w-full max-h-full object-contain rounded-xl"></div>`;
             }
-            
-            overlay.classList.remove('hidden');
-            overlay.classList.add('flex');
+            document.getElementById('resource-modal-overlay').classList.remove('hidden');
+            document.getElementById('resource-modal-overlay').classList.add('flex');
             document.body.style.overflow = 'hidden';
             lucide.createIcons();
         };
 
         window.closeResourceModal = () => {
-            const overlay = document.getElementById('resource-modal-overlay');
-            const container = document.getElementById('modal-content-container');
-            overlay.classList.add('hidden');
-            overlay.classList.remove('flex');
-            container.innerHTML = ""; // DETIENE EL VIDEO AL BORRAR EL IFRAME
+            document.getElementById('resource-modal-overlay').classList.add('hidden');
+            document.getElementById('resource-modal-overlay').classList.remove('flex');
+            document.getElementById('modal-content-container').innerHTML = "";
             document.body.style.overflow = 'auto';
         };
 
-        function renderPublicResources() {
-            const l = document.getElementById('patient-resources');
-            l.innerHTML = (APP_DATA.resources || []).map(r => {
-                let poster = "https://placehold.co/600x400/020617/469da3?text=KAIRÓS+RECURSO";
-                if(r.type === 'youtube') {
-                    const vidId = r.content.split('v=')[1]?.split('&')[0] || r.content.split('/').pop();
-                    poster = `https://img.youtube.com/vi/${vidId}/mqdefault.jpg`;
-                }
-                
-                return `
-                <div class="glass-panel p-6 flex flex-col space-y-4 hover:scale-[1.02] transition-all group cursor-pointer" onclick="window.openResourceModal('${r.type}', '${r.content}', '${r.title}')">
-                    <div class="flex justify-between items-center">
-                        <span class="text-[8px] font-black text-kairos-teal uppercase tracking-widest">${r.type}</span>
-                        <div class="p-2 bg-white/5 rounded-lg border border-white/5 text-slate-400 group-hover:text-kairos-teal transition-all flex items-center gap-2 text-[8px] font-black uppercase"><i data-lucide="maximize" class="w-3 h-3"></i> Ampliar</div>
-                    </div>
-                    <h4 class="text-sm font-bold text-white uppercase leading-tight">${r.title}</h4>
-                    <div class="w-full aspect-video rounded-2xl overflow-hidden bg-black/40 border border-white/5 relative">
-                        <!-- Imagen estática para evitar que se reproduzcan varios a la vez -->
-                        <img src="${poster}" class="w-full h-full object-cover opacity-60">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-12 h-12 bg-kairos-teal/80 text-white rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-all">
-                                <i data-lucide="${r.type === 'youtube' ? 'play' : 'file-text'}" class="w-6 h-6"></i>
-                            </div>
-                        </div>
-                    </div>
+        function renderAdminSidebar() {
+            const s = document.getElementById('sidebar-patients');
+            if(!s) return;
+            s.innerHTML = (APP_DATA.patients || []).map(p => `
+                <div class="group relative flex items-center gap-2 mb-2">
+                    <button type="button" onclick="window.openWorkspace('${p.id}')" class="flex-1 text-left p-5 rounded-2xl border transition-all ${activePatientId === p.id ? 'bg-kairos-teal/20 border-kairos-teal/40' : 'bg-white/5 border-white/5 hover:bg-white/10 shadow-lg'}">
+                        <p class="text-[7px] font-black text-kairos-teal uppercase mb-1">${p.id}</p>
+                        <p class="text-xs font-bold text-white uppercase truncate">${p.name}</p>
+                    </button>
+                    <button onclick="window.deletePatient('${p.id}')" class="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white p-2 rounded-full shadow-xl transition-all hover:scale-110"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
                 </div>
-            `}).join('') || '<p class="col-span-full py-20 opacity-20 text-[10px] font-black uppercase text-center tracking-[0.4em]">En proceso de actualización...</p>';
+            `).join('');
             lucide.createIcons();
         }
 
         window.registerPatient = () => {
-            const name = document.getElementById('new-p-name').value.trim().toUpperCase();
-            const date = document.getElementById('new-p-date').value;
-            if(!name || !date) return;
+            const nameEl = document.getElementById('new-p-name');
+            const dateEl = document.getElementById('new-p-date');
+            if(!nameEl.value || !dateEl.value) return;
             if(!APP_DATA.patients) APP_DATA.patients = [];
-            APP_DATA.patients.unshift({ id: "KAI-"+Math.floor(10000+Math.random()*90000), name, date, notes: [], files: [] });
+            APP_DATA.patients.unshift({ id: "KAI-"+Math.floor(10000+Math.random()*90000), name: nameEl.value.toUpperCase(), date: dateEl.value, notes: [], files: [] });
             saveToCloud(APP_DATA);
-            document.getElementById('new-p-name').value = "";
+            nameEl.value = ""; dateEl.value = "";
         };
 
-        window.openWorkspace = (id) => {
-            activePatientId = id;
-            editingNoteIdx = null;
-            const p = APP_DATA.patients.find(x => x.id === id);
-            if(!p) return;
-            const ws = document.getElementById('clinical-workspace');
-            ws.innerHTML = `
-                <div class="print-header">
-                    <div class="flex items-center gap-6">
-                        <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w200" class="print-logo">
-                        <div>
-                            <h2 style="font-size: 20px; font-weight: 900; color: #469da3; text-transform: uppercase;">REPORTE CLÍNICO DE EVOLUCIÓN</h2>
-                            <p style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">Psic. Carlos Aguilar Sánchez - KAIRÓS</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-12 animate-reveal">
-                    <div class="flex justify-between items-center border-b border-white/10 pb-8 no-print">
-                        <div>
-                            <h2 class="text-3xl font-black text-white uppercase italic tracking-tighter">${p.name}</h2>
-                            <p class="text-[9px] text-slate-500 font-bold uppercase mt-1 tracking-widest">FOLIO: ${p.id}</p>
-                        </div>
-                        <button type="button" onclick="window.print()" class="p-4 bg-white/5 rounded-2xl text-kairos-teal font-black text-[9px] uppercase border border-white/5 flex items-center gap-2 hover:bg-white/10 transition-all shadow-sm"><i data-lucide="printer" class="w-4 h-4"></i> Imprimir Reporte</button>
-                    </div>
-
-                    <div class="glass-panel p-8 space-y-8 no-print border-kairos-teal/20 shadow-xl">
-                        <h4 id="note-header" class="text-[9px] font-black text-kairos-teal uppercase tracking-widest">Nueva Entrada Evolutiva</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <textarea id="note-mental" class="input-premium w-full p-5 h-44 rounded-2xl text-[11px] uppercase leading-relaxed" placeholder="Estado Mental..."></textarea>
-                            <textarea id="note-strat" class="input-premium w-full p-5 h-44 rounded-2xl text-[11px] uppercase leading-relaxed" placeholder="Técnicas..."></textarea>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <textarea id="note-resol" class="input-premium w-full p-5 h-32 rounded-2xl text-[11px] uppercase leading-relaxed" placeholder="Resolución..."></textarea>
-                            <textarea id="note-sug" class="input-premium w-full p-5 h-32 rounded-2xl text-[11px] uppercase font-bold border-kairos-teal/10" placeholder="Recomendaciones..."></textarea>
-                        </div>
-                        <div class="flex gap-4 pt-4">
-                            <button type="button" onclick="window.professionalizeNote()" class="flex-1 bg-kairos-ai/10 text-ai py-5 rounded-2xl font-black text-[10px] uppercase border border-ai/20 shadow-lg hover:bg-ai/20 transition-all flex items-center justify-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> IA</button>
-                            <button type="button" id="btn-save-note" onclick="window.saveNote()" class="flex-[3] bg-kairos-teal py-5 rounded-2xl font-black text-[10px] uppercase shadow-2xl hover:brightness-110 transition-all">Guardar Registro</button>
-                        </div>
-                    </div>
-
-                    <div class="print-area space-y-12">
-                        ${(p.notes || []).map((n, idx) => `
-                            <div class="note-card">
-                                <div class="flex justify-between items-center mb-6 no-print">
-                                    <p class="text-[10px] font-black text-kairos-teal uppercase">${n.date}</p>
-                                    <button type="button" onclick="window.editNote(${idx})" class="p-2 text-slate-500 hover:text-ai transition-all bg-white/5 rounded-lg border border-white/5"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                                </div>
-                                <div class="justified-text text-[12px] uppercase leading-loose text-gray-800 print:text-black space-y-8">
-                                    <div><p class="font-black text-[10px] mb-3 text-slate-700">I. VALORACIÓN DEL ESTADO MENTAL:</p><p class="pl-4">${n.mental}</p></div>
-                                    <div><p class="font-black text-[10px] mb-3 text-slate-700">II. ESTRATEGIAS E INTERVENCIÓN TERAPÉUTICA:</p><p class="pl-4">${n.strat}</p></div>
-                                    <div><p class="font-black text-[10px] mb-3 text-slate-700">III. RESOLUCIÓN Y SÍNTESIS DE LA SESIÓN:</p><p class="pl-4">${n.resol}</p></div>
-                                    <div><p class="font-black text-[10px] mb-3 text-slate-700">IV. RECOMENDACIONES Y SEGUIMIENTO:</p><p class="bg-gray-50 print:bg-white p-6 rounded-2xl border border-gray-100 font-bold">${n.sug}</p></div>
-                                </div>
-                            </div>
-                        `).join('') || '<div class="py-32 text-center opacity-20"><p class="text-[10px] font-black uppercase tracking-widest">Sin registros previos</p></div>'}
-                    </div>
-                </div>
-            `;
-            lucide.createIcons();
-        };
-
-        window.saveNote = () => {
-            const p = APP_DATA.patients.find(x => x.id === activePatientId);
-            const note = {
-                date: editingNoteIdx !== null ? p.notes[editingNoteIdx].date : new Date().toLocaleString(),
-                mental: document.getElementById('note-mental').value.trim().toUpperCase(),
-                strat: document.getElementById('note-strat').value.trim().toUpperCase(),
-                resol: document.getElementById('note-resol').value.trim().toUpperCase(),
-                sug: document.getElementById('note-sug').value.trim().toUpperCase()
-            };
-            if(!note.mental) return;
-            if(editingNoteIdx !== null) { p.notes[editingNoteIdx] = note; } else { p.notes.unshift(note); }
+        window.deletePatient = (id) => {
+            if(!confirm("¿ELIMINAR EXPEDIENTE?")) return;
+            APP_DATA.patients = APP_DATA.patients.filter(x => x.id !== id);
             saveToCloud(APP_DATA);
-            window.openWorkspace(activePatientId);
-        };
-
-        window.editNote = (idx) => {
-            editingNoteIdx = idx;
-            const n = APP_DATA.patients.find(x => x.id === activePatientId).notes[idx];
-            document.getElementById('note-mental').value = n.mental;
-            document.getElementById('note-strat').value = n.strat;
-            document.getElementById('note-resol').value = n.resol;
-            document.getElementById('note-sug').value = n.sug;
-            document.getElementById('btn-save-note').innerText = "Actualizar Registro";
-            document.getElementById('note-header').innerText = "Editando Registro: " + n.date;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        window.professionalizeNote = async () => {
-            const f = document.getElementById('note-mental');
-            const t = f.value; if(!t || t.length < 5) return;
-            try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAIu-Vq3jDea3Xr7VRxJckSdXQ5Ja7K_mM`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Como psicólogo clínico formal, redacta el siguiente estado mental de forma técnica y profesional (español y todo en mayúsculas): " + t }] }] })
-                });
-                const d = await r.json(); const ai = d.candidates?.[0]?.content?.parts?.[0]?.text;
-                if(ai) f.value = ai.toUpperCase();
-            } catch(e) { console.error(e); }
         };
 
         window.renderScheduleConfig = () => {
             const c = document.getElementById('schedule-config-container');
+            if(!c) return;
             const d = { lun:'LUNES', mar:'MARTES', mie:'MIÉRCOLES', jue:'JUEVES', vie:'VIERNES', sab:'SÁBADO', dom:'DOMINGO' };
             const s = APP_DATA.schedule || {};
             c.innerHTML = Object.keys(d).map(k => `
@@ -533,7 +447,7 @@
             const d = new Date(di + "T00:00:00"); const k = ['dom','lun','mar','mie','jue','vie','sab'][d.getDay()];
             const c = (APP_DATA.schedule || {})[k]; const sD = document.getElementById('time-slots');
             document.getElementById('time-slots-container').classList.remove('hidden'); sD.innerHTML = "";
-            if(!c || !c.active) { sD.innerHTML = '<p class="col-span-full py-8 text-[10px] font-black uppercase text-center text-red-400 bg-red-400/5 rounded-xl">Sin disponibilidad operativa</p>'; return; }
+            if(!c || !c.active) { sD.innerHTML = '<p class="col-span-full py-8 text-[10px] font-black uppercase text-center text-red-400">Sin disponibilidad operativa</p>'; return; }
             let cur = parseInt(c.start.split(':')[0]); const end = parseInt(c.end.split(':')[0]);
             while(cur < end) {
                 const t = `${cur}:00`; const isT = (APP_DATA.appointments || []).some(a => a.date === di && a.time === t);
@@ -547,6 +461,7 @@
                 };
                 sD.appendChild(b); cur++;
             }
+            lucide.createIcons();
         };
 
         window.confirmBooking = () => {
@@ -560,41 +475,27 @@
                 <div class="py-12 text-center animate-reveal">
                     <i data-lucide="check-circle" class="w-16 h-16 text-green-500 mx-auto mb-6"></i>
                     <h3 class="text-2xl font-black uppercase">Cita Agendada</h3>
-                    <p class="text-[10px] text-slate-500 uppercase mt-2 font-bold tracking-widest">Confirmación enviada satisfactoriamente</p>
-                    <button onclick="window.fullLogout()" class="mt-12 px-10 py-4 bg-kairos-teal text-white rounded-2xl text-[10px] font-black uppercase shadow-xl hover:scale-105 transition-all">Finalizar Proceso</button>
+                    <button onclick="window.fullLogout()" class="mt-12 px-10 py-4 bg-kairos-teal text-white rounded-2xl text-[10px] font-black uppercase shadow-xl">Finalizar</button>
                 </div>`;
             lucide.createIcons();
         };
 
-        function renderAdminSidebar() {
-            const s = document.getElementById('sidebar-patients');
-            s.innerHTML = (APP_DATA.patients || []).map(p => `
-                <div class="group relative flex items-center gap-2 mb-2">
-                    <button type="button" onclick="window.openWorkspace('${p.id}')" class="flex-1 text-left p-5 rounded-2xl border transition-all ${activePatientId === p.id ? 'bg-kairos-teal/20 border-kairos-teal/40' : 'bg-white/5 border-white/5 hover:bg-white/10 shadow-lg'}">
-                        <p class="text-[7px] font-black text-kairos-teal uppercase mb-1">${p.id}</p>
-                        <p class="text-xs font-bold text-white uppercase truncate">${p.name}</p>
-                    </button>
-                    <button onclick="window.deletePatient('${p.id}')" class="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white p-2 rounded-full shadow-xl transition-all hover:scale-110"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
-                </div>
-            `).join('');
-            lucide.createIcons();
-        }
-
         function renderAdminAgenda() {
             const l = document.getElementById('panel-agenda');
+            if(!l) return;
             l.innerHTML = (APP_DATA.appointments || []).map((a, i) => `
-                <div class="glass-panel p-6 space-y-5 relative animate-reveal border-white/5">
+                <div class="glass-panel p-6 space-y-5 relative animate-reveal">
                     <button onclick="window.deleteApp(${i})" class="absolute top-4 right-4 text-red-500/30 hover:text-red-500 transition-all"><i data-lucide="trash" class="w-4 h-4"></i></button>
                     <div class="flex items-center gap-2 px-3 py-1 bg-kairos-teal/10 rounded-full border border-kairos-teal/20 w-max">
                          <span class="text-[8px] font-black text-kairos-teal uppercase">${a.date} | ${a.time}</span>
                     </div>
                     <div class="space-y-1">
                         <h4 class="text-sm font-black text-white uppercase tracking-tight leading-none">${a.patient}</h4>
-                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest"><i data-lucide="phone" class="w-3 h-3 inline mr-1 text-kairos-teal"></i> ${a.phone || 'NO REGISTRADO'}</p>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest"><i data-lucide="phone" class="w-3 h-3 inline mr-1 text-kairos-teal"></i> ${a.phone}</p>
                     </div>
-                    <a href="https://wa.me/${(a.phone || '').replace(/\D/g,'')}" target="_blank" class="block w-full py-3 bg-kairos-whatsapp/10 rounded-xl text-[9px] font-black text-kairos-whatsapp text-center border border-kairos-whatsapp/20 uppercase hover:bg-kairos-whatsapp/20 transition-all shadow-sm">Contactar vía WhatsApp</a>
+                    <a href="https://wa.me/${(a.phone || '').replace(/\D/g,'')}" target="_blank" class="block w-full py-3 bg-kairos-whatsapp/10 rounded-xl text-[9px] font-black text-kairos-whatsapp text-center border border-kairos-whatsapp/20 uppercase hover:bg-kairos-whatsapp/20 transition-all">WhatsApp</a>
                 </div>
-            `).join('') || '<p class="col-span-full py-24 opacity-20 text-center uppercase font-black text-xs tracking-widest">Agenda vacía</p>';
+            `).join('') || '<p class="col-span-full py-24 opacity-20 text-center uppercase font-black text-xs">Agenda vacía</p>';
             lucide.createIcons();
         }
 
@@ -610,10 +511,10 @@
             saveToCloud(APP_DATA);
             document.getElementById('res-title').value = ""; document.getElementById('res-url').value = "";
         };
-
         function renderAdminResources() {
             const l = document.getElementById('admin-resources-list');
-            l.innerHTML = (APP_DATA.resources || []).map((r, i) => `<div class="bg-white/5 p-4 rounded-xl flex justify-between items-center border border-white/5 shadow-sm"><p class="text-xs font-bold uppercase text-white">${r.title}</p><button onclick="window.deleteResource(${i})" class="text-red-500 hover:bg-red-500/10 p-2 rounded-lg transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>`).join('');
+            if(!l) return;
+            l.innerHTML = (APP_DATA.resources || []).map((r, i) => `<div class="bg-white/5 p-4 rounded-xl flex justify-between items-center border border-white/5"><p class="text-xs font-bold uppercase text-white">${r.title}</p><button onclick="window.deleteResource(${i})" class="text-red-500 hover:bg-red-500/10 p-2 rounded-lg transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>`).join('');
             lucide.createIcons();
         }
 
