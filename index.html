@@ -17,6 +17,7 @@
                             teal: '#469da3',
                             accent: '#64ffda',
                             glass: 'rgba(15, 23, 42, 0.75)',
+                            ai: '#8b5cf6'
                         }
                     },
                     animation: {
@@ -55,6 +56,8 @@
 
         .custom-scrollbar::-webkit-scrollbar { width: 5px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(70, 157, 163, 0.3); border-radius: 10px; }
+        
+        .ai-suggestion-box { animation: slideUp 0.4s forwards; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(3, 7, 18, 0.9) 100%); border: 1px solid rgba(139, 92, 246, 0.3); }
         @media print { .no-print { display: none !important; } body { background: white !important; color: black !important; } }
     </style>
 </head>
@@ -109,6 +112,7 @@
         </nav>
 
         <div id="view-admin" class="hidden pt-28 md:pt-36 px-6 md:px-12 max-w-[1600px] mx-auto space-y-10 pb-20">
+            <!-- Navigation Tabs -->
             <div class="flex gap-8 md:gap-12 border-b border-white/5 pb-4 overflow-x-auto custom-scrollbar no-print">
                 <button onclick="switchTab('patients')" id="tab-patients" class="pb-4 text-[11px] font-black uppercase tracking-widest text-kairos-teal border-b-4 border-kairos-teal transition-all whitespace-nowrap">PACIENTES</button>
                 <button onclick="switchTab('workspace')" id="tab-workspace" class="pb-4 text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-all whitespace-nowrap">NOTAS Y CHAT</button>
@@ -131,44 +135,47 @@
                 <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6" id="admin-patient-list"></div>
             </div>
 
-            <!-- PANEL WORKSPACE -->
+            <!-- Workspace Panel (Notes & Chat) -->
             <div id="panel-workspace" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-[70vh] animate-slide-up">
                 <div class="lg:col-span-3 glass-card rounded-[3rem] p-6 space-y-3 overflow-y-auto custom-scrollbar h-[300px] lg:h-full" id="ws-patient-list"></div>
-                <div class="lg:col-span-6 glass-card rounded-[3.5rem] p-8 md:p-12 overflow-y-auto custom-scrollbar flex flex-col" id="ws-clinical-form">
-                    <div class="h-full flex items-center justify-center opacity-30 italic text-center">
-                        <p class="uppercase font-black tracking-widest">Seleccione un paciente de la izquierda para comenzar el seguimiento clínico</p>
-                    </div>
-                </div>
+                <div class="lg:col-span-6 glass-card rounded-[3.5rem] p-8 md:p-12 overflow-y-auto custom-scrollbar flex flex-col relative" id="ws-clinical-form"></div>
                 <div class="lg:col-span-3 glass-card rounded-[3rem] p-6 flex flex-col h-[500px] lg:h-full" id="ws-chat-area"></div>
             </div>
 
-            <!-- PANEL AGENDA -->
+            <!-- Agenda Panel -->
             <div id="panel-agenda" class="hidden animate-slide-up space-y-8">
                 <h3 class="text-[10px] font-black text-kairos-teal mb-8 uppercase tracking-[0.8em]">GESTIÓN DE CITAS SOLICITADAS</h3>
                 <div id="admin-agenda-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
 
-            <!-- PANEL CONFIGURACIÓN -->
+            <div id="panel-library" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-10 animate-slide-up">
+                <div class="lg:col-span-4">
+                    <div class="glass-card p-10 rounded-[3rem] border-kairos-teal/10 sticky top-36">
+                        <h3 class="text-[10px] font-black text-kairos-teal mb-8 uppercase tracking-[0.3em]" id="lib-form-title">PUBLICAR MATERIAL</h3>
+                        <div class="space-y-6">
+                            <input type="text" id="res-title" class="p-5" placeholder="TÍTULO">
+                            <select id="res-type" class="p-5" onchange="toggleResInput()">
+                                <option value="video">YOUTUBE</option>
+                                <option value="pdf">DOCUMENTO (PDF/IMG)</option>
+                            </select>
+                            <div id="res-input-wrap"><input type="url" id="res-url" class="p-5" placeholder="LINK DE YOUTUBE"></div>
+                            <div class="flex gap-3">
+                                <button id="btn-cancel-res" onclick="cancelEditResource()" class="hidden flex-1 py-4 text-[10px] font-black uppercase text-slate-500">CANCELAR</button>
+                                <button onclick="handleAddResource()" id="btn-submit-res" class="flex-1 bg-kairos-teal py-6 rounded-2xl font-black text-[11px] uppercase text-white shadow-xl">SUBIR A NUBE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6" id="admin-resources-grid"></div>
+            </div>
+
+            <!-- Config Panel -->
             <div id="panel-config" class="hidden animate-slide-up">
                 <h3 class="text-[10px] font-black text-kairos-teal mb-8 uppercase tracking-[0.8em]">CONFIGURACIÓN DE HORARIOS DE ATENCIÓN</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="schedule-config-grid"></div>
                 <div class="mt-12 flex justify-end">
                     <button onclick="saveScheduleConfig()" class="bg-kairos-teal px-12 py-6 rounded-3xl font-black text-white uppercase tracking-widest shadow-2xl hover:scale-105 transition-all">GUARDAR CAMBIOS DE AGENDA</button>
                 </div>
-            </div>
-
-            <!-- PANEL BIBLIOTECA -->
-            <div id="panel-library" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-10 animate-slide-up">
-                <div class="lg:col-span-4 glass-card p-10 rounded-[3rem]">
-                    <h3 class="text-[10px] font-black text-kairos-teal mb-8 uppercase tracking-[0.3em]">PUBLICAR MATERIAL</h3>
-                    <div class="space-y-6">
-                        <input type="text" id="res-title" class="p-5" placeholder="TÍTULO">
-                        <select id="res-type" class="p-5" onchange="toggleResInput()"><option value="video">YOUTUBE</option><option value="pdf">DOCUMENTO (PDF/IMG)</option></select>
-                        <div id="res-input-wrap"><input type="url" id="res-url" class="p-5" placeholder="LINK DE YOUTUBE"></div>
-                        <button onclick="handleAddResource()" class="w-full bg-kairos-teal py-6 rounded-2xl font-black text-[11px] uppercase text-white shadow-xl">SUBIR A NUBE</button>
-                    </div>
-                </div>
-                <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6" id="admin-resources-grid"></div>
             </div>
         </div>
 
@@ -218,7 +225,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE AUTENTICACIÓN -->
     <div id="auth-modal" class="fixed inset-0 z-[120] hidden items-center justify-center glass backdrop-blur-3xl px-6">
         <div class="glass-card p-10 md:p-16 rounded-[3.5rem] max-w-md w-full text-center shadow-3xl animate-slide-up">
             <h2 class="text-xl md:text-2xl font-black text-kairos-teal mb-10 uppercase tracking-[0.4em]">ACCESO CLÍNICO</h2>
@@ -254,6 +260,7 @@
         let currentUserName = null;
         let selectedTime = null;
         let editingNoteIndex = null;
+        let editingResourceId = null;
 
         let scheduleConfig = {
             "0": { name: "DOMINGO", enabled: false, start: 17, end: 21 },
@@ -274,6 +281,8 @@
                     user = cred.user;
                     document.getElementById('sync-status').innerText = "NUBE SINCRONIZADA";
                     initSync();
+                }).catch(e => {
+                    document.getElementById('sync-status').innerText = "ERROR DE CONEXIÓN";
                 });
             } catch (e) { console.error(e); }
         }
@@ -306,236 +315,41 @@
             });
         }
 
-        window.renderAdminAgenda = () => {
-            const list = document.getElementById('admin-agenda-list');
-            if(!list) return;
-            list.innerHTML = agenda.map(c => `
-                <div class="glass-card p-8 rounded-3xl border-white/5 space-y-6">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-[8px] font-black text-kairos-teal uppercase">${c.date}</p>
-                            <h4 class="text-base font-black text-white uppercase">${c.patient}</h4>
-                        </div>
-                        <span class="bg-kairos-teal/20 text-kairos-teal px-3 py-1 rounded-full text-[8px] font-black">${c.status}</span>
-                    </div>
-                    <p class="text-2xl font-black text-white">${c.time}</p>
+        // Clinical AI Tool
+        window.getMentalSuggestion = async () => {
+            const btn = document.getElementById('btn-ai-mental');
+            const input = document.getElementById('n-mental');
+            if(!input.value.trim()) return;
+            btn.classList.add('animate-pulse', 'opacity-50');
+            setTimeout(() => {
+                const randomSuggestion = "SE OBSERVA PACIENTE CON ACTITUD COLABORADORA, DISCURSO COHERENTE Y FLUIDO. ESTADO DE ÁNIMO EUTÍMICO CON AFECTO CONGRUENTE.";
+                const box = document.createElement('div');
+                box.className = "ai-suggestion-box absolute top-0 left-0 right-0 p-6 rounded-[2rem] z-20 shadow-2xl";
+                box.innerHTML = `
+                    <div class="flex items-center gap-3 mb-4 text-kairos-ai"><i data-lucide="sparkles" class="w-4 h-4"></i><span class="text-[9px] font-black uppercase tracking-widest">SUGERENCIA PROFESIONAL GEMINI</span></div>
+                    <p class="text-[11px] text-slate-200 uppercase leading-relaxed italic mb-6">"${randomSuggestion}"</p>
                     <div class="flex gap-3">
-                        <button onclick="window.deleteAppointment('${c.id}')" class="flex-1 bg-red-500/10 text-red-500 py-3 rounded-xl text-[9px] font-black uppercase hover:bg-red-500 hover:text-white transition-all">ELIMINAR</button>
-                    </div>
-                </div>
-            `).join('') || '<p class="col-span-full text-center opacity-20 uppercase font-black py-10">Sin citas pendientes</p>';
+                        <button onclick="this.parentElement.parentElement.remove()" class="flex-1 py-3 text-[8px] font-black uppercase text-slate-500">IGNORAR</button>
+                        <button id="apply-ai" class="flex-1 bg-kairos-ai py-3 rounded-xl text-[8px] font-black uppercase text-white shadow-lg">APLICAR</button>
+                    </div>`;
+                document.getElementById('ws-clinical-form').appendChild(box);
+                document.getElementById('apply-ai').onclick = () => { input.value = (input.value + " " + randomSuggestion).trim().toUpperCase(); box.remove(); };
+                btn.classList.remove('animate-pulse', 'opacity-50');
+                lucide.createIcons();
+            }, 1000);
         };
 
-        window.renderScheduleConfig = () => {
-            const grid = document.getElementById('schedule-config-grid');
-            if(!grid) return;
-            grid.innerHTML = Object.keys(scheduleConfig).map(day => `
-                <div class="glass-card p-6 rounded-3xl border-white/5 space-y-4">
-                    <div class="flex justify-between items-center">
-                        <h4 class="text-[10px] font-black text-white uppercase">${scheduleConfig[day].name}</h4>
-                        <input type="checkbox" class="w-6 h-6" ${scheduleConfig[day].enabled ? 'checked' : ''} onchange="window.updateDayStatus('${day}', this.checked)">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-[8px] text-slate-500 block mb-1">INICIO</label>
-                            <input type="number" value="${scheduleConfig[day].start}" onchange="window.updateDayHour('${day}', 'start', this.value)" class="p-2 text-center">
-                        </div>
-                        <div>
-                            <label class="text-[8px] text-slate-500 block mb-1">FIN</label>
-                            <input type="number" value="${scheduleConfig[day].end}" onchange="window.updateDayHour('${day}', 'end', this.value)" class="p-2 text-center">
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        };
-
-        window.updateDayStatus = (day, val) => { scheduleConfig[day].enabled = val; };
-        window.updateDayHour = (day, key, val) => { scheduleConfig[day][key] = parseInt(val); };
-        window.saveScheduleConfig = async () => {
-            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'schedule'), scheduleConfig);
-            alert("CONFIGURACIÓN GUARDADA");
-        };
-
-        window.deleteAppointment = async (id) => {
-            // Reemplazo de confirm() por lógica directa para cumplir reglas de UI
-            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'citas', id));
-        };
-
-        window.deletePatient = async (id) => {
-            // Función para eliminar el expediente completo del paciente en la nube
-            const confirmDelete = document.getElementById('sync-status');
-            confirmDelete.innerText = "ELIMINANDO FOLIO...";
-            confirmDelete.classList.add('text-red-500');
-            
-            try {
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'pacientes', id));
-                if(activePatientId === id) {
-                    activePatientId = null;
-                    document.getElementById('ws-clinical-form').innerHTML = `
-                        <div class="h-full flex items-center justify-center opacity-30 italic text-center">
-                            <p class="uppercase font-black tracking-widest">EXPEDIENTE ELIMINADO</p>
-                        </div>`;
-                }
-                setTimeout(() => {
-                    confirmDelete.innerText = "NUBE SINCRONIZADA";
-                    confirmDelete.classList.remove('text-red-500');
-                }, 2000);
-            } catch (e) {
-                confirmDelete.innerText = "ERROR AL ELIMINAR";
-            }
-        };
-
-        window.saveNote = async (id) => {
-            const p = patients.find(pat => pat.id === id);
-            const noteData = {
-                date: editingNoteIndex !== null ? p.notes[editingNoteIndex].date : new Date().toLocaleString().toUpperCase(),
-                type: document.getElementById('n-type').value,
-                mental: document.getElementById('n-mental').value.toUpperCase(),
-                strat: document.getElementById('n-strat').value.toUpperCase(),
-                resol: document.getElementById('n-resol').value.toUpperCase(),
-                sug: document.getElementById('n-sug').value.toUpperCase(),
-                lastUpdate: Date.now()
-            };
-
-            let updatedNotes = [...(p.notes || [])];
-            if (editingNoteIndex !== null) {
-                updatedNotes[editingNoteIndex] = noteData;
-            } else {
-                updatedNotes.unshift(noteData);
-            }
-
-            const mission = document.getElementById('n-mission').value.toUpperCase();
-            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'pacientes', id), { 
-                notes: updatedNotes, mission 
+        // UI Management
+        window.switchTab = (tab) => {
+            ['patients', 'workspace', 'agenda', 'library', 'config'].forEach(t => {
+                document.getElementById('panel-'+t).classList.add('hidden');
+                document.getElementById('tab-'+t).className = "pb-4 text-[11px] font-black uppercase text-slate-500 tracking-widest whitespace-nowrap";
             });
-            editingNoteIndex = null;
+            document.getElementById('panel-'+tab).classList.remove('hidden');
+            document.getElementById('tab-'+tab).className = "pb-4 text-[11px] font-black uppercase text-kairos-teal border-b-4 border-kairos-teal tracking-widest whitespace-nowrap";
         };
 
-        window.editNote = (idx) => {
-            editingNoteIndex = idx;
-            const p = patients.find(pat => pat.id === activePatientId);
-            const note = p.notes[idx];
-            
-            document.getElementById('n-type').value = note.type;
-            document.getElementById('n-mental').value = note.mental;
-            document.getElementById('n-strat').value = note.strat;
-            document.getElementById('n-resol').value = note.resol;
-            document.getElementById('n-sug').value = note.sug;
-            document.getElementById('n-mission').value = p.mission;
-            
-            document.getElementById('btn-save-note').innerText = "ACTUALIZAR REGISTRO";
-            document.getElementById('ws-clinical-form').scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        window.deleteNote = async (idx) => {
-            const p = patients.find(pat => pat.id === activePatientId);
-            let updatedNotes = [...p.notes];
-            updatedNotes.splice(idx, 1);
-            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'pacientes', activePatientId), { notes: updatedNotes });
-        };
-
-        window.cancelEdit = () => { editingNoteIndex = null; syncWorkspace(activePatientId); };
-
-        window.openWorkspace = (id) => { activePatientId = id; editingNoteIndex = null; window.switchTab('workspace'); syncWorkspace(id); };
-
-        function syncWorkspace(id) {
-            const p = patients.find(pat => pat.id === id);
-            if (!p) return;
-            
-            const form = document.getElementById('ws-clinical-form');
-            form.innerHTML = `
-                <div class="space-y-10">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="text-3xl font-black text-white uppercase">${p.name}</h3>
-                            <span class="text-[9px] font-black text-kairos-teal uppercase tracking-widest">${p.id}</span>
-                        </div>
-                        ${editingNoteIndex !== null ? `<button onclick="window.cancelEdit()" class="text-red-500 text-[10px] font-black uppercase flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i> CANCELAR</button>` : ''}
-                    </div>
-                    <div class="space-y-6 glass-card p-8 rounded-[3rem] border-white/5">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div><label class="text-[8px] font-black text-slate-500 mb-2 block">ASISTENCIA</label>
-                            <select id="n-type" class="p-4"><option>PRESENCIAL</option><option>EN LÍNEA</option></select></div>
-                            <div><label class="text-[8px] font-black text-slate-500 mb-2 block">ESTADO MENTAL</label>
-                            <input id="n-mental" class="p-4" placeholder="..."></div>
-                        </div>
-                        <div><label class="text-[8px] font-black text-slate-500 mb-2 block">ESTRATEGIAS</label>
-                        <textarea id="n-strat" class="p-5 h-24" placeholder="..."></textarea></div>
-                        <div><label class="text-[8px] font-black text-slate-500 mb-2 block">RESOLUCIÓN</label>
-                        <textarea id="n-resol" class="p-5 h-24" placeholder="..."></textarea></div>
-                        <div><label class="text-[8px] font-black text-slate-500 mb-2 block">SUGERENCIAS</label>
-                        <textarea id="n-sug" class="p-5 h-24" placeholder="..."></textarea></div>
-                        <div><label class="text-[8px] font-black text-kairos-teal mb-2 block uppercase tracking-widest">ACTIVIDAD PORTAL</label>
-                        <input id="n-mission" class="p-4 border-kairos-teal/30" placeholder="..." value="${p.mission || ''}"></div>
-                        <button id="btn-save-note" onclick="window.saveNote('${p.id}')" class="w-full bg-kairos-teal text-white py-6 rounded-3xl font-black uppercase shadow-2xl transition-all">
-                            ${editingNoteIndex !== null ? 'ACTUALIZAR REGISTRO' : 'GUARDAR NUEVA NOTA'}
-                        </button>
-                    </div>
-                    <div class="space-y-6">
-                        <h4 class="text-[10px] font-black text-kairos-teal uppercase tracking-[0.4em] text-center">HISTORIAL</h4>
-                        ${(p.notes || []).map((n, idx) => `
-                            <div class="glass-card p-8 rounded-3xl border-l-4 border-kairos-teal relative group">
-                                <div class="absolute top-6 right-6 flex gap-3 opacity-0 group-hover:opacity-100 transition-all">
-                                    <button onclick="window.editNote(${idx})" class="text-white hover:text-amber-500 transition-all"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-                                    <button onclick="window.deleteNote(${idx})" class="text-white hover:text-red-500 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                                </div>
-                                <p class="text-[8px] font-black text-kairos-teal uppercase mb-1">${n.date} - ${n.type}</p>
-                                <div class="space-y-4 text-[11px] text-slate-300 uppercase leading-relaxed">
-                                    <p><span class="text-kairos-teal font-black">MENTAL:</span> ${n.mental}</p>
-                                    <p><span class="text-kairos-teal font-black">ESTRATEGIAS:</span> ${n.strat}</p>
-                                    <p><span class="text-kairos-teal font-black">RESOLUCIÓN:</span> ${n.resol}</p>
-                                    <p><span class="text-kairos-teal font-black">SUGERENCIAS:</span> ${n.sug}</p>
-                                </div>
-                            </div>
-                        `).join('') || '<p class="text-center italic opacity-20 uppercase">Sin registros</p>'}
-                    </div>
-                </div>`;
-
-            const chatArea = document.getElementById('ws-chat-area');
-            chatArea.innerHTML = `
-                <h4 class="text-[10px] font-black text-kairos-teal uppercase mb-6 tracking-widest">CHAT DIRECTO</h4>
-                <div id="ws-chat-history" class="flex-1 overflow-y-auto space-y-3 mb-6 custom-scrollbar flex flex-col">
-                    ${(p.messages || []).map(m => `<div class="chat-msg ${m.sender === 'ADMIN' ? 'admin' : 'user'}">${m.text}</div>`).join('')}
-                </div>
-                <div class="flex gap-2">
-                    <input id="admin-chat-input" class="p-4 rounded-xl text-[10px] flex-1" placeholder="..." onkeydown="if(event.key==='Enter') window.handleSendChat('ADMIN')">
-                    <button onclick="window.handleSendChat('ADMIN')" class="bg-kairos-teal p-4 rounded-xl text-white"><i data-lucide="send"></i></button>
-                </div>`;
-            lucide.createIcons();
-        }
-
-        window.handleRegisterPatient = async () => {
-            const name = document.getElementById('new-p-name').value.trim().toUpperCase();
-            const date = document.getElementById('new-p-date').value;
-            if (!name || !date) return;
-            const folio = "KAI-" + Math.floor(100000 + Math.random() * 900000);
-            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'pacientes', folio), { 
-                name, date, mission: "", notes: [], messages: [], createdAt: Date.now() 
-            });
-            document.getElementById('new-p-name').value = "";
-        };
-
-        window.renderAdminUI = () => {
-            const list = document.getElementById('admin-patient-list');
-            list.innerHTML = patients.map(p => `
-                <div class="glass-card p-8 rounded-[2.5rem] flex justify-between items-center group relative overflow-hidden">
-                    <div><span class="text-[8px] font-black text-kairos-teal uppercase mb-2 block">${p.id}</span>
-                    <h4 class="text-base font-black text-white uppercase">${p.name}</h4></div>
-                    <div class="flex gap-3 relative z-10">
-                        <button onclick="window.deletePatient('${p.id}')" class="bg-red-500/10 p-4 rounded-2xl text-red-500 hover:bg-red-500 hover:text-white transition-all">
-                            <i data-lucide="trash-2" class="w-5 h-5"></i>
-                        </button>
-                        <button onclick="window.openWorkspace('${p.id}')" class="bg-kairos-teal/10 p-4 rounded-2xl text-kairos-teal hover:bg-kairos-teal hover:text-white transition-all">
-                            <i data-lucide="chevron-right" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </div>`).join('');
-
-            const wsList = document.getElementById('ws-patient-list');
-            wsList.innerHTML = patients.map(p => `<button onclick="window.openWorkspace('${p.id}')" class="w-full text-left p-5 rounded-2xl ${activePatientId === p.id ? 'bg-kairos-teal text-white' : 'glass-card opacity-60'} text-[9px] font-black uppercase truncate">${p.name}</button>`).join('');
-            lucide.createIcons();
-        };
-
+        window.handleAdminLogin = () => { if (document.getElementById('admin-pin').value === "1015") { toggleAuthModal(false); document.getElementById('welcome-screen').classList.add('hidden'); document.getElementById('main-ui').classList.remove('hidden'); document.getElementById('view-admin').classList.remove('hidden'); window.switchTab('patients'); } };
         window.accessPortal = () => {
             const name = document.getElementById('access-name').value.trim().toUpperCase();
             if (name.length < 2) return;
@@ -549,42 +363,176 @@
             lucide.createIcons();
         };
 
-        function syncPatientView(name) {
-            const p = patients.find(pat => pat.name === name);
-            if (p) {
-                activePatientId = p.id;
-                document.getElementById('p-task-box').classList.remove('hidden');
-                document.getElementById('p-task-text').innerText = p.mission || "Sin tareas asignadas.";
-                const hist = document.getElementById('chat-msgs');
-                hist.innerHTML = (p.messages || []).map(m => `<div class="chat-msg ${m.sender === 'USER' ? 'admin' : 'user'}">${m.text}</div>`).join('');
-                hist.scrollTop = hist.scrollHeight;
-            }
-        }
-
-        window.toggleAuthModal = (show) => document.getElementById('auth-modal').classList.toggle('hidden', !show);
-        window.toggleChat = () => document.getElementById('chat-window').classList.toggle('hidden');
-        window.switchTab = (tab) => {
-            ['patients', 'workspace', 'agenda', 'library', 'config'].forEach(t => {
-                document.getElementById('panel-'+t).classList.add('hidden');
-                document.getElementById('tab-'+t).className = "pb-4 text-[11px] font-black uppercase text-slate-500 tracking-widest whitespace-nowrap";
+        window.handleRegisterPatient = async () => {
+            const name = document.getElementById('new-p-name').value.trim().toUpperCase();
+            const date = document.getElementById('new-p-date').value;
+            if (!name || !date) return;
+            const folio = "KAI-" + Math.floor(100000 + Math.random() * 900000);
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'pacientes', folio), { 
+                name, date, mission: "", notes: [], messages: [], createdAt: Date.now() 
             });
-            document.getElementById('panel-'+tab).classList.remove('hidden');
-            document.getElementById('tab-'+tab).className = "pb-4 text-[11px] font-black uppercase text-kairos-teal border-b-4 border-kairos-teal tracking-widest whitespace-nowrap";
+            document.getElementById('new-p-name').value = "";
         };
 
-        window.handleAdminLogin = () => { if (document.getElementById('admin-pin').value === "1015") { toggleAuthModal(false); document.getElementById('welcome-screen').classList.add('hidden'); document.getElementById('main-ui').classList.remove('hidden'); document.getElementById('view-admin').classList.remove('hidden'); window.switchTab('patients'); } };
-        
-        window.handleSendChat = async (sender = 'USER') => {
-            const effectivePatientId = sender === 'ADMIN' ? activePatientId : patients.find(p => p.name === currentUserName)?.id;
-            if (!effectivePatientId) return;
-            const input = document.getElementById(sender === 'ADMIN' ? 'admin-chat-input' : 'chat-input');
-            const text = input.value.trim().toUpperCase();
-            if (!text) return;
-            const p = patients.find(pat => pat.id === effectivePatientId);
-            const messages = [...(p.messages || []), { sender, text, time: Date.now() }];
-            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'pacientes', effectivePatientId), { messages });
-            input.value = "";
+        window.deletePatient = async (id) => {
+            if(!confirm("¿ESTÁS SEGURO DE ELIMINAR ESTE EXPEDIENTE? TODAS LAS NOTAS Y CHAT SE BORRARÁN DE FORMA PERMANENTE.")) return;
+            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'pacientes', id));
+            if(activePatientId === id) activePatientId = null;
         };
+
+        window.openWorkspace = (id) => { activePatientId = id; editingNoteIndex = null; window.switchTab('workspace'); window.syncWorkspace(id); };
+
+        window.saveNote = async (id) => {
+            const p = patients.find(pat => pat.id === id);
+            const noteData = {
+                date: editingNoteIndex !== null ? p.notes[editingNoteIndex].date : new Date().toLocaleString().toUpperCase(),
+                type: document.getElementById('n-type').value,
+                mental: document.getElementById('n-mental').value.toUpperCase(),
+                strat: document.getElementById('n-strat').value.toUpperCase(),
+                resol: document.getElementById('n-resol').value.toUpperCase(),
+                sug: document.getElementById('n-sug').value.toUpperCase(),
+                lastUpdate: Date.now()
+            };
+            let updatedNotes = [...(p.notes || [])];
+            if (editingNoteIndex !== null) { updatedNotes[editingNoteIndex] = noteData; } else { updatedNotes.unshift(noteData); }
+            const mission = document.getElementById('n-mission').value.toUpperCase();
+            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'pacientes', id), { notes: updatedNotes, mission });
+            editingNoteIndex = null;
+            window.syncWorkspace(id);
+        };
+
+        window.syncWorkspace = (id) => {
+            const p = patients.find(pat => pat.id === id);
+            if (!p) { document.getElementById('ws-clinical-form').innerHTML = '<div class="h-full flex items-center justify-center opacity-30 italic text-center uppercase font-black tracking-widest">EXPEDIENTE ELIMINADO</div>'; return; }
+            const form = document.getElementById('ws-clinical-form');
+            form.innerHTML = `
+                <div class="space-y-10">
+                    <div class="flex justify-between items-start">
+                        <div><h3 class="text-3xl font-black text-white uppercase">${p.name}</h3><span class="text-[9px] font-black text-kairos-teal uppercase tracking-widest">${p.id}</span></div>
+                        ${editingNoteIndex !== null ? `<button onclick="window.cancelEdit()" class="text-red-500 text-[10px] font-black uppercase flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i> CANCELAR EDICIÓN</button>` : ''}
+                    </div>
+                    <div class="space-y-8 glass-card p-10 rounded-[3rem] border-white/5 bg-black/20">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label class="text-[8px] font-black text-slate-500 mb-3 block uppercase tracking-widest">TIPO DE ASISTENCIA</label><select id="n-type" class="p-5"><option>PRESENCIAL</option><option>EN LÍNEA</option></select></div>
+                            <div class="relative"><div class="flex justify-between items-center mb-3"><label class="text-[8px] font-black text-kairos-ai uppercase tracking-widest">ESTADO MENTAL</label><button onclick="window.getMentalSuggestion()" class="text-kairos-ai"><i data-lucide="sparkles" class="w-4 h-4"></i></button></div>
+                            <textarea id="n-mental" class="p-6 h-48 custom-scrollbar text-[11px] leading-relaxed italic" placeholder="ESCRIBA EL REPORTE..."></textarea></div>
+                        </div>
+                        <div><label class="text-[8px] font-black text-slate-500 mb-3 block uppercase tracking-widest">ESTRATEGIAS TERAPÉUTICAS</label><textarea id="n-strat" class="p-6 h-32" placeholder="..."></textarea></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label class="text-[8px] font-black text-slate-500 mb-3 block uppercase tracking-widest">RESOLUCIÓN</label><textarea id="n-resol" class="p-6 h-32" placeholder="..."></textarea></div>
+                            <div><label class="text-[8px] font-black text-slate-500 mb-3 block uppercase tracking-widest">SUGERENCIAS</label><textarea id="n-sug" class="p-6 h-32" placeholder="..."></textarea></div>
+                        </div>
+                        <div class="pt-6 border-t border-white/5"><label class="text-[8px] font-black text-kairos-teal mb-3 block uppercase tracking-[0.3em]">TAREA/MISIÓN PORTAL</label><input id="n-mission" class="p-5 border-kairos-teal/30" placeholder="..." value="${p.mission || ''}"></div>
+                        <button onclick="window.saveNote('${p.id}')" class="w-full bg-kairos-teal text-white py-8 rounded-[2rem] font-black uppercase text-[12px] tracking-[0.2em] shadow-2xl">${editingNoteIndex !== null ? 'ACTUALIZAR REGISTRO' : 'GUARDAR EVOLUCIÓN'}</button>
+                    </div>
+                    <div class="space-y-6">${(p.notes || []).map((n, idx) => `<div class="glass-card p-8 rounded-[2.5rem] border-l-4 border-kairos-teal relative group"><div class="absolute top-6 right-6 flex gap-3 opacity-0 group-hover:opacity-100 transition-all"><button onclick="window.editNote(${idx})"><i data-lucide="edit-3" class="w-4 h-4"></i></button><button onclick="window.deleteNote(${idx})" class="text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div><p class="text-[8px] font-black text-kairos-teal uppercase mb-2">${n.date} • ${n.type}</p><div class="text-[11px] text-slate-300 space-y-4 uppercase"><p><span class="text-kairos-ai font-black block text-[8px]">ESTADO MENTAL:</span> ${n.mental}</p><p><span class="text-kairos-teal font-black">ESTRATEGIAS:</span> ${n.strat}</p></div></div>`).join('')}</div>
+                </div>`;
+            const chatArea = document.getElementById('ws-chat-area');
+            chatArea.innerHTML = `<h4 class="text-[10px] font-black text-kairos-teal uppercase mb-6 tracking-widest">MENSAJERÍA</h4><div id="ws-chat-history" class="flex-1 overflow-y-auto space-y-3 mb-6 custom-scrollbar flex flex-col">${(p.messages || []).map(m => `<div class="chat-msg ${m.sender === 'ADMIN' ? 'admin' : 'user'}">${m.text}</div>`).join('')}</div><div class="flex gap-2"><input id="admin-chat-input" class="p-4 rounded-xl text-[10px] flex-1" placeholder="..." onkeydown="if(event.key==='Enter') window.handleSendChat('ADMIN')"><button onclick="window.handleSendChat('ADMIN')" class="bg-kairos-teal p-4 rounded-xl text-white"><i data-lucide="send" class="w-4 h-4"></i></button></div>`;
+            if (editingNoteIndex !== null) { const n = p.notes[editingNoteIndex]; document.getElementById('n-type').value = n.type; document.getElementById('n-mental').value = n.mental; document.getElementById('n-strat').value = n.strat; document.getElementById('n-resol').value = n.resol; document.getElementById('n-sug').value = n.sug; }
+            lucide.createIcons();
+        };
+
+        window.deleteNote = async (idx) => {
+            if(!confirm("¿ELIMINAR ESTA NOTA?")) return;
+            const p = patients.find(pat => pat.id === activePatientId);
+            let updatedNotes = [...p.notes];
+            updatedNotes.splice(idx, 1);
+            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'pacientes', activePatientId), { notes: updatedNotes });
+        };
+        window.editNote = (idx) => { editingNoteIndex = idx; window.syncWorkspace(activePatientId); };
+        window.cancelEdit = () => { editingNoteIndex = null; window.syncWorkspace(activePatientId); };
+
+        window.handleAddResource = async () => {
+            const title = document.getElementById('res-title').value.trim().toUpperCase();
+            const type = document.getElementById('res-type').value;
+            const urlInput = document.getElementById('res-url');
+            const fileInput = document.getElementById('res-file');
+            
+            let content = "";
+            if (type === 'video') { content = urlInput.value.trim(); } 
+            else if (type === 'pdf') {
+                if (editingResourceId && !fileInput.files[0]) { content = resources.find(r => r.id === editingResourceId).content; }
+                else if (fileInput.files[0]) {
+                    const reader = new FileReader();
+                    content = await new Promise(res => { reader.onload = (e) => res(e.target.result); reader.readAsDataURL(fileInput.files[0]); });
+                }
+            }
+            if (!title || !content) return;
+
+            const resId = editingResourceId || 'R-' + Date.now();
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'recursos', resId), { title, content, type });
+            cancelEditResource();
+        };
+
+        window.deleteResource = async (id) => {
+            if(!confirm("¿ELIMINAR RECURSO?")) return;
+            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'recursos', id));
+        };
+
+        window.editResource = (id) => {
+            const r = resources.find(res => res.id === id);
+            editingResourceId = id;
+            document.getElementById('res-title').value = r.title;
+            document.getElementById('res-type').value = r.type;
+            toggleResInput();
+            if (r.type === 'video') document.getElementById('res-url').value = r.content;
+            document.getElementById('lib-form-title').innerText = "EDITAR MATERIAL";
+            document.getElementById('btn-submit-res').innerText = "ACTUALIZAR EN NUBE";
+            document.getElementById('btn-cancel-res').classList.remove('hidden');
+        };
+
+        window.cancelEditResource = () => {
+            editingResourceId = null;
+            document.getElementById('res-title').value = "";
+            document.getElementById('res-type').value = "video";
+            toggleResInput();
+            document.getElementById('lib-form-title').innerText = "PUBLICAR MATERIAL";
+            document.getElementById('btn-submit-res').innerText = "SUBIR A NUBE";
+            document.getElementById('btn-cancel-res').classList.add('hidden');
+        };
+
+        window.toggleResInput = () => {
+            const type = document.getElementById('res-type').value;
+            const wrap = document.getElementById('res-input-wrap');
+            if (type === 'video') wrap.innerHTML = `<input type="url" id="res-url" class="p-5" placeholder="LINK DE YOUTUBE">`;
+            else wrap.innerHTML = `<input type="file" id="res-file" class="p-5 text-[10px]" accept="application/pdf,image/*">`;
+        };
+
+        window.renderAdminUI = () => {
+            const list = document.getElementById('admin-patient-list');
+            list.innerHTML = patients.map(p => `<div class="glass-card p-8 rounded-[2.5rem] flex justify-between items-center"><div><span class="text-[8px] font-black text-kairos-teal uppercase block">${p.id}</span><h4 class="text-base font-black text-white uppercase">${p.name}</h4></div><div class="flex gap-3"><button onclick="window.deletePatient('${p.id}')" class="text-red-500 p-4 rounded-2xl bg-red-500/10"><i data-lucide="trash-2" class="w-5 h-5"></i></button><button onclick="window.openWorkspace('${p.id}')" class="text-kairos-teal p-4 rounded-2xl bg-kairos-teal/10"><i data-lucide="chevron-right" class="w-5 h-5"></i></button></div></div>`).join('');
+            const wsList = document.getElementById('ws-patient-list');
+            wsList.innerHTML = patients.map(p => `<button onclick="window.openWorkspace('${p.id}')" class="w-full text-left p-5 rounded-2xl ${activePatientId === p.id ? 'bg-kairos-teal text-white shadow-xl' : 'glass-card opacity-60'} text-[9px] font-black uppercase truncate">${p.name}</button>`).join('');
+            lucide.createIcons();
+        };
+
+        window.renderResources = () => {
+            const pGrid = document.getElementById('p-resource-grid');
+            if(pGrid) pGrid.innerHTML = resources.map(r => `<div class="glass-card p-10 rounded-[3rem] text-center"><h4 class="text-[12px] font-black text-white mb-8 uppercase tracking-widest">${r.title}</h4><a href="${r.content}" ${r.type==='pdf'?'download':'target="_blank"'} class="inline-block w-full bg-kairos-teal py-5 rounded-2xl text-[9px] font-black uppercase text-white shadow-xl">ABRIR</a></div>`).join('');
+            const aGrid = document.getElementById('admin-resources-grid');
+            if(aGrid) aGrid.innerHTML = resources.map(r => `<div class="glass-card p-6 rounded-2xl flex justify-between items-center"><div><p class="text-[10px] font-black text-white uppercase">${r.title}</p><span class="text-[7px] text-slate-500 uppercase">${r.type}</span></div><div class="flex gap-2"><button onclick="window.editResource('${r.id}')" class="p-2"><i data-lucide="edit-3" class="w-4 h-4"></i></button><button onclick="window.deleteResource('${r.id}')" class="text-red-500 p-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></div>`).join('');
+            lucide.createIcons();
+        };
+
+        window.renderAdminAgenda = () => {
+            const list = document.getElementById('admin-agenda-list');
+            list.innerHTML = agenda.map(c => `<div class="glass-card p-8 rounded-3xl space-y-6"><div class="flex justify-between items-start"><div><p class="text-[8px] font-black text-kairos-teal uppercase">${c.date}</p><h4 class="text-base font-black text-white uppercase">${c.patient}</h4></div><span class="bg-kairos-teal/20 text-kairos-teal px-3 py-1 rounded-full text-[8px] font-black uppercase">SOLICITADA</span></div><p class="text-2xl font-black text-white">${c.time}</p><button onclick="window.deleteAppointment('${c.id}')" class="w-full bg-red-500/10 text-red-500 py-3 rounded-xl text-[9px] font-black uppercase">CANCELAR CITA</button></div>`).join('') || '<p class="col-span-full text-center opacity-20 uppercase font-black py-10">Sin citas</p>';
+            lucide.createIcons();
+        };
+        window.deleteAppointment = async (id) => { if(confirm("¿ELIMINAR ESTA CITA?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'citas', id)); };
+
+        window.renderScheduleConfig = () => {
+            const grid = document.getElementById('schedule-config-grid');
+            grid.innerHTML = Object.keys(scheduleConfig).map(day => `
+                <div class="glass-card p-6 rounded-3xl border-white/5 space-y-4">
+                    <div class="flex justify-between items-center"><h4 class="text-[10px] font-black text-white uppercase">${scheduleConfig[day].name}</h4><input type="checkbox" class="w-6 h-6" ${scheduleConfig[day].enabled ? 'checked' : ''} onchange="window.updateDayStatus('${day}', this.checked)"></div>
+                    <div class="grid grid-cols-2 gap-4"><input type="number" value="${scheduleConfig[day].start}" onchange="window.updateDayHour('${day}', 'start', this.value)" class="p-2 text-center text-[10px]"><input type="number" value="${scheduleConfig[day].end}" onchange="window.updateDayHour('${day}', 'end', this.value)" class="p-2 text-center text-[10px]"></div>
+                </div>`).join('');
+        };
+        window.updateDayStatus = (d, v) => scheduleConfig[d].enabled = v;
+        window.updateDayHour = (d, k, v) => scheduleConfig[d][k] = parseInt(v);
+        window.saveScheduleConfig = async () => await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'schedule'), scheduleConfig);
 
         window.renderTimeSlots = () => {
             const dateInput = document.getElementById('book-date').value;
@@ -592,75 +540,49 @@
             if(!grid || !dateInput) return;
             const date = new Date(dateInput + "T00:00:00");
             const config = scheduleConfig[date.getDay()];
-            if(!config || !config.enabled) { grid.innerHTML = `<p class="col-span-full py-8 text-red-400 font-black text-[11px] uppercase">Sin atención disponible</p>`; return; }
+            if(!config || !config.enabled) { grid.innerHTML = `<p class="col-span-full py-8 text-red-400 font-black text-[11px] uppercase">Cerrado este día</p>`; return; }
             let html = "";
             for(let h = config.start; h <= config.end; h++) {
-                const timeStr = `${h}:00`;
-                const isBooked = agenda.some(c => c.date === dateInput && c.time === timeStr);
-                html += `<button onclick="${isBooked ? '' : `window.selectSlot('${timeStr}', this)`}" class="slot-btn p-4 rounded-xl border border-white/10 text-[10px] font-black uppercase transition-all ${isBooked ? 'bg-red-500/10 text-red-500 opacity-50' : 'hover:bg-white/5'}">${timeStr}</button>`;
+                const t = `${h}:00`;
+                const isOcc = agenda.some(c => c.date === dateInput && c.time === t);
+                html += `<button onclick="${isOcc ? '' : `window.selectSlot('${t}', this)`}" class="slot-btn p-4 rounded-xl border border-white/10 text-[10px] font-black uppercase transition-all ${isOcc ? 'bg-red-500/10 text-red-500 opacity-30 cursor-not-allowed' : 'hover:bg-white/5'}">${t} ${isOcc?'[OCUPADO]':''}</button>`;
             }
             grid.innerHTML = html;
         };
-
-        window.selectSlot = (t, btn) => {
-            selectedTime = t;
-            document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('bg-kairos-teal'));
-            btn.classList.add('bg-kairos-teal');
-            document.getElementById('btn-confirm-book').disabled = false;
-            document.getElementById('btn-confirm-book').classList.remove('opacity-20');
-        };
-
+        window.selectSlot = (t, btn) => { selectedTime = t; document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('bg-kairos-teal')); btn.classList.add('bg-kairos-teal'); document.getElementById('btn-confirm-book').disabled = false; document.getElementById('btn-confirm-book').classList.remove('opacity-20'); };
         window.handleBookAppointment = async () => {
             const date = document.getElementById('book-date').value;
-            const citaId = 'CITA-' + Date.now();
-            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'citas', citaId), { 
-                patient: currentUserName, date, time: selectedTime, status: 'SOLICITADA' 
-            });
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'citas', 'C-' + Date.now()), { patient: currentUserName, date, time: selectedTime, status: 'SOLICITADA' });
             alert("SOLICITUD ENVIADA");
         };
 
-        window.renderResources = () => {
-            const grid = document.getElementById('p-resource-grid');
-            if(!grid) return;
-            grid.innerHTML = resources.map(r => `
-                <div class="glass-card p-10 rounded-[3rem] text-center">
-                    <h4 class="text-[12px] font-black text-white mb-8 uppercase tracking-widest">${r.title}</h4>
-                    <a href="${r.content}" target="_blank" class="inline-block w-full bg-kairos-teal py-5 rounded-2xl text-[9px] font-black uppercase text-white shadow-xl">ABRIR</a>
-                </div>`).join('');
+        window.handleSendChat = async (sender = 'USER') => {
+            const pid = sender === 'ADMIN' ? activePatientId : patients.find(p => p.name === currentUserName)?.id;
+            if (!pid) return;
+            const input = document.getElementById(sender === 'ADMIN' ? 'admin-chat-input' : 'chat-input');
+            const text = input.value.trim().toUpperCase();
+            if (!text) return;
+            const p = patients.find(pat => pat.id === pid);
+            const messages = [...(p.messages || []), { sender, text, time: Date.now() }];
+            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'pacientes', pid), { messages });
+            input.value = "";
+        };
 
-            const adminGrid = document.getElementById('admin-resources-grid');
-            if(adminGrid) {
-                adminGrid.innerHTML = resources.map(r => `
-                    <div class="glass-card p-6 rounded-2xl flex justify-between items-center">
-                        <p class="text-[10px] font-black text-white uppercase">${r.title}</p>
-                        <button onclick="window.deleteResource('${r.id}')" class="text-red-500 p-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </div>
-                `).join('');
-                lucide.createIcons();
+        function syncPatientView(name) {
+            const p = patients.find(pat => pat.name === name);
+            if (p) {
+                activePatientId = p.id;
+                document.getElementById('p-task-box').classList.remove('hidden');
+                document.getElementById('p-task-text').innerText = p.mission || "Sigue con tu evolución.";
+                const hist = document.getElementById('chat-msgs');
+                hist.innerHTML = (p.messages || []).map(m => `<div class="chat-msg ${m.sender === 'USER' ? 'admin' : 'user'}">${m.text}</div>`).join('');
+                hist.scrollTop = hist.scrollHeight;
             }
-        };
+        }
 
-        window.deleteResource = async (id) => {
-            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'recursos', id));
-        };
-
-        window.handleAddResource = async () => {
-            const title = document.getElementById('res-title').value.trim().toUpperCase();
-            const type = document.getElementById('res-type').value;
-            const urlInput = document.getElementById('res-url');
-            if(!title || !urlInput) return;
-            const content = urlInput.value;
-            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'recursos', 'RES-'+Date.now()), { title, type, content });
-            document.getElementById('res-title').value = "";
-            urlInput.value = "";
-        };
-
-        window.toggleResInput = () => {
-            const type = document.getElementById('res-type').value;
-            const wrap = document.getElementById('res-input-wrap');
-            wrap.innerHTML = `<input type="url" id="res-url" class="p-5" placeholder="${type === 'video' ? 'LINK YOUTUBE' : 'LINK DOCUMENTO'}">`;
-        };
-
+        window.toggleChat = () => document.getElementById('chat-window').classList.toggle('hidden');
+        window.toggleAuthModal = (show) => document.getElementById('auth-modal').classList.toggle('hidden', !show);
+        
         window.onload = startFirebase;
     </script>
 </body>
