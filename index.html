@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KAIRÓS | Clinical Ecosystem</title>
     
-    <!-- FAVICON INTEGRATION -->
+    <!-- FAVICON CORPORATIVO -->
     <link rel="icon" type="image/png" href="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w128">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -56,12 +56,13 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #469da3; border-radius: 10px; }
         .toast-active { transform: translateY(0); opacity: 1; }
         .toast-hidden { transform: translateY(100px); opacity: 0; }
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 1.5rem; background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         @media print { .no-print { display: none !important; } .print-area { display: block !important; width: 100%; color: black !important; background: white !important; } }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- Notification Toast -->
     <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[300] bg-kairos-teal text-white px-8 py-4 rounded-2xl font-black text-[10px] tracking-widest uppercase shadow-2xl transition-all duration-500 toast-hidden flex items-center gap-4">
         <i data-lucide="check-circle" class="w-4 h-4"></i>
         <span id="toast-message">OPERACIÓN EXITOSA</span>
@@ -71,7 +72,7 @@
         <div class="max-w-xl w-full text-center space-y-12 py-20">
             <div class="animate-float">
                 <div class="w-64 h-64 md:w-80 md:h-80 mx-auto bg-white rounded-full p-4 logo-glow flex items-center justify-center border-8 border-white shadow-2xl overflow-hidden">
-                    <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w1000" alt="KAIRÓS LOGO" class="w-full h-full object-contain">
+                    <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w1000" alt="KAIRÓS" class="w-full h-full object-contain">
                 </div>
             </div>
             <div class="space-y-4">
@@ -95,12 +96,12 @@
                     </div>
                     <div class="hidden sm:block">
                         <p class="text-xs font-black tracking-[0.4em] text-kairos-teal uppercase leading-none">KAIRÓS</p>
-                        <p class="text-[8px] font-bold text-slate-500 uppercase mt-1">SISTEMA CLÍNICO</p>
+                        <p class="text-[8px] font-bold text-slate-500 uppercase mt-1">ESTADO: <span id="sync-text">SINCRO...</span></p>
                     </div>
                 </div>
                 <div id="sync-indicator" class="flex items-center gap-3 bg-white/5 px-6 py-3 rounded-full border border-white/10">
                     <div class="w-2 h-2 rounded-full bg-slate-500" id="sync-dot"></div>
-                    <span class="text-[9px] font-black tracking-widest text-slate-400 uppercase" id="sync-text">ESTADO: INACTIVO</span>
+                    <span class="text-[9px] font-black tracking-widest text-slate-400 uppercase">SISTEMA CLÍNICO</span>
                 </div>
                 <button onclick="window.exitToWelcome()" class="p-4 bg-white/5 rounded-2xl text-slate-400 hover:text-red-400 transition-all border border-white/5"><i data-lucide="log-out" class="w-5 h-5"></i></button>
             </div>
@@ -115,27 +116,27 @@
                 <button onclick="window.switchTab('config')" id="tab-config" class="flex-shrink-0 px-8 py-4 rounded-2xl text-[10px] font-black tracking-widest transition-all uppercase text-slate-500 hover:bg-white/5">AJUSTES</button>
             </div>
 
+            <!-- Library Content Manager -->
             <div id="panel-biblioteca" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div class="lg:col-span-5 glass-card p-12 rounded-[3.5rem] space-y-10 h-fit">
-                    <h3 class="text-xs font-black text-kairos-teal tracking-[0.5em] uppercase text-center">PUBLICAR MATERIAL MULTIMEDIA</h3>
+                    <h3 class="text-xs font-black text-kairos-teal tracking-[0.5em] uppercase text-center">PUBLICAR MATERIAL</h3>
                     <div class="space-y-6">
                         <input type="text" id="res-title" class="premium-input w-full p-6 rounded-2xl text-xs" placeholder="TÍTULO DEL RECURSO">
                         <select id="res-type" class="premium-input w-full p-6 rounded-2xl text-xs bg-kairos-deep" onchange="window.handleResTypeChange()">
                             <option value="video">YOUTUBE / VIDEO REPRODUCIBLE</option>
-                            <option value="file">ARCHIVO O IMAGEN (PDF/JPG)</option>
+                            <option value="file">ARCHIVO (PDF/IMAGEN)</option>
                             <option value="link">ENLACE WEB EXTERNO</option>
                         </select>
                         <div id="res-input-container">
-                            <input type="url" id="res-url" class="premium-input w-full p-6 rounded-2xl text-xs" placeholder="URL DE YOUTUBE">
+                            <input type="url" id="res-url" class="premium-input w-full p-6 rounded-2xl text-xs" placeholder="PEGA EL ENLACE DE YOUTUBE AQUÍ">
                         </div>
                     </div>
-                    <button id="btn-add-resource" onclick="window.addResource()" class="w-full bg-kairos-teal py-6 rounded-2xl font-black text-[10px] tracking-[0.4em] uppercase shadow-xl hover:scale-[1.01] transition-all">SUBIR A BIBLIOTECA</button>
+                    <button onclick="window.addResource()" class="w-full bg-kairos-teal py-6 rounded-2xl font-black text-[10px] tracking-[0.4em] uppercase shadow-xl">SUBIR A BIBLIOTECA</button>
                 </div>
-                <div class="lg:col-span-7 glass-card p-10 rounded-[3rem] overflow-y-auto space-y-6 max-h-[750px] custom-scrollbar" id="admin-resources-list">
-                    <!-- Resources show up here -->
-                </div>
+                <div class="lg:col-span-7 glass-card p-10 rounded-[3rem] overflow-y-auto space-y-4 max-h-[750px] custom-scrollbar" id="admin-resources-list"></div>
             </div>
 
+            <!-- Panel Pacientes -->
             <div id="panel-expedientes" class="space-y-10">
                 <div class="glass-card p-12 rounded-[3.5rem] max-w-2xl no-print mx-auto lg:mx-0">
                     <h3 class="text-xs font-black text-kairos-teal tracking-[0.5em] mb-8 uppercase">REGISTRAR EXPEDIENTE</h3>
@@ -143,11 +144,12 @@
                         <input type="text" id="new-p-name" class="w-full premium-input p-6 rounded-2xl text-xs font-black" placeholder="NOMBRE COMPLETO" onkeypress="if(event.key === 'Enter') window.registerPatient()">
                         <input type="date" id="new-p-date" class="w-full premium-input p-6 rounded-2xl text-xs font-black">
                     </div>
-                    <button onclick="window.registerPatient()" class="w-full mt-8 bg-kairos-teal py-6 rounded-2xl font-black text-[11px] tracking-[0.4em] uppercase shadow-2xl transition-all hover:scale-[1.01]">GENERAR FOLIO KAIRÓS</button>
+                    <button onclick="window.registerPatient()" class="w-full mt-8 bg-kairos-teal py-6 rounded-2xl font-black text-[11px] tracking-[0.4em] uppercase shadow-2xl">GENERAR FOLIO KAIRÓS</button>
                 </div>
                 <div id="admin-patients-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             </div>
 
+            <!-- Workspace & Notes -->
             <div id="panel-notas" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-[700px]">
                 <div class="lg:col-span-3 glass-card p-6 rounded-[2.5rem] flex flex-col gap-3 overflow-y-auto max-h-[850px] no-print custom-scrollbar" id="notas-sidebar-list"></div>
                 <div class="lg:col-span-9 glass-card p-8 md:p-14 rounded-[3.5rem] overflow-y-auto print-area custom-scrollbar" id="notes-workspace">
@@ -158,11 +160,13 @@
                 </div>
             </div>
 
+            <!-- Agenda -->
             <div id="panel-agenda" class="hidden space-y-10">
-                <h3 class="text-sm font-black text-kairos-teal tracking-[0.5em] uppercase text-center">SOLICITUDES DE CITAS</h3>
+                <h3 class="text-sm font-black text-kairos-teal tracking-[0.5em] uppercase text-center">CITAS SOLICITADAS</h3>
                 <div id="admin-agenda-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             </div>
 
+            <!-- Configuración -->
             <div id="panel-config" class="hidden space-y-10">
                 <div class="glass-card p-12 rounded-[3.5rem] max-w-4xl mx-auto">
                     <h3 class="text-xs font-black text-kairos-teal tracking-[0.5em] mb-12 uppercase text-center">CONFIGURACIÓN DE HORARIOS</h3>
@@ -172,16 +176,17 @@
             </div>
         </div>
 
-        <div id="view-patient" class="hidden px-6 max-w-5xl mx-auto space-y-12 pb-40">
+        <div id="view-patient" class="hidden px-6 max-w-6xl mx-auto space-y-12 pb-40">
             <section class="glass-card p-12 md:p-24 rounded-[4rem] text-center space-y-12 relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-kairos-teal to-transparent opacity-40"></div>
-                <div class="w-32 h-32 md:w-48 md:h-48 mx-auto bg-white rounded-[3rem] p-4 shadow-2xl flex items-center justify-center overflow-hidden border-4 border-white">
-                    <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w600" alt="KAIRÓS IDENTITY" class="w-full h-full object-contain">
+                <div class="w-32 h-32 md:w-48 md:h-48 mx-auto bg-white rounded-[3rem] p-4 shadow-2xl flex items-center justify-center border-4 border-white">
+                    <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w600" alt="KAIRÓS" class="w-full h-full object-contain">
                 </div>
                 <h1 class="text-4xl md:text-6xl font-black tracking-tighter uppercase leading-none">BIENVENIDO A <br><span class="text-kairos-teal">TU PORTAL KAIRÓS</span></h1>
-                <p class="max-w-2xl mx-auto text-slate-400 text-xs md:text-sm text-center leading-relaxed uppercase italic tracking-widest">ESPACIO DIGITAL PARA TU SEGUIMIENTO TERAPÉUTICO.</p>
+                <p class="max-w-2xl mx-auto text-slate-400 text-xs md:text-sm uppercase tracking-widest">ESPACIO DIGITAL PARA TU SEGUIMIENTO TERAPÉUTICO.</p>
             </section>
 
+            <!-- Tarea/Objetivo -->
             <section id="patient-task-section" class="hidden">
                 <div class="glass-card p-10 md:p-14 rounded-[3.5rem] border-kairos-teal/30 bg-kairos-teal/5 border-l-8 border-l-kairos-teal">
                     <h3 class="text-[10px] font-black tracking-[0.6em] uppercase mb-8 flex items-center gap-4 text-kairos-teal">
@@ -191,22 +196,24 @@
                 </div>
             </section>
 
-            <h3 class="text-xs font-black text-kairos-teal tracking-[1em] uppercase text-center py-10">BIBLIOTECA Y RECURSOS</h3>
-            <div id="patient-resources" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
+            <div class="space-y-10">
+                <h3 class="text-xs font-black text-kairos-teal tracking-[1em] uppercase text-center py-10">RECURSOS Y VIDEOS TERAPÉUTICOS</h3>
+                <div id="patient-resources" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
+            </div>
 
-            <section class="max-w-3xl mx-auto">
-                <div class="glass-card p-10 md:p-14 rounded-[4rem] border-kairos-teal/20 text-center">
-                    <h3 class="text-2xl font-black mb-12 text-kairos-teal uppercase tracking-widest">SOLICITAR CITA</h3>
-                    <input type="date" id="booking-date" class="w-full premium-input p-6 rounded-2xl text-center font-black uppercase mb-10 text-lg" onchange="window.handleDateSelect()">
-                    <div id="time-slots-container" class="hidden space-y-8">
-                        <div id="time-slots" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
-                        <button id="final-booking" onclick="window.confirmBooking()" disabled class="w-full bg-kairos-teal py-8 rounded-3xl font-black opacity-30 tracking-[0.6em] text-xs shadow-2xl transition-all uppercase mt-6">CONFIRMAR ESPACIO</button>
-                    </div>
+            <!-- Booking Module -->
+            <section class="glass-card p-12 rounded-[4rem] text-center space-y-10">
+                <h3 class="text-xs font-black text-kairos-teal tracking-[1em] uppercase">SOLICITAR CITA</h3>
+                <div class="max-w-md mx-auto space-y-8">
+                    <input type="date" id="booking-date" class="w-full premium-input p-6 rounded-2xl text-center text-xl font-black" onchange="window.generateTimeSlots()">
+                    <div id="booking-slots-container" class="grid grid-cols-2 gap-4"></div>
+                    <button id="btn-confirm-booking" onclick="window.confirmBooking()" class="hidden w-full bg-kairos-teal py-6 rounded-2xl font-black text-[11px] tracking-[0.4em] uppercase shadow-2xl">CONFIRMAR ESPACIO</button>
                 </div>
             </section>
         </div>
     </main>
 
+    <!-- Chat Widget -->
     <div id="chat-widget" class="fixed bottom-8 right-8 z-[80] hidden no-print">
         <button onclick="window.toggleChat()" class="w-16 h-16 bg-kairos-teal rounded-full shadow-2xl flex items-center justify-center text-white hover:scale-110 transition-all border-4 border-kairos-deep relative">
             <i data-lucide="message-circle-more"></i>
@@ -214,7 +221,7 @@
         </button>
         <div id="chat-window" class="hidden absolute bottom-24 right-0 w-[320px] md:w-[400px] h-[500px] md:h-[600px] glass-card rounded-[3rem] flex flex-col border border-kairos-teal/30 overflow-hidden">
             <div class="p-6 border-b border-white/5 bg-kairos-teal/10 flex items-center gap-4">
-                <div class="w-12 h-12 bg-white rounded-full p-1 flex items-center justify-center overflow-hidden border border-kairos-teal/20">
+                <div class="w-12 h-12 bg-white rounded-full p-1 flex items-center justify-center border border-kairos-teal/20">
                     <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w200" alt="KAIRÓS" class="w-full h-full object-contain">
                 </div>
                 <div class="flex-1">
@@ -224,12 +231,12 @@
                 <button onclick="window.toggleChat()"><i data-lucide="x" class="w-4 h-4 opacity-40"></i></button>
             </div>
             <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-5 custom-scrollbar"></div>
-            <div class="p-5 border-t border-white/5 bg-black/30 flex flex-col gap-4">
+            <div class="p-5 border-t border-white/5 bg-black/30 space-y-4">
                 <div class="flex gap-3">
-                    <input type="text" id="chat-input" class="flex-1 premium-input p-4 text-[11px] rounded-xl" placeholder="ESCRIBE UN MENSAJE..." onkeypress="if(event.key === 'Enter') window.sendChatMessage()">
+                    <input type="text" id="chat-input" class="flex-1 premium-input p-4 text-[11px] rounded-xl" placeholder="MENSAJE..." onkeypress="if(event.key === 'Enter') window.sendChatMessage()">
                     <button onclick="window.sendChatMessage()" class="bg-kairos-teal p-4 rounded-xl shadow-lg"><i data-lucide="send" class="w-5 h-5"></i></button>
                 </div>
-                <button onclick="window.notifyByWhatsApp()" class="w-full py-3 bg-green-600/20 text-green-400 border border-green-500/30 rounded-xl text-[8px] font-black uppercase tracking-widest hover:bg-green-600 hover:text-white transition-all">NOTIFICAR URGENCIA POR WHATSAPP</button>
+                <button onclick="window.notifyByWhatsApp()" class="w-full py-3 bg-green-600/20 text-green-400 border border-green-500/30 rounded-xl text-[8px] font-black uppercase tracking-widest hover:bg-green-600 hover:text-white transition-all">NOTIFICAR POR WHATSAPP</button>
             </div>
         </div>
     </div>
@@ -240,8 +247,8 @@
             <h2 class="text-2xl font-black tracking-[0.5em] text-kairos-teal uppercase">ACCESO CLÍNICO</h2>
             <input type="password" id="admin-pass" placeholder="PIN" class="w-full premium-input py-6 text-center text-3xl tracking-[1em] rounded-2xl" onkeypress="if(event.key === 'Enter') window.validateAdmin()">
             <div class="flex gap-4">
-                <button onclick="toggleAuth(false)" class="flex-1 py-4 text-[10px] font-black opacity-40 uppercase tracking-widest">VOLVER</button>
-                <button onclick="window.validateAdmin()" class="flex-1 bg-kairos-teal py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl">VALIDAR</button>
+                <button onclick="window.toggleAuth(false)" class="flex-1 py-4 text-[10px] font-black opacity-40 uppercase">VOLVER</button>
+                <button onclick="window.validateAdmin()" class="flex-1 bg-kairos-teal py-4 rounded-2xl font-black text-[10px] uppercase shadow-2xl">VALIDAR</button>
             </div>
         </div>
     </div>
@@ -265,94 +272,144 @@
         const db = getFirestore(app);
         const appId = 'kairos-b84d5';
 
-        let APP_DATA = { patients: [], resources: [], appointments: [], schedule: {} };
-        let activePatientId = null;
-        let editingNoteIdx = null;
+        let APP_DATA = { 
+            patients: [], 
+            resources: [], 
+            appointments: [], 
+            schedule: {
+                lun: { active: true, start: "17:00", end: "21:00" },
+                mar: { active: true, start: "17:00", end: "21:00" },
+                mie: { active: true, start: "17:00", end: "21:00" },
+                jue: { active: true, start: "17:00", end: "21:00" },
+                vie: { active: true, start: "18:00", end: "21:00" },
+                sab: { active: true, start: "15:00", end: "21:00" },
+                dom: { active: false, start: "09:00", end: "12:00" }
+            } 
+        };
+        
         let selectedTime = null;
-
-        async function init() {
-            updateSyncStatus('sync', 'CONECTANDO...');
-            try {
-                await signInAnonymously(auth);
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clinical_ecosystem', 'main_store');
-                        onSnapshot(docRef, (docSnap) => {
-                            if (docSnap.exists()) {
-                                APP_DATA = docSnap.data();
-                                updateSyncStatus('success', 'NUBE ACTIVA');
-                                window.refreshCurrentView();
-                            } else {
-                                const defaultSched = {
-                                    lun: { active: true, start: "17:00", end: "21:00" },
-                                    mar: { active: true, start: "17:00", end: "21:00" },
-                                    mie: { active: true, start: "17:00", end: "21:00" },
-                                    jue: { active: true, start: "17:00", end: "21:00" },
-                                    vie: { active: true, start: "18:00", end: "21:00" },
-                                    sab: { active: true, start: "15:00", end: "21:00" },
-                                    dom: { active: false, start: "09:00", end: "12:00" }
-                                };
-                                saveToCloud({ patients: [], resources: [], appointments: [], schedule: defaultSched });
-                            }
-                        }, (error) => {
-                            updateSyncStatus('error', 'ERR PERMISOS');
-                        });
-                    }
-                });
-            } catch (err) {
-                updateSyncStatus('error', 'ERR AUTH');
-            }
-        }
-
-        const saveToCloud = async (newData) => {
-            updateSyncStatus('sync', 'GUARDANDO...');
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clinical_ecosystem', 'main_store');
-                await setDoc(docRef, newData);
-                updateSyncStatus('success', 'SINCRONIZADO');
-            } catch (e) {
-                updateSyncStatus('error', 'ERR NUBE');
-            }
-        };
-
-        const updateSyncStatus = (type, text) => {
-            const dot = document.getElementById('sync-dot');
-            const txt = document.getElementById('sync-text');
-            if(!dot || !txt) return;
-            dot.className = `w-2 h-2 rounded-full ${type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-kairos-teal animate-pulse'}`;
-            txt.innerText = text;
-        };
-
-        const showToast = (msg) => {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').innerText = msg;
-            toast.classList.remove('toast-hidden');
-            toast.classList.add('toast-active');
-            setTimeout(() => { toast.classList.add('toast-hidden'); toast.classList.remove('toast-active'); }, 3000);
-        };
+        let activePatientId = null;
 
         function getYouTubeEmbedUrl(url) {
             if (!url) return '';
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            if (match && match[2].length === 11) {
-                return `https://www.youtube.com/embed/${match[2]}?modestbranding=1&rel=0`;
-            }
-            return url;
+            let videoId = '';
+            try {
+                if (url.includes('v=')) videoId = url.split('v=')[1].split('&')[0];
+                else if (url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
+                else if (url.includes('shorts/')) videoId = url.split('shorts/')[1].split('?')[0];
+                else if (url.includes('embed/')) return url;
+                return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+            } catch(e) { return url; }
         }
 
-        window.refreshCurrentView = () => {
-            if(window.viewMode === 'admin') {
-                renderAdminPatients();
-                renderNotasSidebar();
-                renderAdminResources();
-                renderAdminAgenda();
-                renderScheduleConfig();
-                if(activePatientId) openNoteWorkspace(activePatientId);
-            } else if(window.portalUser) {
-                refreshPatientView();
+        window.handleResTypeChange = () => {
+            const type = document.getElementById('res-type').value;
+            const container = document.getElementById('res-input-container');
+            if (type === 'file') {
+                container.innerHTML = '<input type="file" id="res-file" class="premium-input w-full p-6 rounded-2xl text-[10px]">';
+            } else {
+                container.innerHTML = `<input type="url" id="res-url" class="premium-input w-full p-6 rounded-2xl text-xs" placeholder="${type === 'video' ? 'PEGA EL ENLACE DE YOUTUBE AQUÍ' : 'URL DEL SITIO WEB'}">`;
             }
+        };
+
+        window.addResource = async () => {
+            const title = document.getElementById('res-title').value.trim().toUpperCase();
+            const type = document.getElementById('res-type').value;
+            if(!title) return;
+
+            const save = async (content, fileName = "") => {
+                APP_DATA.resources.unshift({ title, type, content, fileName, id: Date.now() });
+                await saveToCloud(APP_DATA);
+                document.getElementById('res-title').value = "";
+                showToast("RECURSO PUBLICADO");
+            };
+
+            if (type === 'file') {
+                const file = document.getElementById('res-file').files[0];
+                if(!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => save(e.target.result, file.name);
+                reader.readAsDataURL(file);
+            } else {
+                const url = document.getElementById('res-url').value.trim();
+                if(!url) return;
+                save(url);
+            }
+        };
+
+        function refreshPatientView() {
+            const p = APP_DATA.patients.find(x => x.name === window.portalUser);
+            if(p && p.task) {
+                document.getElementById('patient-task-section').classList.remove('hidden');
+                document.getElementById('patient-task-content').innerText = p.task;
+            }
+            
+            // Render Chat
+            const chatBox = document.getElementById('chat-messages');
+            if(p && p.chat) {
+                chatBox.innerHTML = p.chat.map(m => `
+                    <div class="${m.role === 'patient' ? 'ml-auto bg-kairos-teal/20' : 'mr-auto bg-white/5'} p-5 rounded-[2rem] max-w-[85%] text-[10px] border border-white/10 shadow-lg animate-fade-in">
+                        <p class="text-[7px] font-black opacity-30 mb-2 uppercase">${m.role === 'admin' ? 'PSICÓLOGO' : 'TÚ'}</p>
+                        ${m.text}
+                    </div>
+                `).join('');
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+            
+            // Visor Multimedia Inmersivo
+            const resGrid = document.getElementById('patient-resources');
+            resGrid.innerHTML = (APP_DATA.resources || []).map(r => {
+                // Caso Video YouTube
+                if (r.type === 'video') {
+                    const embed = getYouTubeEmbedUrl(r.content);
+                    return `
+                        <div class="glass-card p-10 rounded-[3.5rem] space-y-8 animate-fade-in flex flex-col group hover:border-kairos-teal transition-all">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-kairos-teal/10 text-kairos-teal rounded-full flex items-center justify-center shrink-0"><i data-lucide="play-circle"></i></div>
+                                <h4 class="text-xs font-black tracking-widest uppercase truncate">${r.title}</h4>
+                            </div>
+                            <div class="video-container shadow-2xl border border-white/10 group-hover:scale-[1.02] transition-all duration-500">
+                                <iframe src="${embed}" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                            </div>
+                        </div>
+                    `;
+                }
+                // Caso Imagen
+                if (r.type === 'file' && (r.content.includes('image/') || r.fileName?.match(/\.(jpg|jpeg|png|gif)$/i))) {
+                    return `
+                        <div class="glass-card p-10 rounded-[3.5rem] space-y-8 animate-fade-in text-center group hover:border-kairos-teal transition-all">
+                            <div class="flex items-center gap-4 mb-4 text-left">
+                                <div class="w-10 h-10 bg-kairos-teal/10 text-kairos-teal rounded-full flex items-center justify-center shrink-0"><i data-lucide="image"></i></div>
+                                <h4 class="text-xs font-black tracking-widest uppercase truncate">${r.title}</h4>
+                            </div>
+                            <div class="overflow-hidden rounded-3xl">
+                                <img src="${r.content}" class="w-full h-auto shadow-xl border border-white/10 group-hover:scale-110 transition-all duration-700">
+                            </div>
+                            <a href="${r.content}" download="${r.fileName}" class="inline-block bg-kairos-teal/10 text-kairos-teal border border-kairos-teal/30 px-10 py-3 rounded-full text-[9px] font-black uppercase">DESCARGAR IMAGEN</a>
+                        </div>
+                    `;
+                }
+                // Caso PDF / Enlace Externo
+                return `
+                    <div class="glass-card p-12 rounded-[3.5rem] text-center space-y-8 animate-fade-in hover:border-kairos-teal transition-all">
+                        <div class="w-16 h-16 bg-kairos-teal/10 rounded-2xl mx-auto flex items-center justify-center">
+                             <i data-lucide="${r.type === 'link' ? 'external-link' : 'file-text'}" class="w-8 h-8 text-kairos-teal"></i>
+                        </div>
+                        <h4 class="text-xs font-black tracking-widest uppercase">${r.title}</h4>
+                        <a href="${r.content}" target="_blank" class="inline-block bg-kairos-teal text-white px-10 py-4 rounded-full text-[9px] font-black uppercase shadow-xl hover:scale-105 transition-all">
+                            ${r.type === 'link' ? 'ABRIR ENLACE' : 'VER DOCUMENTO'}
+                        </a>
+                    </div>
+                `;
+            }).join('') || '<p class="col-span-full py-20 text-center opacity-10 uppercase text-[10px]">No hay recursos compartidos todavía</p>';
             lucide.createIcons();
+        }
+
+        window.saveToCloud = async (data) => {
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'clinical_ecosystem', 'main_store'), data);
+                updateSyncStatus('success', 'SINCRONIZADO');
+            } catch(e) { updateSyncStatus('error', 'ERR NUBE'); }
         };
 
         window.accessPortal = () => {
@@ -367,8 +424,6 @@
             window.refreshCurrentView();
         };
 
-        window.toggleAuth = (show) => document.getElementById('auth-modal').classList.toggle('hidden', !show);
-
         window.validateAdmin = () => {
             if (document.getElementById('admin-pass').value === "1015") {
                 window.viewMode = 'admin';
@@ -376,280 +431,282 @@
                 document.getElementById('welcome-screen').classList.add('hidden');
                 document.getElementById('main-ui').classList.remove('hidden');
                 document.getElementById('view-admin').classList.remove('hidden');
-                switchTab('expedientes');
+                window.switchTab('expedientes');
             } else { showToast("PIN INCORRECTO"); }
         };
 
-        window.exitToWelcome = () => location.reload();
+        window.refreshCurrentView = () => {
+            if(window.viewMode === 'admin') {
+                renderAdminPatients();
+                renderAdminResources();
+                renderAdminAgenda();
+                renderScheduleConfig();
+                renderNotasSidebar();
+                if(activePatientId) window.openNoteWorkspace(activePatientId);
+            } else if(window.portalUser) {
+                refreshPatientView();
+            }
+            lucide.createIcons();
+        };
+
+        function renderAdminPatients() {
+            const list = document.getElementById('admin-patients-list');
+            list.innerHTML = APP_DATA.patients.map(p => `
+                <div class="glass-card p-10 rounded-[3rem] relative group border-white/5">
+                    <button onclick="window.deletePatient('${p.id}')" class="absolute top-8 right-8 opacity-0 group-hover:opacity-100 p-3 bg-red-500/10 text-red-500 rounded-xl transition-all"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+                    <span class="text-[9px] font-black text-kairos-teal tracking-[0.4em] uppercase">${p.id}</span>
+                    <h4 class="text-sm font-black text-white mt-4 uppercase truncate">${p.name}</h4>
+                    <p class="text-[9px] font-bold text-slate-500 mt-2 uppercase">ALTA: ${p.date}</p>
+                </div>
+            `).join('') || '<p class="col-span-full py-20 text-center opacity-10 uppercase text-[10px]">Sin expedientes</p>';
+        }
+
+        function renderAdminResources() {
+            const list = document.getElementById('admin-resources-list');
+            list.innerHTML = APP_DATA.resources.map((r, idx) => `
+                <div class="bg-white/5 p-6 rounded-2xl flex justify-between items-center group border border-white/5">
+                    <div>
+                        <p class="text-xs font-black uppercase">${r.title}</p>
+                        <p class="text-[8px] text-kairos-teal font-black uppercase mt-1">${r.type}</p>
+                    </div>
+                    <button onclick="window.deleteResource(${idx})" class="p-2 bg-red-500/10 text-red-500 rounded-xl transition-all opacity-0 group-hover:opacity-100"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </div>
+            `).join('') || '<p class="text-center opacity-10 py-16 uppercase text-[10px]">Sin recursos</p>';
+        }
+
+        function renderAdminAgenda() {
+            const list = document.getElementById('admin-agenda-list');
+            list.innerHTML = (APP_DATA.appointments || []).map((a, idx) => `
+                <div class="glass-card p-10 rounded-[3rem] border-white/5 relative group">
+                    <button onclick="window.deleteAppointment(${idx})" class="absolute top-6 right-6 opacity-0 group-hover:opacity-100 p-2 bg-red-500/10 text-red-500 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    <p class="text-[10px] font-black text-kairos-teal mb-4 uppercase">${a.date}</p>
+                    <h4 class="text-sm font-black text-white uppercase">${a.patient}</h4>
+                    <p class="text-[11px] font-bold text-slate-500 mt-2 uppercase">${a.time}</p>
+                </div>
+            `).join('') || '<p class="col-span-full py-20 text-center opacity-10 uppercase text-[10px]">Sin citas</p>';
+        }
+
+        window.generateTimeSlots = () => {
+            const dateInput = document.getElementById('booking-date').value;
+            const container = document.getElementById('booking-slots-container');
+            const btn = document.getElementById('btn-confirm-booking');
+            container.innerHTML = "";
+            btn.classList.add('hidden');
+            selectedTime = null;
+
+            if(!dateInput) return;
+
+            const date = new Date(dateInput + "T12:00:00");
+            const days = ['dom', 'lun', 'mar', 'mie', 'jue', 'vie', 'sab'];
+            const dayKey = days[date.getDay()];
+            const config = APP_DATA.schedule[dayKey];
+
+            if(!config || !config.active) {
+                container.innerHTML = `<p class="col-span-2 text-[10px] font-black opacity-30 py-4 uppercase">No hay disponibilidad este día</p>`;
+                return;
+            }
+
+            const start = parseInt(config.start.split(':')[0]);
+            const end = parseInt(config.end.split(':')[0]);
+
+            for(let h = start; h < end; h++) {
+                const timeStr = `${h.toString().padStart(2, '0')}:00`;
+                const isBooked = APP_DATA.appointments.some(a => a.date === dateInput && a.time === timeStr);
+                
+                const slot = document.createElement('button');
+                slot.innerText = timeStr + " HRS";
+                slot.className = `p-4 rounded-xl text-[10px] font-black border transition-all ${isBooked ? 'bg-red-500/10 border-red-500/20 text-red-500 cursor-not-allowed' : 'bg-white/5 border-white/10 hover:border-kairos-teal'}`;
+                
+                if(!isBooked) {
+                    slot.onclick = () => {
+                        Array.from(container.children).forEach(c => c.classList.remove('bg-kairos-teal', 'text-white'));
+                        slot.classList.add('bg-kairos-teal', 'text-white');
+                        selectedTime = timeStr;
+                        btn.classList.remove('hidden');
+                    };
+                }
+                container.appendChild(slot);
+            }
+        };
+
+        window.confirmBooking = async () => {
+            if(!selectedTime) return;
+            const date = document.getElementById('booking-date').value;
+            if(!APP_DATA.appointments) APP_DATA.appointments = [];
+            APP_DATA.appointments.push({ date, time: selectedTime, patient: window.portalUser, id: Date.now() });
+            await saveToCloud(APP_DATA);
+            showToast("CITA SOLICITADA");
+            window.generateTimeSlots();
+        };
 
         window.switchTab = (tab) => {
             ['expedientes', 'notas', 'agenda', 'biblioteca', 'config'].forEach(p => {
                 const el = document.getElementById('panel-'+p);
                 if(el) el.classList.add('hidden');
                 const t = document.getElementById('tab-'+p);
-                if(t) t.className = "flex-shrink-0 px-8 py-4 rounded-2xl text-[10px] font-black tracking-widest transition-all uppercase text-slate-500 hover:bg-white/5";
+                if(t) t.className = "flex-shrink-0 px-8 py-4 rounded-2xl text-[10px] font-black tracking-widest uppercase text-slate-500 hover:bg-white/5";
             });
             document.getElementById('panel-'+tab).classList.remove('hidden');
-            document.getElementById('tab-'+tab).className = "flex-shrink-0 px-8 py-4 rounded-2xl text-[10px] font-black tracking-widest transition-all uppercase bg-kairos-teal text-white shadow-xl";
+            document.getElementById('tab-'+tab).className = "flex-shrink-0 px-8 py-4 rounded-2xl text-[10px] font-black tracking-widest uppercase bg-kairos-teal text-white shadow-xl";
             window.refreshCurrentView();
         };
 
-        window.handleResTypeChange = () => {
-            const type = document.getElementById('res-type').value;
-            const container = document.getElementById('res-input-container');
-            if (type === 'file') {
-                container.innerHTML = `<input type="file" id="res-file" class="premium-input w-full p-6 rounded-2xl text-[11px]" accept=".pdf,.jpg,.png,.jpeg">`;
-            } else if (type === 'video') {
-                container.innerHTML = `<input type="url" id="res-url" class="premium-input w-full p-6 rounded-2xl text-xs" placeholder="URL DE YOUTUBE">`;
-            } else {
-                container.innerHTML = `<input type="url" id="res-url" class="premium-input w-full p-6 rounded-2xl text-xs" placeholder="URL DEL ENLACE">`;
-            }
-        };
-
-        window.addResource = () => {
-            const titleEl = document.getElementById('res-title');
-            const typeEl = document.getElementById('res-type');
-            const title = titleEl.value.trim().toUpperCase();
-            const type = typeEl.value;
-            if(!title) { showToast("INGRESA UN TÍTULO"); return; }
-            const btn = document.getElementById('btn-add-resource');
-            btn.disabled = true; btn.innerText = "PROCESANDO...";
-
-            const saveRes = (content, fileName = "") => {
-                if(!APP_DATA.resources) APP_DATA.resources = [];
-                APP_DATA.resources.unshift({ id: Date.now(), title, type, content, fileName });
-                saveToCloud(APP_DATA).then(() => {
-                    titleEl.value = ""; btn.disabled = false; btn.innerText = "SUBIR A BIBLIOTECA";
-                    showToast("MATERIAL PUBLICADO");
-                });
-            };
-
-            if(type === 'file') {
-                const fileInput = document.getElementById('res-file');
-                const file = fileInput?.files[0];
-                if(!file) { showToast("SELECCIONA ARCHIVO"); btn.disabled = false; btn.innerText = "SUBIR A BIBLIOTECA"; return; }
-                const reader = new FileReader();
-                reader.onload = (e) => saveRes(e.target.result, file.name);
-                reader.readAsDataURL(file);
-            } else {
-                const urlInput = document.getElementById('res-url');
-                if(!urlInput.value) { showToast("INGRESA URL"); btn.disabled = false; return; }
-                saveRes(urlInput.value);
-            }
-        };
-
-        function renderAdminResources() {
-            const list = document.getElementById('admin-resources-list');
-            list.innerHTML = (APP_DATA.resources || []).map((r, idx) => `
-                <div class="bg-white/5 p-6 rounded-3xl flex items-center gap-6 group border border-white/5 hover:border-kairos-teal/30 transition-all">
-                    <div class="w-12 h-12 bg-kairos-teal/10 rounded-xl flex items-center justify-center shrink-0">
-                        <i data-lucide="${r.type === 'video' ? 'play-circle' : r.type === 'file' ? 'file' : 'link'}" class="w-6 h-6 text-kairos-teal"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-[10px] font-black uppercase truncate">${r.title}</p>
-                        <p class="text-[8px] text-slate-500 font-bold uppercase mt-1 tracking-widest">${r.type}</p>
-                    </div>
-                    <button onclick="window.deleteResource(${idx})" class="p-3 bg-red-500/10 text-red-500 rounded-xl transition-all opacity-0 group-hover:opacity-100 hover:bg-red-500 hover:text-white"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                </div>
-            `).join('') || '<p class="text-center opacity-10 py-16 uppercase text-[10px]">Sin recursos publicados</p>';
-            lucide.createIcons();
-        }
-
-        window.deleteResource = (idx) => {
-            if(!confirm("¿ELIMINAR RECURSO?")) return;
-            APP_DATA.resources.splice(idx, 1);
-            saveToCloud(APP_DATA);
-            showToast("RECURSO ELIMINADO");
-        };
-
-        function refreshPatientView() {
-            const p = APP_DATA.patients.find(x => x.name === window.portalUser);
-            if(p) {
-                if(p.task) {
-                    document.getElementById('patient-task-section').classList.remove('hidden');
-                    document.getElementById('patient-task-content').innerText = p.task;
-                }
-                const chatBox = document.getElementById('chat-messages');
-                chatBox.innerHTML = (p.chat || []).map(m => `
-                    <div class="${m.role === 'patient' ? 'ml-auto bg-kairos-teal/20' : 'mr-auto bg-white/5'} p-5 rounded-[2rem] max-w-[85%] text-[10px] border border-white/10 shadow-lg">
-                        <p class="text-[7px] font-black opacity-30 mb-2 uppercase">${m.role === 'admin' ? 'PSICÓLOGO' : 'TÚ'}</p>
-                        ${m.text}
-                    </div>
-                `).join('');
-                chatBox.scrollTop = chatBox.scrollHeight;
-                if(p.chat?.slice(-1)[0]?.role === 'admin' && document.getElementById('chat-window').classList.contains('hidden')) {
-                    document.getElementById('chat-badge').classList.remove('hidden');
-                }
-            }
-            
-            const resGrid = document.getElementById('patient-resources');
-            const resources = APP_DATA.resources || [];
-            
-            resGrid.innerHTML = resources.map(r => {
-                if (r.type === 'video') {
-                    const embedUrl = getYouTubeEmbedUrl(r.content);
-                    return `
-                        <div class="glass-card p-8 md:p-10 rounded-[3.5rem] space-y-8 animate-fade-in border-white/5 overflow-hidden">
-                            <h4 class="text-xs font-black tracking-widest uppercase text-center flex items-center justify-center gap-3">
-                                <i data-lucide="play-circle" class="text-kairos-teal w-5 h-5"></i> ${r.title}
-                            </h4>
-                            <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
-                                <iframe src="${embedUrl}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                        </div>
-                    `;
-                } else if (r.type === 'file' && (r.content.startsWith('data:image'))) {
-                    return `
-                        <div class="glass-card p-8 md:p-10 rounded-[3.5rem] space-y-8 animate-fade-in border-white/5 text-center">
-                            <h4 class="text-xs font-black tracking-widest uppercase">${r.title}</h4>
-                            <div class="w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-white/5">
-                                <img src="${r.content}" alt="${r.title}" class="w-full h-auto object-contain max-h-[400px]">
-                            </div>
-                            <a href="${r.content}" download="${r.fileName || 'kairos-img'}" class="inline-block bg-kairos-teal/10 text-kairos-teal border border-kairos-teal/30 px-10 py-3 rounded-full text-[9px] font-black uppercase hover:bg-kairos-teal hover:text-white transition-all shadow-xl">DESCARGAR IMAGEN</a>
-                        </div>
-                    `;
-                } else {
-                    return `
-                        <div class="glass-card p-12 rounded-[3.5rem] text-center space-y-8 animate-fade-in border-white/5 hover:border-kairos-teal/30 transition-all">
-                            <div class="w-12 h-12 bg-kairos-teal/10 rounded-full flex items-center justify-center mx-auto">
-                                <i data-lucide="${r.type === 'file' ? 'file-text' : 'link'}" class="w-5 h-5 text-kairos-teal"></i>
-                            </div>
-                            <h4 class="text-xs font-black tracking-widest uppercase">${r.title}</h4>
-                            <a href="${r.content}" ${r.type === 'file' ? `download="${r.fileName}"` : 'target="_blank"'} class="inline-block bg-kairos-teal/10 text-kairos-teal border border-kairos-teal/30 px-10 py-3 rounded-full text-[9px] font-black uppercase hover:bg-kairos-teal hover:text-white transition-all shadow-xl uppercase font-black">
-                                ${r.type === 'file' ? 'DESCARGAR DOCUMENTO' : 'ABRIR ENLACE WEB'}
-                            </a>
-                        </div>
-                    `;
-                }
-            }).join('') || '<p class="col-span-full py-20 text-center opacity-10 uppercase text-[10px] tracking-widest font-black">Biblioteca actualmente vacía</p>';
-            lucide.createIcons();
-        }
-
-        window.registerPatient = () => {
+        window.registerPatient = async () => {
             const name = document.getElementById('new-p-name').value.trim().toUpperCase();
             const date = document.getElementById('new-p-date').value;
             if(!name || !date) return;
-            const folio = "KAI-" + Math.floor(100000 + Math.random() * 900000);
-            APP_DATA.patients.unshift({ id: folio, name, date, task: "", notes: [], chat: [] });
-            saveToCloud(APP_DATA);
+            APP_DATA.patients.unshift({ id: 'KAI-'+Date.now().toString().slice(-6), name, date, task: "", chat: [], notes: [] });
+            await saveToCloud(APP_DATA);
             document.getElementById('new-p-name').value = "";
-            showToast("EXPEDIENTE GENERADO");
+            showToast("PACIENTE REGISTRADO");
         };
 
-        window.openNotesForPatient = (id) => { activePatientId = id; switchTab('notas'); window.openNoteWorkspace(id); };
+        window.deletePatient = async (id) => {
+            APP_DATA.patients = APP_DATA.patients.filter(p => p.id !== id);
+            await saveToCloud(APP_DATA);
+        };
 
-        window.renderAdminPatients = () => {
-            const list = document.getElementById('admin-patients-list');
-            list.innerHTML = APP_DATA.patients.map(p => `
-                <div class="glass-card p-10 rounded-[3rem] relative group border-white/5 transition-all hover:border-kairos-teal/30">
-                    <button onclick="window.deletePatient('${p.id}')" class="absolute top-8 right-8 opacity-0 group-hover:opacity-100 p-3 bg-red-500/10 text-red-500 rounded-xl transition-all"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
-                    <span class="text-[9px] font-black text-kairos-teal tracking-[0.4em] uppercase">${p.id}</span>
-                    <h4 class="text-sm font-black text-white mt-4 uppercase truncate">${p.name}</h4>
-                    <p class="text-[9px] font-bold text-slate-500 uppercase mt-2">ALTA: ${p.date}</p>
-                    <button onclick="window.openNotesForPatient('${p.id}')" class="mt-8 w-full py-4 border border-white/5 rounded-2xl text-[9px] font-black tracking-widest hover:bg-kairos-teal/10 transition-all uppercase">GESTIONAR CLÍNICA</button>
+        window.deleteResource = async (idx) => {
+            APP_DATA.resources.splice(idx, 1);
+            await saveToCloud(APP_DATA);
+        };
+
+        window.deleteAppointment = async (idx) => {
+            APP_DATA.appointments.splice(idx, 1);
+            await saveToCloud(APP_DATA);
+        };
+
+        window.saveScheduleConfig = async () => {
+            ['lun','mar','mie','jue','vie','sab','dom'].forEach(d => {
+                APP_DATA.schedule[d].active = document.getElementById(`sc-${d}`).checked;
+                APP_DATA.schedule[d].start = document.getElementById(`ss-${d}`).value;
+                APP_DATA.schedule[d].end = document.getElementById(`se-${d}`).value;
+            });
+            await saveToCloud(APP_DATA);
+            showToast("CONFIGURACIÓN ACTUALIZADA");
+        };
+
+        function renderScheduleConfig() {
+            const container = document.getElementById('schedule-config-container');
+            const days = { lun:'LUNES', mar:'MARTES', mie:'MIÉRCOLES', jue:'JUEVES', vie:'VIERNES', sab:'SÁBADO', dom:'DOMINGO' };
+            container.innerHTML = Object.keys(days).map(d => `
+                <div class="flex flex-wrap items-center gap-6 p-8 bg-white/5 rounded-[2rem] border border-white/5">
+                    <div class="w-full sm:w-32 flex items-center gap-4">
+                        <input type="checkbox" id="sc-${d}" ${APP_DATA.schedule[d]?.active ? 'checked' : ''} class="w-5 h-5 accent-kairos-teal">
+                        <span class="text-[11px] font-black uppercase">${days[d]}</span>
+                    </div>
+                    <div class="flex-1 flex gap-4">
+                        <input type="time" id="ss-${d}" value="${APP_DATA.schedule[d]?.start || '17:00'}" class="premium-input p-4 rounded-xl text-xs flex-1">
+                        <input type="time" id="se-${d}" value="${APP_DATA.schedule[d]?.end || '21:00'}" class="premium-input p-4 rounded-xl text-xs flex-1">
+                    </div>
                 </div>
-            `).join('') || '<p class="col-span-full py-20 text-center opacity-10 uppercase text-[10px]">Sin expedientes activos</p>';
-            lucide.createIcons();
-        };
+            `).join('');
+        }
+
+        function renderNotasSidebar() {
+            const list = document.getElementById('notas-sidebar-list');
+            list.innerHTML = APP_DATA.patients.map(p => `
+                <button onclick="window.openNoteWorkspace('${p.id}')" class="w-full text-left p-6 rounded-3xl border transition-all ${activePatientId === p.id ? 'bg-kairos-teal/10 border-kairos-teal/40' : 'bg-white/5 border-white/5 hover:bg-white/10'}">
+                    <p class="text-[8px] text-kairos-teal font-black mb-1 uppercase">${p.id}</p>
+                    <p class="text-xs font-black text-white uppercase truncate">${p.name}</p>
+                </button>
+            `).join('');
+        }
 
         window.openNoteWorkspace = (id) => {
             activePatientId = id;
             const p = APP_DATA.patients.find(x => x.id === id);
             const ws = document.getElementById('notes-workspace');
-            if(!p) return;
-            
             ws.innerHTML = `
-                <div class="space-y-16 animate-fade-in">
-                    <div class="border-b border-white/5 pb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 no-print">
-                        <div>
-                            <span class="bg-kairos-teal text-white px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest">${p.id}</span>
-                            <h3 class="text-3xl md:text-5xl font-black mt-6 text-white uppercase leading-none tracking-tighter">${p.name}</h3>
-                        </div>
-                        <div class="flex gap-4">
-                            <button onclick="window.print()" class="p-5 bg-white/5 rounded-2xl text-slate-400 hover:text-white transition-all"><i data-lucide="printer" class="w-6 h-6"></i></button>
-                            <button onclick="window.cancelNoteEdit()" id="btn-cancel-note" class="hidden text-red-500 text-[11px] font-black uppercase">CANCELAR EDICIÓN</button>
-                        </div>
+                <div class="space-y-12 animate-fade-in">
+                    <h3 class="text-4xl font-black text-white uppercase tracking-tighter">${p.name}</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                         <div class="space-y-4">
+                             <label class="text-[9px] font-black opacity-40 uppercase">EJE CENTRAL / TAREA SEMANAL</label>
+                             <textarea id="n-task" class="w-full premium-input p-6 rounded-2xl h-40" placeholder="ESCRIBE EL OBJETIVO PARA EL PACIENTE...">${p.task || ''}</textarea>
+                         </div>
+                         <div class="space-y-4">
+                             <label class="text-[9px] font-black opacity-40 uppercase">CHAT DIRECTO</label>
+                             <div id="admin-chat-view" class="h-64 overflow-y-auto bg-black/20 p-4 rounded-2xl space-y-4 custom-scrollbar">
+                                ${(p.chat || []).map(m => `<p class="text-[9px] uppercase font-black"><span class="${m.role === 'admin' ? 'text-kairos-teal' : 'text-slate-500'}">${m.role}:</span> ${m.text}</p>`).join('')}
+                             </div>
+                             <div class="flex gap-2">
+                                <input type="text" id="admin-chat-msg" class="flex-1 premium-input p-4 rounded-xl text-[10px]" placeholder="ESCRIBIR AL PACIENTE..." onkeypress="if(event.key === 'Enter') window.sendAdminChat()">
+                                <button onclick="window.sendAdminChat()" class="bg-kairos-teal p-4 rounded-xl"><i data-lucide="send" class="w-4 h-4"></i></button>
+                             </div>
+                         </div>
                     </div>
-
-                    <div class="space-y-14 no-print">
-                        <div class="w-full">
-                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-5">1. TIPO DE ASISTENCIA</label>
-                            <select id="n-type" class="w-full premium-input p-6 rounded-2xl text-xs bg-kairos-deep">
-                                <option>PRESENCIAL</option><option>SESIÓN EN LÍNEA</option><option>CRISIS</option>
-                            </select>
-                        </div>
-                        <div class="w-full">
-                            <div class="flex justify-between items-end mb-5">
-                                <label class="text-[10px] font-black text-kairos-teal uppercase tracking-widest">2. ESTADO MENTAL Y CONDUCTUAL</label>
-                                <button onclick="window.getAISuggestion()" class="bg-kairos-ai/10 text-kairos-ai px-5 py-2 rounded-xl text-[9px] font-black uppercase flex items-center gap-2 hover:bg-kairos-ai/20 transition-all border border-kairos-ai/30">
-                                    <i data-lucide="sparkles" class="w-4 h-4"></i> PROFESIONALIZAR CON IA GEMINI
-                                </button>
-                            </div>
-                            <textarea id="n-mental" class="w-full premium-input p-10 h-64 rounded-[3.5rem] text-sm uppercase italic placeholder:opacity-20" placeholder="ESCRIBE TUS OBSERVACIONES..."></textarea>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                            <div class="w-full">
-                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-5">3. ESTRATEGIAS TERAPÉUTICAS</label>
-                                <textarea id="n-strat" class="w-full premium-input p-10 h-48 rounded-[3.5rem] text-sm uppercase" placeholder="TÉCNICAS E INTERVENCIONES..."></textarea>
-                            </div>
-                            <div class="w-full">
-                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-5">4. RESOLUCIÓN Y CIERRE</label>
-                                <textarea id="n-resol" class="w-full premium-input p-10 h-48 rounded-[3.5rem] text-sm uppercase" placeholder="ACUERDOS Y CONCLUSIONES..."></textarea>
-                            </div>
-                        </div>
-                        <div class="w-full">
-                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-5">5. SUGERENCIAS Y RECOMENDACIONES</label>
-                            <textarea id="n-sug" class="w-full premium-input p-10 h-48 rounded-[3.5rem] text-sm uppercase" placeholder="TAREAS O INDICACIONES..."></textarea>
-                        </div>
-                        <div class="bg-kairos-teal/5 p-12 rounded-[4rem] border border-kairos-teal/20">
-                            <label class="text-[11px] font-black text-kairos-teal uppercase block mb-6 text-center tracking-[0.5em]">MISIÓN SEMANAL (PARA EL PACIENTE)</label>
-                            <input type="text" id="n-task" class="w-full premium-input p-8 rounded-3xl font-black text-center text-xl" value="${p.task || ''}" placeholder="EJE CENTRAL TERAPÉUTICO">
-                        </div>
-                        <button onclick="window.saveNote()" id="btn-save-note" class="w-full bg-kairos-teal py-10 rounded-[3.5rem] font-black text-sm tracking-[0.5em] uppercase shadow-2xl transition-all">REGISTRAR EVOLUCIÓN CLÍNICA</button>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 pt-24 border-t border-white/5">
-                        <div class="space-y-10">
-                            <h4 class="text-center text-[11px] font-black opacity-30 uppercase tracking-[1em]">Historial de Notas</h4>
-                            ${p.notes.map((n, idx) => `
-                                <div class="glass-card p-12 rounded-[3.5rem] border-l-4 border-kairos-teal relative group print-area mb-8">
-                                    <div class="absolute top-10 right-10 flex gap-4 opacity-0 group-hover:opacity-100 transition-all no-print">
-                                        <button onclick="window.editNote(${idx})" class="p-3 bg-white/5 rounded-xl text-kairos-teal hover:bg-kairos-teal/10"><i data-lucide="edit-3" class="w-5 h-5"></i></button>
-                                        <button onclick="window.deleteNote(${idx})" class="p-3 bg-white/5 rounded-xl text-red-500 hover:bg-red-500/10"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
-                                    </div>
-                                    <p class="text-[10px] font-black text-kairos-teal mb-6 uppercase">${n.date} | ${n.type}</p>
-                                    <div class="space-y-4 text-xs uppercase text-slate-300 italic"><p>${n.mental}</p></div>
-                                </div>
-                            `).join('') || '<p class="text-center opacity-10 uppercase text-[10px]">Sin registros anteriores</p>'}
-                        </div>
-                        <div class="space-y-10 no-print">
-                            <h4 class="text-center text-[11px] font-black opacity-30 uppercase tracking-[1em]">Chat con Paciente</h4>
-                            <div id="admin-chat-box" class="h-[500px] overflow-y-auto space-y-6 pr-4 custom-scrollbar">
-                                ${(p.chat || []).map(m => `
-                                    <div class="p-6 rounded-[2rem] ${m.role === 'admin' ? 'ml-auto bg-kairos-teal/20' : 'mr-auto bg-white/5'} max-w-[90%] text-[11px] border border-white/10">
-                                        <p class="opacity-40 text-[8px] mb-2 font-black uppercase">${m.role === 'admin' ? 'PSICÓLOGO' : 'PACIENTE'}</p>
-                                        <p class="uppercase font-semibold tracking-wide">${m.text}</p>
-                                    </div>
-                                `).join('')}
-                            </div>
-                            <div class="flex gap-4">
-                                <input type="text" id="admin-chat-input" class="flex-1 premium-input p-5 rounded-2xl text-[11px]" placeholder="RESPONDER..." onkeypress="if(event.key === 'Enter') window.sendAdminChat()">
-                                <button onclick="window.sendAdminChat()" class="bg-kairos-teal p-5 rounded-2xl shadow-xl"><i data-lucide="send" class="w-6 h-6"></i></button>
-                            </div>
-                        </div>
-                    </div>
+                    <button onclick="window.savePatientDetails()" class="w-full bg-kairos-teal py-6 rounded-2xl font-black uppercase text-[10px] shadow-2xl">ACTUALIZAR EXPEDIENTE</button>
                 </div>
             `;
             lucide.createIcons();
             renderNotasSidebar();
         };
 
-        window.notifyByWhatsApp = () => {
-            const phone = "522381239088";
-            const text = encodeURIComponent(`HOLA DR. CARLOS, LE HE ENVIADO UN MENSAJE A TRAVÉS DEL PORTAL KAIRÓS.`);
-            window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+        window.savePatientDetails = async () => {
+            const p = APP_DATA.patients.find(x => x.id === activePatientId);
+            p.task = document.getElementById('n-task').value.toUpperCase();
+            await saveToCloud(APP_DATA);
+            showToast("DATOS GUARDADOS");
         };
 
+        window.sendAdminChat = async () => {
+            const msg = document.getElementById('admin-chat-msg').value.trim().toUpperCase();
+            if(!msg || !activePatientId) return;
+            const p = APP_DATA.patients.find(x => x.id === activePatientId);
+            if(!p.chat) p.chat = [];
+            p.chat.push({ role: 'admin', text: msg, date: new Date().toLocaleString() });
+            await saveToCloud(APP_DATA);
+            window.openNoteWorkspace(activePatientId);
+        };
+
+        window.sendChatMessage = async () => {
+            const msg = document.getElementById('chat-input').value.trim().toUpperCase();
+            if(!msg || !window.portalUser) return;
+            const p = APP_DATA.patients.find(x => x.name === window.portalUser);
+            if(p) {
+                if(!p.chat) p.chat = [];
+                p.chat.push({ role: 'patient', text: msg, date: new Date().toLocaleString() });
+                await saveToCloud(APP_DATA);
+                document.getElementById('chat-input').value = "";
+            }
+        };
+
+        const showToast = (msg) => {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            t.classList.remove('toast-hidden'); t.classList.add('toast-active');
+            setTimeout(() => { t.classList.add('toast-hidden'); t.classList.remove('toast-active'); }, 3000);
+        };
+
+        const updateSyncStatus = (type, text) => {
+            const dot = document.getElementById('sync-dot');
+            const txt = document.getElementById('sync-text');
+            if(!dot || !txt) return;
+            dot.className = `w-2 h-2 rounded-full ${type === 'success' ? 'bg-green-500' : 'bg-red-500 animate-pulse'}`;
+            txt.innerText = text;
+        };
+
+        window.toggleAuth = (show) => document.getElementById('auth-modal').classList.toggle('hidden', !show);
+        window.toggleChat = () => document.getElementById('chat-window').classList.toggle('hidden');
+        window.exitToWelcome = () => location.reload();
+        window.notifyByWhatsApp = () => window.open(`https://wa.me/522381239088?text=Hola Dr. Carlos, tengo un mensaje pendiente en el portal KAIRÓS.`, '_blank');
+        
+        async function init() {
+            updateSyncStatus('wait', 'CONECTANDO...');
+            await signInAnonymously(auth);
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', 'clinical_ecosystem', 'main_store'), (snap) => {
+                        if (snap.exists()) {
+                            APP_DATA = snap.data();
+                            window.refreshCurrentView();
+                            updateSyncStatus('success', 'EN LÍNEA');
+                        } else { saveToCloud(APP_DATA); }
+                    });
+                }
+            });
+        }
         window.onload = init;
     </script>
 </body>
