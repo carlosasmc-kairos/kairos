@@ -674,24 +674,64 @@
         };
 
         window.addResource = () => {
-            const title = document.getElementById('res-title').value.trim().toUpperCase();
-            const type = document.getElementById('res-type').value;
-            if(!title) return;
+            const titleEl = document.getElementById('res-title');
+            const typeEl = document.getElementById('res-type');
+            const title = titleEl.value.trim().toUpperCase();
+            const type = typeEl.value;
+            
+            if(!title) {
+                showToast("INGRESA UN TÍTULO");
+                return;
+            }
+
+            const btn = document.getElementById('btn-add-resource');
+            btn.disabled = true;
+            btn.innerText = "PROCESANDO...";
+
             const saveRes = (content, fileName = "") => {
-                const resObj = { id: Date.now(), title, type, content, fileName };
+                const resObj = { 
+                    id: Date.now(), 
+                    title, 
+                    type, 
+                    content: content || "", 
+                    fileName 
+                };
+                
+                if(!APP_DATA.resources) APP_DATA.resources = [];
                 APP_DATA.resources.unshift(resObj);
-                saveToCloud(APP_DATA);
-                document.getElementById('res-title').value = "";
-                showToast("MATERIAL PUBLICADO");
+                
+                saveToCloud(APP_DATA).then(() => {
+                    titleEl.value = "";
+                    const urlInput = document.getElementById('res-url');
+                    if(urlInput) urlInput.value = "";
+                    btn.disabled = false;
+                    btn.innerText = "PUBLICAR MATERIAL";
+                    showToast("MATERIAL PUBLICADO");
+                });
             };
+
             if(type === 'file') {
-                const file = document.getElementById('res-file').files[0];
-                if(!file) return;
+                const fileInput = document.getElementById('res-file');
+                const file = fileInput ? fileInput.files[0] : null;
+                if(!file) {
+                    showToast("SELECCIONA UN ARCHIVO");
+                    btn.disabled = false;
+                    btn.innerText = "PUBLICAR MATERIAL";
+                    return;
+                }
                 const reader = new FileReader();
                 reader.onload = (e) => saveRes(e.target.result, file.name);
                 reader.readAsDataURL(file);
             } else {
-                saveRes(document.getElementById('res-url').value);
+                const urlInput = document.getElementById('res-url');
+                const urlValue = urlInput ? urlInput.value.trim() : "";
+                if(!urlValue) {
+                    showToast("INGRESA UNA URL");
+                    btn.disabled = false;
+                    btn.innerText = "PUBLICAR MATERIAL";
+                    return;
+                }
+                saveRes(urlValue);
             }
         };
 
@@ -735,18 +775,27 @@
                     document.getElementById('chat-badge').classList.remove('hidden');
                 }
             }
+            
             const resGrid = document.getElementById('patient-resources');
-            resGrid.innerHTML = APP_DATA.resources.map(r => `
+            const resources = APP_DATA.resources || [];
+            
+            resGrid.innerHTML = resources.map(r => {
+                let icon = 'link';
+                if(r.type === 'video') icon = 'play';
+                if(r.type === 'file') icon = 'file-text';
+                
+                return `
                 <div class="glass-card p-12 rounded-[3.5rem] text-center space-y-8 animate-fade-in border-white/5 hover:border-kairos-teal/30 transition-all">
                     <div class="w-12 h-12 bg-kairos-teal/10 rounded-full flex items-center justify-center mx-auto">
-                        <i data-lucide="${r.type === 'video' ? 'play' : r.type === 'file' ? 'file-text' : 'link'}" class="w-5 h-5 text-kairos-teal"></i>
+                        <i data-lucide="${icon}" class="w-5 h-5 text-kairos-teal"></i>
                     </div>
                     <h4 class="text-xs font-black tracking-widest uppercase">${r.title}</h4>
                     <a href="${r.content}" ${r.type==='file' ? `download="${r.fileName}"` : 'target="_blank"'} class="inline-block bg-kairos-teal/10 text-kairos-teal border border-kairos-teal/30 px-10 py-3 rounded-full text-[9px] font-black uppercase hover:bg-kairos-teal hover:text-white transition-all shadow-xl">
                         ${r.type==='file' ? 'DESCARGAR' : 'ABRIR'}
                     </a>
                 </div>
-            `).join('') || '<p class="col-span-full py-10 text-center opacity-10 uppercase text-[10px]">Biblioteca vacía</p>';
+                `;
+            }).join('') || '<p class="col-span-full py-10 text-center opacity-10 uppercase text-[10px]">Biblioteca vacía</p>';
             lucide.createIcons();
         }
 
