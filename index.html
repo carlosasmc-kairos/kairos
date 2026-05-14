@@ -85,8 +85,8 @@
                 <p class="text-slate-400 text-sm md:text-base font-medium leading-relaxed uppercase">Plataforma clínica para consulta de horarios, recursos y contacto directo.</p>
             </div>
             <div class="w-full space-y-4">
-                <!-- Autocomplete off para asegurar que el campo esté siempre limpio para el usuario -->
-                <input type="text" id="visitor-name-gate" autocomplete="off" class="w-full input-premium p-5 rounded-2xl text-center text-lg font-bold uppercase text-white" placeholder="INGRESA TU NOMBRE" onkeypress="if(event.key === 'Enter') window.enterPortal()">
+                <!-- Se fuerza el valor vacío y se usa un autocomplete más estricto -->
+                <input type="text" id="visitor-name-gate" value="" autocomplete="one-time-code" class="w-full input-premium p-5 rounded-2xl text-center text-lg font-bold uppercase text-white" placeholder="INGRESA TU NOMBRE" onkeypress="if(event.key === 'Enter') window.enterPortal()">
                 <button type="button" onclick="window.enterPortal()" class="w-full bg-kairos-teal text-white py-5 rounded-2xl font-black tracking-widest text-xs uppercase shadow-xl hover:brightness-110 active:scale-95 transition-all">ACCEDER AL PORTAL</button>
                 <button type="button" onclick="window.toggleAuth(true)" class="text-[10px] font-black text-slate-600 hover:text-kairos-teal transition-all tracking-[0.2em] uppercase pt-4 flex items-center justify-center gap-2 mx-auto"><i data-lucide="shield-check" class="w-4 h-4"></i> ACCESO PROFESIONAL</button>
             </div>
@@ -273,9 +273,12 @@
         async function init() {
             try {
                 await signInAnonymously(auth);
-                // Asegurar que el campo de nombre esté limpio al iniciar
+                // Limpieza absoluta del campo de nombre al cargar
                 const nameGate = document.getElementById('visitor-name-gate');
-                if(nameGate) nameGate.value = "";
+                if(nameGate) {
+                    nameGate.value = "";
+                    nameGate.setAttribute('value', '');
+                }
 
                 onSnapshot(mainDocRef, (docSnap) => {
                     if (docSnap.exists()) {
@@ -304,15 +307,18 @@
             document.getElementById('main-content').classList.add('hidden');
             document.getElementById('welcome-gate').classList.remove('hidden');
             
-            // Limpieza absoluta de campos de entrada al salir
-            document.getElementById('visitor-name-gate').value = "";
+            // Limpieza absoluta de campos al salir
+            const nameGate = document.getElementById('visitor-name-gate');
+            if(nameGate) nameGate.value = "";
+            
             const phoneField = document.getElementById('patient-phone');
             if(phoneField) phoneField.value = "";
+            
             const fullNameField = document.getElementById('patient-full-name');
             if(fullNameField) fullNameField.value = "";
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            document.getElementById('visitor-name-gate').focus();
+            if(nameGate) nameGate.focus();
         };
 
         window.toggleAuth = (show) => document.getElementById('auth-modal').classList.toggle('hidden', !show);
