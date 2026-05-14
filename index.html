@@ -45,6 +45,9 @@
         .custom-scroll::-webkit-scrollbar { width: 5px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #469da3; border-radius: 10px; }
         
+        .video-container { position: relative; width: 100%; height: 0; padding-bottom: 56.25%; overflow: hidden; border-radius: 1rem; }
+        .video-container iframe, .video-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+
         @media print {
             .no-print { display: none !important; }
             body { background: white !important; color: black !important; padding: 0 !important; margin: 0 !important; }
@@ -67,13 +70,13 @@
 <body class="antialiased custom-scroll">
 
     <div id="resource-modal-overlay" class="fixed inset-0 z-[400] hidden flex items-center justify-center p-4 md:p-10" onclick="if(event.target === this) window.closeResourceModal()">
-        <div class="relative w-full max-w-5xl h-full flex flex-col items-center justify-center animate-reveal pointer-events-none">
-            <button onclick="window.closeResourceModal()" class="pointer-events-auto absolute -top-14 right-0 bg-white/10 hover:bg-red-500/20 text-white hover:text-red-400 px-6 py-3 rounded-2xl transition-all flex items-center gap-3 font-black text-xs uppercase tracking-widest border border-white/10">
-                <i data-lucide="x-circle" class="w-5 h-5"></i> CERRAR Y VOLVER
+        <div class="relative w-full max-w-5xl flex flex-col items-center justify-center animate-reveal pointer-events-none">
+            <button onclick="window.closeResourceModal()" class="pointer-events-auto absolute -top-12 md:-top-14 right-0 bg-white/10 hover:bg-red-500/20 text-white hover:text-red-400 px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl transition-all flex items-center gap-2 md:gap-3 font-black text-[10px] md:text-xs uppercase tracking-widest border border-white/10">
+                <i data-lucide="x-circle" class="w-4 h-4 md:w-5 md:h-5"></i> CERRAR
             </button>
-            <div id="modal-content-container" class="pointer-events-auto w-full h-[75vh] bg-black rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-white/10">
+            <div id="modal-content-container" class="pointer-events-auto w-full aspect-video bg-black rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-white/10">
             </div>
-            <h3 id="modal-resource-title" class="mt-8 text-xl font-black text-kairos-teal uppercase italic tracking-tighter text-center"></h3>
+            <h3 id="modal-resource-title" class="mt-4 md:mt-8 text-sm md:text-xl font-black text-kairos-teal uppercase italic tracking-tighter text-center px-4"></h3>
         </div>
     </div>
 
@@ -552,14 +555,16 @@
             const container = document.getElementById('modal-content-container');
             document.getElementById('modal-resource-title').innerText = title;
             container.innerHTML = "";
+            
             if(type === 'youtube') {
                 const vidId = content.split('v=')[1]?.split('&')[0] || content.split('/').pop();
-                container.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${vidId}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
+                container.innerHTML = `<iframe class="w-full h-full border-0" src="https://www.youtube.com/embed/${vidId}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
             } else if(type === 'drive') {
-                container.innerHTML = `<iframe class="w-full h-full" src="${content.replace('/view', '/preview')}" frameborder="0"></iframe>`;
+                container.innerHTML = `<iframe class="w-full h-full border-0" src="${content.replace('/view', '/preview')}" allow="autoplay"></iframe>`;
             } else {
-                container.innerHTML = `<div class="w-full h-full flex items-center justify-center p-4 bg-white/5"><img src="${content}" class="max-w-full max-h-full object-contain rounded-xl"></div>`;
+                container.innerHTML = `<div class="w-full h-full flex items-center justify-center p-2 bg-white/5"><img src="${content}" class="max-w-full max-h-full object-contain rounded-lg"></div>`;
             }
+            
             overlay.classList.remove('hidden');
             overlay.classList.add('flex');
             document.body.style.overflow = 'hidden';
@@ -573,13 +578,6 @@
             document.body.style.overflow = 'auto';
         };
 
-        function renderAdminSidebar() {
-            const s = document.getElementById('sidebar-patients');
-            if(!s) return;
-            s.innerHTML = (APP_DATA.patients || []).map(p => `<div class="group relative flex items-center gap-2 mb-2"><button type="button" onclick="window.openWorkspace('${p.id}')" class="flex-1 text-left p-5 rounded-2xl border transition-all ${activePatientId === p.id ? 'bg-kairos-teal/20 border-kairos-teal/40' : 'bg-white/5 border-white/5 hover:bg-white/10 shadow-lg'}"><p class="text-[7px] font-black text-kairos-teal uppercase mb-1">${p.id}</p><p class="text-xs font-bold text-white uppercase truncate">${p.name}</p></button><button onclick="window.deletePatient('${p.id}')" class="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white p-2 rounded-full shadow-xl transition-all hover:scale-110"><i data-lucide="trash-2" class="w-3 h-3"></i></button></div>`).join('');
-            lucide.createIcons();
-        }
-
         function renderPublicResources() {
             const l = document.getElementById('patient-resources');
             if(!l) return;
@@ -590,17 +588,17 @@
                     thumb = `https://img.youtube.com/vi/${vidId}/maxresdefault.jpg`;
                 }
                 return `
-                    <div class="glass-panel p-6 flex flex-col space-y-4 hover:scale-[1.02] transition-all group">
+                    <div class="glass-panel p-4 md:p-6 flex flex-col space-y-4 hover:scale-[1.02] transition-all group">
                         <div class="flex justify-between items-center">
                             <span class="text-[8px] font-black text-kairos-teal uppercase tracking-widest">${r.type}</span>
                             <button onclick="window.openResourceModal('${r.type}', '${r.content}', '${r.title}')" class="p-2 bg-white/5 rounded-lg border border-white/10 text-slate-400 hover:text-kairos-teal transition-all flex items-center gap-2 text-[8px] font-black uppercase"><i data-lucide="maximize" class="w-3 h-3"></i> Ampliar</button>
                         </div>
-                        <h4 class="text-sm font-bold text-white uppercase leading-tight">${r.title}</h4>
-                        <div class="w-full aspect-video rounded-2xl overflow-hidden bg-black/40 border border-white/5 relative group cursor-pointer" onclick="window.openResourceModal('${r.type}', '${r.content}', '${r.title}')">
-                            <img src="${thumb}" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-500" onerror="this.src='https://placehold.co/600x400/020617/469da3?text=DOC'">
+                        <h4 class="text-xs md:text-sm font-bold text-white uppercase leading-tight truncate">${r.title}</h4>
+                        <div class="video-container cursor-pointer group" onclick="window.openResourceModal('${r.type}', '${r.content}', '${r.title}')">
+                            <img src="${thumb}" class="opacity-60 group-hover:opacity-100 transition-all duration-500" onerror="this.src='https://placehold.co/600x400/020617/469da3?text=RECURSO'">
                             <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="w-12 h-12 bg-kairos-teal/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 group-hover:scale-125 transition-all">
-                                    <i data-lucide="play" class="w-6 h-6 text-white fill-white"></i>
+                                <div class="w-10 h-10 md:w-12 md:h-12 bg-kairos-teal/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 group-hover:scale-125 transition-all">
+                                    <i data-lucide="play" class="w-5 h-5 md:w-6 md:h-6 text-white fill-white"></i>
                                 </div>
                             </div>
                         </div>
