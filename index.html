@@ -114,8 +114,10 @@
                 <button onclick="switchTab('workspace')" id="tab-workspace" class="pb-4 text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-all whitespace-nowrap">NOTAS Y CHAT</button>
                 <button onclick="switchTab('agenda')" id="tab-agenda" class="pb-4 text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-all whitespace-nowrap">AGENDA</button>
                 <button onclick="switchTab('library')" id="tab-library" class="pb-4 text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-all whitespace-nowrap">BIBLIOTECA</button>
+                <button onclick="switchTab('config')" id="tab-config" class="pb-4 text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-all whitespace-nowrap">CONFIGURACIÓN</button>
             </div>
 
+            <!-- PANEL PACIENTES -->
             <div id="panel-patients" class="grid grid-cols-1 lg:grid-cols-12 gap-10 animate-slide-up">
                 <div class="lg:col-span-4">
                     <div class="glass-card p-10 rounded-[3rem] border-kairos-teal/10 sticky top-36">
@@ -130,17 +132,29 @@
                 <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6" id="admin-patient-list"></div>
             </div>
 
+            <!-- PANEL WORKSPACE -->
             <div id="panel-workspace" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 h-auto lg:h-[80vh] animate-slide-up">
                 <div class="lg:col-span-3 glass-card rounded-[3rem] p-6 space-y-3 overflow-y-auto custom-scrollbar h-[300px] lg:h-full" id="ws-patient-list"></div>
                 <div class="lg:col-span-6 glass-card rounded-[3.5rem] p-8 md:p-12 overflow-y-auto custom-scrollbar" id="ws-clinical-form"></div>
                 <div class="lg:col-span-3 glass-card rounded-[3rem] p-6 flex flex-col h-[500px] lg:h-full" id="ws-chat-area"></div>
             </div>
 
+            <!-- PANEL AGENDA (ADMIN) -->
             <div id="panel-agenda" class="hidden animate-slide-up">
                 <h3 class="text-[10px] font-black text-kairos-teal mb-8 uppercase tracking-[0.8em]">GESTIÓN DE CITAS SOLICITADAS</h3>
                 <div id="admin-agenda-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
 
+            <!-- PANEL CONFIGURACIÓN (HORARIOS) -->
+            <div id="panel-config" class="hidden animate-slide-up">
+                <h3 class="text-[10px] font-black text-kairos-teal mb-8 uppercase tracking-[0.8em]">CONFIGURACIÓN DE HORARIOS DE ATENCIÓN</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="schedule-config-grid"></div>
+                <div class="mt-12 flex justify-end">
+                    <button onclick="saveScheduleConfig()" class="bg-kairos-teal px-12 py-6 rounded-3xl font-black text-white uppercase tracking-widest shadow-2xl hover:scale-105 transition-all">GUARDAR CAMBIOS DE AGENDA</button>
+                </div>
+            </div>
+
+            <!-- PANEL BIBLIOTECA -->
             <div id="panel-library" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-10 animate-slide-up">
                 <div class="lg:col-span-4 glass-card p-10 rounded-[3rem]">
                     <h3 class="text-[10px] font-black text-kairos-teal mb-8 uppercase tracking-[0.3em]">PUBLICAR MATERIAL</h3>
@@ -179,9 +193,17 @@
                 <div class="glass-card p-10 md:p-16 rounded-[3.5rem] text-center border-kairos-teal/20">
                     <h3 class="text-2xl font-black text-white uppercase mb-10 tracking-[0.2em]">AGENDAR CONSULTA</h3>
                     <div class="space-y-8">
-                        <input type="date" id="book-date" class="p-6 text-center text-lg font-black">
-                        <div id="time-slots" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-                        <button id="btn-confirm-book" disabled onclick="handleBookAppointment()" class="w-full bg-kairos-teal py-8 rounded-[2rem] font-black text-[12px] uppercase text-white shadow-2xl opacity-20 transition-all">CONFIRMAR ESPACIO</button>
+                        <div class="space-y-2 text-left">
+                            <label class="text-[9px] font-black text-kairos-teal uppercase tracking-widest ml-4">1. SELECCIONA FECHA</label>
+                            <input type="date" id="book-date" class="p-6 text-center text-lg font-black" onchange="window.renderTimeSlots()">
+                        </div>
+                        <div class="space-y-2 text-left">
+                            <label class="text-[9px] font-black text-kairos-teal uppercase tracking-widest ml-4">2. SELECCIONA HORARIO DISPONIBLE</label>
+                            <div id="time-slots" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <p class="col-span-full py-8 text-slate-500 italic text-[11px] uppercase">Elige una fecha para ver horarios...</p>
+                            </div>
+                        </div>
+                        <button id="btn-confirm-book" disabled onclick="handleBookAppointment()" class="w-full bg-kairos-teal py-8 rounded-[2rem] font-black text-[12px] uppercase text-white shadow-2xl opacity-20 transition-all">SOLICITAR CONSULTA</button>
                     </div>
                 </div>
             </section>
@@ -206,7 +228,6 @@
         </div>
     </div>
 
-    <!-- MODAL AUTH -->
     <div id="auth-modal" class="fixed inset-0 z-[120] hidden items-center justify-center glass backdrop-blur-3xl px-6">
         <div class="glass-card p-10 md:p-16 rounded-[3.5rem] max-w-md w-full text-center shadow-3xl animate-slide-up">
             <h2 class="text-xl md:text-2xl font-black text-kairos-teal mb-10 uppercase tracking-[0.4em]">ACCESO CLÍNICO</h2>
@@ -222,7 +243,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, collection, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAIu-Vq3jDea3Xr7VRxJckSdXQ5Ja7K_mM",
@@ -241,6 +262,17 @@
         let activePatientId = null;
         let currentUserName = null;
         let selectedTime = null;
+
+        // Default Config for Schedule
+        let scheduleConfig = {
+            "0": { name: "DOMINGO", enabled: false, start: 17, end: 21 },
+            "1": { name: "LUNES", enabled: true, start: 17, end: 21 },
+            "2": { name: "MARTES", enabled: true, start: 17, end: 21 },
+            "3": { name: "MIÉRCOLES", enabled: true, start: 17, end: 21 },
+            "4": { name: "JUEVES", enabled: true, start: 17, end: 21 },
+            "5": { name: "VIERNES", enabled: true, start: 18, end: 21 },
+            "6": { name: "SÁBADO", enabled: true, start: 15, end: 21 }
+        };
 
         async function startFirebase() {
             try {
@@ -271,6 +303,17 @@
             onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'citas'), (snap) => {
                 agenda = snap.docs.map(d => ({ ...d.data(), id: d.id }));
                 renderAdminAgenda();
+                renderTimeSlots();
+            });
+
+            onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'schedule'), (snap) => {
+                if(snap.exists()) {
+                    scheduleConfig = snap.data();
+                    renderScheduleConfig();
+                    renderTimeSlots();
+                } else {
+                    saveScheduleConfig(true); // Save defaults if empty
+                }
             });
         }
 
@@ -305,22 +348,16 @@
             await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'citas', id));
         };
 
-        window.handleAddResource = async () => {
-            const title = document.getElementById('res-title').value.trim().toUpperCase();
-            const type = document.getElementById('res-type').value;
-            if (!title) return;
-            const resId = 'RES-' + Date.now();
-            const resRef = doc(db, 'artifacts', appId, 'public', 'data', 'recursos', resId);
-            if (type === 'video') {
-                const url = document.getElementById('res-url').value;
-                await setDoc(resRef, { title, type, content: url });
-            } else {
-                const fileInput = document.getElementById('res-file');
-                if (!fileInput.files[0]) return;
-                const reader = new FileReader();
-                reader.onload = async (e) => { await setDoc(resRef, { title, type, content: e.target.result, fileName: fileInput.files[0].name }); };
-                reader.readAsDataURL(fileInput.files[0]);
+        window.saveScheduleConfig = async (silent = false) => {
+            if(!silent) {
+                for(let i=0; i<7; i++) {
+                    scheduleConfig[i].enabled = document.getElementById(`day-${i}-enabled`).checked;
+                    scheduleConfig[i].start = parseInt(document.getElementById(`day-${i}-start`).value);
+                    scheduleConfig[i].end = parseInt(document.getElementById(`day-${i}-end`).value);
+                }
             }
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'schedule'), scheduleConfig);
+            if(!silent) alert("CONFIGURACIÓN DE HORARIOS ACTUALIZADA.");
         };
 
         window.accessPortal = () => {
@@ -334,6 +371,45 @@
             document.getElementById('chat-widget').classList.remove('hidden');
             renderTimeSlots();
             lucide.createIcons();
+        };
+
+        window.renderTimeSlots = () => {
+            const dateInput = document.getElementById('book-date').value;
+            const grid = document.getElementById('time-slots');
+            if(!dateInput) return;
+
+            const date = new Date(dateInput + "T00:00:00");
+            const dayOfWeek = date.getDay();
+            const config = scheduleConfig[dayOfWeek];
+
+            if(!config || !config.enabled) {
+                grid.innerHTML = `<p class="col-span-full py-8 text-red-400 font-black text-[11px] uppercase">No hay atención disponible este día.</p>`;
+                document.getElementById('btn-confirm-book').disabled = true;
+                document.getElementById('btn-confirm-book').classList.add('opacity-20');
+                return;
+            }
+
+            let html = "";
+            for(let h = config.start; h <= config.end; h++) {
+                const timeStr = `${h}:00`;
+                const isBooked = agenda.some(c => c.date === dateInput && c.time === timeStr);
+                
+                html += `
+                    <button onclick="${isBooked ? '' : `window.selectSlot('${timeStr}', this)`}" 
+                            class="slot-btn p-4 rounded-xl border border-white/10 text-[10px] font-black uppercase transition-all 
+                            ${isBooked ? 'bg-red-500/10 text-red-500 cursor-not-allowed opacity-50' : (selectedTime === timeStr ? 'bg-kairos-teal text-white' : 'hover:bg-white/5')}">
+                        ${timeStr} ${isBooked ? '<br>[OCUPADO]' : ''}
+                    </button>`;
+            }
+            grid.innerHTML = html;
+        };
+
+        window.selectSlot = (t, btn) => {
+            selectedTime = t;
+            document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('bg-kairos-teal', 'text-white'));
+            btn.classList.add('bg-kairos-teal', 'text-white');
+            document.getElementById('btn-confirm-book').disabled = false;
+            document.getElementById('btn-confirm-book').classList.remove('opacity-20');
         };
 
         window.handleBookAppointment = async () => {
@@ -351,18 +427,6 @@
             renderTimeSlots();
         };
 
-        window.handleSendChat = async (sender = 'USER') => {
-            const effectivePatientId = sender === 'ADMIN' ? activePatientId : patients.find(p => p.name === currentUserName)?.id;
-            if (!effectivePatientId) return;
-            const input = document.getElementById(sender === 'ADMIN' ? 'admin-chat-input' : 'chat-input');
-            const text = input.value.trim().toUpperCase();
-            if (!text) return;
-            const p = patients.find(pat => pat.id === effectivePatientId);
-            const messages = [...(p.messages || []), { sender, text, time: Date.now() }];
-            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'pacientes', effectivePatientId), { messages });
-            input.value = "";
-        };
-
         function renderAdminUI() {
             const list = document.getElementById('admin-patient-list');
             list.innerHTML = patients.map(p => `
@@ -377,13 +441,38 @@
             lucide.createIcons();
         }
 
+        function renderScheduleConfig() {
+            const grid = document.getElementById('schedule-config-grid');
+            grid.innerHTML = Object.keys(scheduleConfig).map(day => {
+                const c = scheduleConfig[day];
+                return `
+                <div class="glass-card p-8 rounded-[2.5rem] border-white/5 space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-xs font-black text-white uppercase">${c.name}</h4>
+                        <input type="checkbox" id="day-${day}-enabled" ${c.enabled ? 'checked' : ''} class="w-6 h-6 rounded-lg accent-kairos-teal">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[8px] font-black text-slate-500 uppercase block mb-2 tracking-widest">INICIO (HORA)</label>
+                            <input type="number" id="day-${day}-start" value="${c.start}" class="p-3 text-center">
+                        </div>
+                        <div>
+                            <label class="text-[8px] font-black text-slate-500 uppercase block mb-2 tracking-widest">FIN (HORA)</label>
+                            <input type="number" id="day-${day}-end" value="${c.end}" class="p-3 text-center">
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
         function renderAdminAgenda() {
             const list = document.getElementById('admin-agenda-list');
-            list.innerHTML = agenda.map(c => `
+            const sortedAgenda = [...agenda].sort((a,b) => new Date(a.date) - new Date(b.date));
+            list.innerHTML = sortedAgenda.map(c => `
                 <div class="glass-card p-8 rounded-3xl border-l-4 border-kairos-teal">
                     <p class="text-[9px] font-black text-kairos-teal mb-4 uppercase">${c.date} | ${c.time}</p>
                     <h4 class="text-base font-black text-white mb-6 uppercase">${c.patient}</h4>
-                    <button onclick="window.handleCancelAppointment('${c.id}')" class="w-full bg-red-500/10 text-red-500 py-4 rounded-2xl font-black text-[9px] uppercase">CANCELAR CITA</button>
+                    <button onclick="window.handleCancelAppointment('${c.id}')" class="w-full bg-red-500/10 text-red-500 py-4 rounded-2xl font-black text-[9px] uppercase hover:bg-red-500 hover:text-white transition-all">CANCELAR CITA</button>
                 </div>`).join('') || `<p class="col-span-full py-10 text-center opacity-20 uppercase">Sin citas pendientes</p>`;
         }
 
@@ -404,20 +493,6 @@
                 </div>`).join('');
             lucide.createIcons();
         }
-
-        function renderTimeSlots() {
-            const times = ["10:00", "11:00", "12:00", "16:00", "17:00", "18:00", "19:00"];
-            const grid = document.getElementById('time-slots');
-            grid.innerHTML = times.map(t => `<button onclick="window.selectSlot('${t}', this)" class="slot-btn p-4 rounded-xl border border-white/10 text-[10px] font-black uppercase transition-all ${selectedTime === t ? 'bg-kairos-teal text-white' : 'hover:bg-white/5'}">${t}</button>`).join('');
-        }
-
-        window.selectSlot = (t, btn) => {
-            selectedTime = t;
-            document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('bg-kairos-teal', 'text-white'));
-            btn.classList.add('bg-kairos-teal', 'text-white');
-            document.getElementById('btn-confirm-book').disabled = false;
-            document.getElementById('btn-confirm-book').classList.remove('opacity-20');
-        };
 
         window.openWorkspace = (id) => { activePatientId = id; window.switchTab('workspace'); syncWorkspace(id); };
 
@@ -466,7 +541,7 @@
         window.toggleAuthModal = (show) => document.getElementById('auth-modal').classList.toggle('hidden', !show);
         window.toggleChat = () => document.getElementById('chat-window').classList.toggle('hidden');
         window.switchTab = (tab) => {
-            ['patients', 'workspace', 'agenda', 'library'].forEach(t => {
+            ['patients', 'workspace', 'agenda', 'library', 'config'].forEach(t => {
                 document.getElementById('panel-'+t).classList.add('hidden');
                 document.getElementById('tab-'+t).className = "pb-4 text-[11px] font-black uppercase text-slate-500 tracking-widest whitespace-nowrap";
             });
@@ -476,6 +551,19 @@
 
         window.handleAdminLogin = () => { if (document.getElementById('admin-pin').value === "1015") { toggleAuthModal(false); document.getElementById('welcome-screen').classList.add('hidden'); document.getElementById('main-ui').classList.remove('hidden'); document.getElementById('view-admin').classList.remove('hidden'); switchTab('patients'); } };
         window.toggleResInput = () => { const type = document.getElementById('res-type').value; document.getElementById('res-input-wrap').innerHTML = type === 'video' ? `<input type="url" id="res-url" class="p-5" placeholder="LINK DE YOUTUBE">` : `<input type="file" id="res-file" class="p-5 text-[10px]">`; };
+        
+        window.handleSendChat = async (sender = 'USER') => {
+            const effectivePatientId = sender === 'ADMIN' ? activePatientId : patients.find(p => p.name === currentUserName)?.id;
+            if (!effectivePatientId) return;
+            const input = document.getElementById(sender === 'ADMIN' ? 'admin-chat-input' : 'chat-input');
+            const text = input.value.trim().toUpperCase();
+            if (!text) return;
+            const p = patients.find(pat => pat.id === effectivePatientId);
+            const messages = [...(p.messages || []), { sender, text, time: Date.now() }];
+            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'pacientes', effectivePatientId), { messages });
+            input.value = "";
+        };
+
         window.onload = startFirebase;
     </script>
 </body>
