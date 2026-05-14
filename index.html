@@ -69,9 +69,29 @@
             .print-logo { width: 80px !important; filter: none !important; }
         }
         .print-header { display: none; }
+
+        /* Modal de Recurso Expandido */
+        #resource-modal-overlay {
+            transition: all 0.3s ease-in-out;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(12px);
+        }
     </style>
 </head>
 <body class="antialiased custom-scroll">
+
+    <!-- MODAL DE RECURSO EXPANDIDO -->
+    <div id="resource-modal-overlay" class="fixed inset-0 z-[300] hidden flex items-center justify-center p-4 md:p-10">
+        <div class="relative w-full max-w-6xl h-full flex flex-col items-center justify-center animate-reveal">
+            <button onclick="window.closeResourceModal()" class="absolute -top-12 right-0 text-white hover:text-kairos-teal transition-all flex items-center gap-2 font-black text-xs uppercase tracking-widest">
+                <i data-lucide="x-circle" class="w-8 h-8"></i> Cerrar Vista
+            </button>
+            <div id="modal-content-container" class="w-full h-[80vh] bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+                <!-- El contenido dinámico (iframe o img) se inyecta aquí -->
+            </div>
+            <h3 id="modal-resource-title" class="mt-6 text-xl font-black text-white uppercase italic tracking-tighter text-center"></h3>
+        </div>
+    </div>
 
     <!-- PANTALLA DE BIENVENIDA -->
     <div id="welcome-gate" class="fixed inset-0 z-[200] bg-kairos-deep flex items-center justify-center p-6 overflow-y-auto">
@@ -202,6 +222,7 @@
                     <select id="res-type" class="input-premium w-full p-4 rounded-xl text-xs bg-kairos-deep font-bold">
                         <option value="youtube">YouTube</option>
                         <option value="drive">Drive (Documento Externo)</option>
+                        <option value="image">Imagen Directa</option>
                     </select>
                     <input type="url" id="res-url" class="input-premium w-full p-4 rounded-xl text-xs" placeholder="URL Enlace">
                     <button type="button" onclick="window.addResource()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[9px] uppercase shadow-lg">Publicar Recurso</button>
@@ -440,7 +461,7 @@
                             </div>
                         </div>
                         <div class="flex gap-4 pt-4">
-                            <button type="button" onclick="window.professionalizeNote()" class="flex-1 bg-kairos-ai/10 text-ai py-5 rounded-2xl font-black text-[10px] uppercase border border-kairos-ai/20 shadow-lg hover:bg-kairos-ai/20 transition-all flex items-center justify-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> IA</button>
+                            <button type="button" onclick="window.professionalizeNote()" class="flex-1 bg-kairos-ai/10 text-ai py-5 rounded-2xl font-black text-[10px] uppercase border border-ai/20 shadow-lg hover:bg-ai/20 transition-all flex items-center justify-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> IA</button>
                             <button type="button" id="btn-save-note" onclick="window.saveNote()" class="flex-[3] bg-kairos-teal py-5 rounded-2xl font-black text-[10px] uppercase shadow-2xl hover:brightness-110 transition-all">Guardar Registro</button>
                         </div>
                     </div>
@@ -468,7 +489,7 @@
                         
                         <div class="hidden print:block pt-32 text-center space-y-3">
                              <div class="w-40 h-px bg-gray-400 mx-auto"></div>
-                             <p style="font-size: 11px; font-weight: 900; text-transform: uppercase;">Psic. Carlos Aguilar Sánchez</p>
+                             <p style="font-size: 11px; font-weight: 900; text-transform: uppercase; color: #1e293b;">Psic. Carlos Aguilar Sánchez</p>
                              <p style="font-size: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em;">Especialista en Salud Mental • Firma Autorizada</p>
                         </div>
                     </div>
@@ -593,6 +614,39 @@
             lucide.createIcons();
         };
 
+        window.openResourceModal = (type, content, title) => {
+            const overlay = document.getElementById('resource-modal-overlay');
+            const container = document.getElementById('modal-content-container');
+            const titleEl = document.getElementById('modal-resource-title');
+            
+            titleEl.innerText = title;
+            container.innerHTML = "";
+            
+            if(type === 'youtube') {
+                const vidId = content.split('v=')[1]?.split('&')[0] || content.split('/').pop();
+                container.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${vidId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            } else if(type === 'drive') {
+                const driveEmbed = content.replace('/view', '/preview');
+                container.innerHTML = `<iframe class="w-full h-full" src="${driveEmbed}" frameborder="0"></iframe>`;
+            } else {
+                container.innerHTML = `<div class="w-full h-full flex items-center justify-center p-4 bg-white/5"><img src="${content}" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl border border-white/5"></div>`;
+            }
+            
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        };
+
+        window.closeResourceModal = () => {
+            const overlay = document.getElementById('resource-modal-overlay');
+            const container = document.getElementById('modal-content-container');
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+            container.innerHTML = ""; // Detener reproducción de videos
+            document.body.style.overflow = 'auto';
+        };
+
         function renderAdminSidebar() {
             const s = document.getElementById('sidebar-patients');
             s.innerHTML = (APP_DATA.patients || []).map(p => `
@@ -610,14 +664,19 @@
         function renderPublicResources() {
             const l = document.getElementById('patient-resources');
             l.innerHTML = (APP_DATA.resources || []).map(r => `
-                <div class="glass-panel p-6 flex flex-col space-y-4 hover:scale-[1.02] transition-all">
-                    <span class="text-[8px] font-black text-kairos-teal uppercase tracking-widest">${r.type}</span>
+                <div class="glass-panel p-6 flex flex-col space-y-4 hover:scale-[1.02] transition-all group">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[8px] font-black text-kairos-teal uppercase tracking-widest">${r.type}</span>
+                        <button onclick="window.openResourceModal('${r.type}', '${r.content}', '${r.title}')" class="p-2 bg-white/5 rounded-lg border border-white/5 text-slate-400 hover:text-kairos-teal transition-all flex items-center gap-2 text-[8px] font-black uppercase"><i data-lucide="maximize" class="w-3 h-3"></i> Ampliar</button>
+                    </div>
                     <h4 class="text-sm font-bold text-white uppercase leading-tight">${r.title}</h4>
-                    <div class="w-full aspect-video rounded-2xl overflow-hidden bg-black/40 border border-white/5">
-                        ${r.type === 'youtube' ? `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${r.content.split('v=')[1]?.split('&')[0] || r.content.split('/').pop()}"></iframe>` : `<img src="${r.content}" class="w-full h-full object-cover">`}
+                    <div class="w-full aspect-video rounded-2xl overflow-hidden bg-black/40 border border-white/5 relative">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                        ${r.type === 'youtube' ? `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${r.content.split('v=')[1]?.split('&')[0] || r.content.split('/').pop()}"></iframe>` : r.type === 'drive' ? `<iframe class="w-full h-full" src="${r.content.replace('/view', '/preview')}"></iframe>` : `<img src="${r.content}" class="w-full h-full object-cover">`}
                     </div>
                 </div>
             `).join('') || '<p class="col-span-full py-20 opacity-20 text-[10px] font-black uppercase text-center tracking-[0.4em]">En proceso de actualización...</p>';
+            lucide.createIcons();
         }
 
         function renderAdminAgenda() {
@@ -632,7 +691,6 @@
                         <h4 class="text-sm font-black text-white uppercase tracking-tight leading-none">${a.patient}</h4>
                         <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest"><i data-lucide="phone" class="w-3 h-3 inline mr-1 text-kairos-teal"></i> ${a.phone || 'NO REGISTRADO'}</p>
                     </div>
-                    <!-- Redirección a WhatsApp directa en cada cita -->
                     <a href="https://wa.me/${(a.phone || '').replace(/\D/g,'')}" target="_blank" class="block w-full py-3 bg-kairos-whatsapp/10 rounded-xl text-[9px] font-black text-kairos-whatsapp text-center border border-kairos-whatsapp/20 uppercase hover:bg-kairos-whatsapp/20 transition-all shadow-sm">Contactar vía WhatsApp</a>
                 </div>
             `).join('') || '<p class="col-span-full py-24 opacity-20 text-center uppercase font-black text-xs tracking-widest">Agenda vacía</p>';
