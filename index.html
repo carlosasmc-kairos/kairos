@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KAIRÓS | Clinical Ecosystem</title>
     
-    <!-- FAVICON CORPORATIVO -->
     <link rel="icon" type="image/png" href="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w128">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -32,14 +31,8 @@
                         'fade-in': 'fadeIn 0.5s ease-out'
                     },
                     keyframes: {
-                        floating: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        },
-                        fadeIn: {
-                            '0%': { opacity: '0', transform: 'translateY(10px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' }
-                        }
+                        floating: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-20px)' } },
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
                     }
                 }
             }
@@ -54,8 +47,23 @@
         .logo-glow { filter: drop-shadow(0 0 50px rgba(70, 157, 163, 0.4)); }
         .custom-scrollbar::-webkit-scrollbar { width: 5px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #469da3; border-radius: 10px; }
-        @media print { .no-print { display: none !important; } .print-area { display: block !important; color: black !important; background: white !important; } }
-        iframe { border-radius: 1.5rem; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .print-area { display: block !important; padding: 0 !important; margin: 0 !important; width: 100% !important; }
+            .glass-card { background: white !important; border: 1px solid #eee !important; box-shadow: none !important; color: black !important; backdrop-filter: none !important; }
+            .premium-input { border: 1px solid #ddd !important; color: black !important; background: #f9f9f9 !important; }
+            .text-kairos-teal { color: #469da3 !important; }
+            .text-slate-400, .text-slate-500 { color: #666 !important; }
+            .print-header { display: flex !important; align-items: center; justify-content: space-between; border-bottom: 2px solid #469da3; padding-bottom: 20px; margin-bottom: 30px; }
+            .print-logo { width: 80px; height: 80px; object-contain: contain; }
+            .note-card { page-break-inside: avoid; border: 1px solid #eee; margin-bottom: 20px; padding: 20px; border-radius: 10px; }
+        }
+        .print-header { display: none; }
+        
+        /* Estilos para el modo edición */
+        .editing-glow { border-color: #a855f7 !important; box-shadow: 0 0 20px rgba(168, 85, 247, 0.2) !important; }
     </style>
 </head>
 <body class="antialiased custom-scrollbar">
@@ -69,7 +77,7 @@
         <a href="https://console.developers.google.com/apis/api/firestore.googleapis.com/overview?project=kairos-b84d5" target="_blank" class="bg-white text-kairos-error px-5 py-1.5 rounded-full font-black hover:scale-105 transition-all">HABILITAR</a>
     </div>
 
-    <!-- PANTALLA DE BIENVENIDA (SIN TELÉFONO) -->
+    <!-- PANTALLA DE BIENVENIDA -->
     <div id="welcome-screen" class="fixed inset-0 z-[100] flex items-center justify-center bg-kairos-deep px-6 overflow-y-auto">
         <div class="max-w-xl w-full text-center space-y-12 py-20">
             <div class="animate-float">
@@ -99,7 +107,7 @@
                     </div>
                     <div>
                         <p class="text-xs font-black tracking-[0.4em] text-kairos-teal uppercase leading-none">KAIRÓS</p>
-                        <p class="text-[8px] font-bold text-slate-500 uppercase mt-1">SISTEMA EN LA NUBE</p>
+                        <p class="text-[8px] font-bold text-slate-500 uppercase mt-1">CLINICAL ECOSYSTEM</p>
                     </div>
                 </div>
                 <div id="sync-indicator" class="flex items-center gap-3 bg-white/5 px-6 py-3 rounded-full border border-white/10">
@@ -112,7 +120,6 @@
             </div>
         </nav>
 
-        <!-- VISTA ADMINISTRADOR -->
         <div id="view-admin" class="hidden px-6 max-w-7xl mx-auto space-y-12">
             <div class="flex flex-nowrap gap-2 border-b border-white/5 pb-6 overflow-x-auto no-print custom-scrollbar">
                 <button onclick="window.switchTab('expedientes')" id="tab-expedientes" class="flex-shrink-0 px-8 py-4 rounded-2xl text-[10px] font-black tracking-widest transition-all uppercase bg-kairos-teal text-white">PACIENTES</button>
@@ -122,7 +129,7 @@
                 <button onclick="window.switchTab('config')" id="tab-config" class="flex-shrink-0 px-8 py-4 rounded-2xl text-[10px] font-black tracking-widest transition-all uppercase text-slate-500 hover:bg-white/5">AJUSTES</button>
             </div>
 
-            <!-- PANEL: PACIENTES (REGISTRO EXCLUSIVO - SIN TELÉFONO) -->
+            <!-- PANEL: PACIENTES -->
             <div id="panel-expedientes" class="space-y-10">
                 <div class="glass-card p-12 rounded-[3.5rem] max-w-2xl no-print">
                     <h3 class="text-xs font-black text-kairos-teal tracking-[0.5em] mb-8 uppercase">NUEVO EXPEDIENTE CLÍNICO</h3>
@@ -135,7 +142,6 @@
                 <div id="admin-patients-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             </div>
 
-            <!-- PANEL: LOG DE CONTACTO -->
             <div id="panel-notas" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-[700px]">
                 <div class="lg:col-span-3 glass-card p-6 rounded-[2.5rem] flex flex-col gap-3 overflow-y-auto max-h-[850px] no-print custom-scrollbar" id="notas-sidebar-list"></div>
                 <div class="lg:col-span-9 glass-card p-8 md:p-14 rounded-[3.5rem] overflow-y-auto print-area custom-scrollbar" id="notes-workspace">
@@ -143,6 +149,7 @@
                 </div>
             </div>
 
+            <!-- OTROS PANELES -->
             <div id="panel-biblioteca" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <div class="glass-card p-12 rounded-[3.5rem] space-y-8">
                     <h3 class="text-xs font-black text-kairos-teal tracking-[0.5em] uppercase">GESTIÓN DE RECURSOS</h3>
@@ -209,12 +216,10 @@
         </div>
     </main>
 
-    <!-- BOTÓN WHATSAPP -->
-    <a href="https://wa.me/522381239088" target="_blank" onclick="window.registerWhatsAppClick()" id="whatsapp-btn" class="hidden fixed bottom-8 right-8 z-[80] w-16 h-16 bg-kairos-whatsapp rounded-full shadow-2xl flex items-center justify-center text-white hover:scale-110 transition-all border-4 border-kairos-deep">
+    <a href="https://wa.me/522381239088" target="_blank" onclick="window.registerWhatsAppClick()" id="whatsapp-btn" class="hidden fixed bottom-8 right-8 z-[80] w-16 h-16 bg-kairos-whatsapp rounded-full shadow-2xl flex items-center justify-center text-white hover:scale-110 transition-all border-4 border-kairos-deep no-print">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
     </a>
 
-    <!-- MODAL AUTH -->
     <div id="auth-modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/95 backdrop-blur-3xl px-6">
         <div class="glass-card p-12 rounded-[3.5rem] max-w-sm w-full text-center space-y-12">
             <h2 class="text-2xl font-black tracking-[0.5em] text-kairos-teal uppercase">ACCESO CLÍNICO</h2>
@@ -243,7 +248,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const docId = 'kairos_master_v12_simple';
+        const docId = 'kairos_master_v14_clinical';
 
         let APP_DATA = { patients: [], resources: [], appointments: [], schedule: {} };
         let activePatientId = null;
@@ -317,10 +322,8 @@
         window.accessPortal = () => {
             const name = document.getElementById('patient-name-input').value.trim().toUpperCase();
             if (name.length < 2) return;
-            
             window.portalUser = name;
             window.viewMode = 'patient';
-            
             document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('main-ui').classList.remove('hidden');
             document.getElementById('view-patient').classList.remove('hidden');
@@ -360,36 +363,241 @@
             const name = document.getElementById('new-p-name').value.trim().toUpperCase();
             const date = document.getElementById('new-p-date').value;
             if(!name || !date) return;
-            
             const folio = "KAI-" + Math.floor(100000 + Math.random() * 900000);
-            APP_DATA.patients.unshift({ 
-                id: folio, 
-                name, 
-                date, 
-                task: "", 
-                notes: [], 
-                contactLog: [] 
-            });
+            APP_DATA.patients.unshift({ id: folio, name, date, task: "", notes: [], contactLog: [] });
             saveToCloud(APP_DATA);
             document.getElementById('new-p-name').value = "";
         };
 
         window.deletePatient = (id) => {
-            APP_DATA.patients = APP_DATA.patients.filter(p => p.id !== id);
+            const p = APP_DATA.patients.find(x => x.id === id);
+            if(!p) return;
+            APP_DATA.appointments = APP_DATA.appointments.filter(a => a.patient !== p.name);
+            APP_DATA.patients = APP_DATA.patients.filter(x => x.id !== id);
             if(activePatientId === id) activePatientId = null;
             saveToCloud(APP_DATA);
         };
 
-        window.registerWhatsAppClick = () => {
-            if(!window.portalUser) return;
-            const p = APP_DATA.patients.find(x => x.name === window.portalUser);
-            if(p) {
-                if(!p.contactLog) p.contactLog = [];
-                p.contactLog.unshift({
-                    date: new Date().toLocaleString(),
-                    type: 'REDIRECCIÓN_WHATSAPP'
+        window.openNoteWorkspace = (id) => {
+            activePatientId = id;
+            window.editingNoteIdx = null; // Resetear estado de edición al cambiar de paciente
+            const p = APP_DATA.patients.find(x => x.id === id);
+            const ws = document.getElementById('notes-workspace');
+            
+            ws.innerHTML = `
+                <div class="print-header">
+                    <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w500" class="print-logo">
+                    <div style="text-align: right;">
+                        <h2 style="margin:0; font-weight:900; color:#469da3;">REPORTE CLÍNICO KAIRÓS</h2>
+                        <p style="margin:0; font-size:10px; text-transform:uppercase;">Psic. Carlos Aguilar Sánchez</p>
+                    </div>
+                </div>
+
+                <div class="space-y-16 animate-fade-in">
+                    <div class="border-b border-white/5 pb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 no-print">
+                        <div>
+                            <span class="bg-kairos-teal text-white px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest">${p.id}</span>
+                            <h3 class="text-3xl md:text-5xl font-black mt-6 text-white uppercase leading-none tracking-tighter">${p.name}</h3>
+                        </div>
+                        <div class="flex gap-4">
+                            <button onclick="window.printReport()" class="p-5 bg-kairos-teal text-white rounded-2xl flex items-center gap-3 font-black text-[10px] tracking-widest uppercase hover:scale-105 transition-all">
+                                <i data-lucide="printer"></i> PDF
+                            </button>
+                            <button onclick="window.cancelEdit()" id="btn-cancel-edit" class="hidden p-5 bg-white/5 text-red-400 rounded-2xl border border-red-500/20 font-black text-[10px] uppercase">
+                                CANCELAR EDICIÓN
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="clinical-form-container" class="space-y-12 no-print">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                             <div>
+                                <label class="text-[10px] font-black text-slate-500 uppercase block mb-4">TIPO DE ASISTENCIA</label>
+                                <select id="n-type" class="w-full premium-input p-6 rounded-2xl text-xs bg-kairos-deep">
+                                    <option>PRESENCIAL</option><option>SESIÓN EN LÍNEA</option><option>CRISIS</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-slate-500 uppercase block mb-4">MISIÓN SEMANAL (OBJETIVO)</label>
+                                <input type="text" id="n-task" class="w-full premium-input p-6 rounded-2xl text-xs uppercase" placeholder="DEFINIR OBJETIVO TERAPÉUTICO" value="${p.task || ''}">
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[10px] font-black text-kairos-teal uppercase tracking-widest">ESTADO MENTAL Y CONDUCTUAL</label>
+                                <button onclick="window.getAISuggestion()" class="bg-kairos-ai/10 text-kairos-ai px-4 py-2 rounded-xl text-[8px] font-black uppercase flex items-center gap-2 border border-kairos-ai/20 hover:bg-kairos-ai/20">
+                                    <i data-lucide="sparkles" class="w-4 h-4"></i> PROFESIONALIZAR IA
+                                </button>
+                            </div>
+                            <textarea id="n-mental" class="w-full premium-input p-8 h-40 rounded-3xl text-sm uppercase" placeholder="OBSERVACIONES CLÍNICAS..."></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-4">
+                                <label class="text-[10px] font-black text-slate-500 uppercase">ESTRATEGIAS TERAPÉUTICAS</label>
+                                <textarea id="n-strat" class="w-full premium-input p-8 h-32 rounded-3xl text-sm uppercase"></textarea>
+                            </div>
+                            <div class="space-y-4">
+                                <label class="text-[10px] font-black text-slate-500 uppercase">RESOLUCIÓN Y CIERRE</label>
+                                <textarea id="n-resol" class="w-full premium-input p-8 h-32 rounded-3xl text-sm uppercase"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black text-slate-500 uppercase">SUGERENCIAS Y RECOMENDACIONES</label>
+                            <textarea id="n-sug" class="w-full premium-input p-8 h-32 rounded-3xl text-sm uppercase"></textarea>
+                        </div>
+
+                        <button id="btn-save-note" onclick="window.saveNote()" class="w-full bg-kairos-teal py-8 rounded-[3rem] font-black text-xs uppercase shadow-2xl hover:scale-[1.01] transition-all">
+                            REGISTRAR EVOLUCIÓN CLÍNICA
+                        </button>
+                    </div>
+
+                    <div class="pt-20 border-t border-white/5 space-y-8 print-area">
+                        <h4 class="text-center text-[11px] font-black opacity-30 uppercase tracking-[1em] no-print">Historial de Evolución</h4>
+                        <div id="notes-history-list" class="space-y-8">
+                        ${(p.notes || []).map((n, index) => `
+                            <div class="note-card glass-card p-10 md:p-14 rounded-[3.5rem] border-l-8 border-l-kairos-teal relative group transition-all">
+                                <div class="absolute top-8 right-8 flex gap-3 no-print opacity-0 group-hover:opacity-100 transition-all">
+                                    <button onclick="window.editNote(${index})" class="p-3 bg-kairos-teal/10 text-kairos-teal rounded-xl hover:bg-kairos-teal hover:text-white transition-all">
+                                        <i data-lucide="edit-3" class="w-5 h-5"></i>
+                                    </button>
+                                    <button onclick="window.deleteNote(${index})" class="p-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all">
+                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="flex justify-between items-start mb-8">
+                                    <p class="text-[10px] font-black text-kairos-teal uppercase tracking-widest">${n.date} | ${n.type}</p>
+                                </div>
+                                <div class="grid grid-cols-1 gap-8 text-[11px] uppercase leading-relaxed">
+                                    <div class="space-y-2">
+                                        <p class="font-black text-slate-400">ESTADO MENTAL:</p>
+                                        <p class="text-white italic">${n.mental}</p>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div class="space-y-2">
+                                            <p class="font-black text-slate-400">ESTRATEGIAS:</p>
+                                            <p>${n.strat}</p>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <p class="font-black text-slate-400">RESOLUCIÓN:</p>
+                                            <p>${n.resol}</p>
+                                        </div>
+                                    </div>
+                                    <div class="pt-4 border-t border-white/5">
+                                        <p class="font-black text-slate-400">RECOMENDACIONES:</p>
+                                        <p>${n.sug}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('') || '<p class="text-center opacity-10 py-20 uppercase text-xs">Sin registros históricos</p>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+            renderNotasSidebar();
+        };
+
+        window.editNote = (index) => {
+            const p = APP_DATA.patients.find(x => x.id === activePatientId);
+            const note = p.notes[index];
+            window.editingNoteIdx = index;
+
+            // Llenar formulario
+            document.getElementById('n-type').value = note.type;
+            document.getElementById('n-mental').value = note.mental;
+            document.getElementById('n-strat').value = note.strat;
+            document.getElementById('n-resol').value = note.resol;
+            document.getElementById('n-sug').value = note.sug;
+            document.getElementById('n-task').value = p.task;
+
+            // Cambiar UI de botón y visual
+            const saveBtn = document.getElementById('btn-save-note');
+            saveBtn.innerText = "ACTUALIZAR NOTA CLÍNICA";
+            saveBtn.classList.replace('bg-kairos-teal', 'bg-kairos-ai');
+            
+            document.getElementById('btn-cancel-edit').classList.remove('hidden');
+            document.getElementById('clinical-form-container').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('clinical-form-container').classList.add('editing-glow');
+        };
+
+        window.cancelEdit = () => {
+            window.editingNoteIdx = null;
+            window.openNoteWorkspace(activePatientId);
+        };
+
+        window.saveNote = () => {
+            const p = APP_DATA.patients.find(x => x.id === activePatientId);
+            const note = {
+                date: window.editingNoteIdx !== null ? p.notes[window.editingNoteIdx].date : new Date().toLocaleString(),
+                type: document.getElementById('n-type').value,
+                mental: document.getElementById('n-mental').value.trim().toUpperCase(),
+                strat: document.getElementById('n-strat').value.trim().toUpperCase(),
+                resol: document.getElementById('n-resol').value.trim().toUpperCase(),
+                sug: document.getElementById('n-sug').value.trim().toUpperCase()
+            };
+
+            p.task = document.getElementById('n-task').value.trim().toUpperCase();
+
+            if (window.editingNoteIdx !== null) {
+                p.notes[window.editingNoteIdx] = note;
+                window.editingNoteIdx = null;
+            } else {
+                p.notes.unshift(note);
+            }
+
+            saveToCloud(APP_DATA);
+            window.openNoteWorkspace(activePatientId);
+        };
+
+        window.deleteNote = (index) => {
+            const p = APP_DATA.patients.find(x => x.id === activePatientId);
+            p.notes.splice(index, 1);
+            saveToCloud(APP_DATA);
+            window.openNoteWorkspace(activePatientId);
+        };
+
+        window.printReport = () => {
+            window.print();
+        };
+
+        window.saveNote = () => {
+            const p = APP_DATA.patients.find(x => x.id === activePatientId);
+            const note = {
+                date: new Date().toLocaleString(),
+                type: document.getElementById('n-type').value,
+                mental: document.getElementById('n-mental').value.trim().toUpperCase(),
+                strat: document.getElementById('n-strat').value.trim().toUpperCase(),
+                resol: document.getElementById('n-resol').value.trim().toUpperCase(),
+                sug: document.getElementById('n-sug').value.trim().toUpperCase()
+            };
+            p.task = document.getElementById('n-task').value.trim().toUpperCase();
+            p.notes.unshift(note);
+            saveToCloud(APP_DATA);
+        };
+
+        window.getAISuggestion = async () => {
+            const field = document.getElementById('n-mental');
+            const txt = field.value;
+            if(!txt || txt.length < 5) return;
+            updateSyncStatus('sync', 'IA ANALIZANDO...');
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Profesionaliza esta nota clínica psicológica (Estado Mental): " + txt }] }] })
                 });
-                saveToCloud(APP_DATA);
+                const result = await response.json();
+                const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                if(aiText) {
+                    field.value = aiText.toUpperCase();
+                    updateSyncStatus('success', 'IA PROCESADA');
+                }
+            } catch (err) {
+                updateSyncStatus('error', 'ERR IA');
             }
         };
 
@@ -402,7 +610,7 @@
                     <h4 class="text-sm font-black text-white mt-4 uppercase truncate">${p.name}</h4>
                     <p class="text-[9px] font-bold text-slate-500 uppercase mt-2">ALTA: ${p.date}</p>
                 </div>
-            `).join('') || '<p class="col-span-full py-20 text-center opacity-10 uppercase text-[10px]">Sin expedientes registrados</p>';
+            `).join('') || '<p class="col-span-full py-20 text-center opacity-10 uppercase text-[10px]">Sin expedientes</p>';
         }
 
         function renderNotasSidebar() {
@@ -414,78 +622,6 @@
                 </button>
             `).join('');
         }
-
-        window.openNoteWorkspace = (id) => {
-            activePatientId = id;
-            const p = APP_DATA.patients.find(x => x.id === id);
-            const ws = document.getElementById('notes-workspace');
-            
-            ws.innerHTML = `
-                <div class="space-y-16 animate-fade-in">
-                    <div class="border-b border-white/5 pb-10 flex justify-between items-center no-print">
-                        <div>
-                            <span class="bg-kairos-teal text-white px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest">${p.id}</span>
-                            <h3 class="text-3xl md:text-5xl font-black mt-6 text-white uppercase leading-none tracking-tighter">${p.name}</h3>
-                        </div>
-                        <button onclick="window.print()" class="p-5 bg-white/5 rounded-2xl text-slate-400"><i data-lucide="printer"></i></button>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-14">
-                        <div class="lg:col-span-8 space-y-12">
-                            <div class="bg-kairos-teal/5 p-12 rounded-[4rem] border border-kairos-teal/20">
-                                <label class="text-[11px] font-black text-kairos-teal uppercase block mb-6 text-center tracking-[0.5em]">OBJETIVO TERAPÉUTICO (VISTO POR PACIENTE)</label>
-                                <textarea id="n-task" class="w-full premium-input p-8 h-40 rounded-3xl font-black text-center text-lg uppercase" placeholder="DEFINIR MISIÓN SEMANAL">${p.task || ''}</textarea>
-                                <button onclick="window.saveTask()" class="w-full mt-6 bg-kairos-teal/20 text-kairos-teal py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest">ACTUALIZAR OBJETIVO</button>
-                            </div>
-
-                            <div class="space-y-6">
-                                <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">NOTAS DE EVOLUCIÓN PRIVADAS</h4>
-                                <textarea id="n-evol" class="w-full premium-input p-10 h-64 rounded-[3.5rem] text-sm uppercase" placeholder="REGISTRAR AVANCE DE LA SESIÓN..."></textarea>
-                                <button onclick="window.saveNote()" class="w-full bg-kairos-teal py-8 rounded-[3rem] font-black text-xs uppercase shadow-2xl">GUARDAR EVOLUCIÓN</button>
-                            </div>
-
-                            <div class="space-y-6">
-                                ${(p.notes || []).map(n => `
-                                    <div class="p-10 glass-card rounded-[3rem] border-l-4 border-kairos-teal">
-                                        <p class="text-[9px] font-black text-kairos-teal mb-4 uppercase">${n.date}</p>
-                                        <p class="text-xs text-white uppercase leading-relaxed font-semibold">${n.text}</p>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-
-                        <div class="lg:col-span-4 space-y-8 no-print">
-                            <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em] text-center">ACTIVIDAD DE CONTACTO</h4>
-                            <div class="space-y-4 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
-                                ${(p.contactLog || []).map(log => `
-                                    <div class="p-6 bg-white/5 border border-white/10 rounded-3xl">
-                                        <p class="text-kairos-teal text-[9px] font-black uppercase mb-2">${log.date}</p>
-                                        <p class="text-white text-[10px] font-bold uppercase tracking-wider">SOLICITÓ CONTACTO WHATSAPP</p>
-                                    </div>
-                                `).join('') || '<p class="text-center opacity-10 text-[9px] uppercase py-10">SIN ACTIVIDAD REGISTRADA</p>'}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            lucide.createIcons();
-            renderNotasSidebar();
-        };
-
-        window.saveTask = () => {
-            const p = APP_DATA.patients.find(x => x.id === activePatientId);
-            p.task = document.getElementById('n-task').value.trim().toUpperCase();
-            saveToCloud(APP_DATA);
-        };
-
-        window.saveNote = () => {
-            const p = APP_DATA.patients.find(x => x.id === activePatientId);
-            const text = document.getElementById('n-evol').value.trim().toUpperCase();
-            if(!text) return;
-            p.notes.unshift({ date: new Date().toLocaleString(), text });
-            saveToCloud(APP_DATA);
-            window.openNoteWorkspace(activePatientId);
-        };
 
         window.handleResTypeChange = () => {
             const type = document.getElementById('res-type').value;
@@ -499,13 +635,11 @@
             const title = document.getElementById('res-title').value.trim().toUpperCase();
             const type = document.getElementById('res-type').value;
             if(!title) return;
-
             const saveRes = (content, fileName = "") => {
                 APP_DATA.resources.unshift({ id: Date.now(), title, type, content, fileName });
                 saveToCloud(APP_DATA);
                 document.getElementById('res-title').value = "";
             };
-
             if(type === 'file') {
                 const file = document.getElementById('res-file').files[0];
                 if(!file) return;
@@ -515,11 +649,6 @@
             } else {
                 saveRes(document.getElementById('res-url').value);
             }
-        };
-
-        window.deleteResource = (idx) => {
-            APP_DATA.resources.splice(idx, 1);
-            saveToCloud(APP_DATA);
         };
 
         function renderAdminResources() {
@@ -532,76 +661,31 @@
                     </div>
                     <button onclick="window.deleteResource(${idx})" class="p-2 bg-red-500/10 text-red-500 rounded-xl transition-all opacity-0 group-hover:opacity-100"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                 </div>
-            `).join('') || '<p class="text-center opacity-10 py-16 uppercase text-[10px]">Sin recursos</p>';
+            `).join('');
         }
 
-        const getYouTubeEmbedUrl = (url) => {
-            if(!url) return null;
-            let videoId = "";
-            if (url.includes('v=')) videoId = url.split('v=')[1].split('&')[0];
-            else if (url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
-            else if (url.includes('shorts/')) videoId = url.split('shorts/')[1].split('?')[0];
-            return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+        window.deleteResource = (idx) => {
+            APP_DATA.resources.splice(idx, 1);
+            saveToCloud(APP_DATA);
         };
-
-        function renderPatientPortal() {
-            const p = APP_DATA.patients.find(x => x.name === window.portalUser);
-            if(p?.task) {
-                document.getElementById('patient-task-section').classList.remove('hidden');
-                document.getElementById('patient-task-content').innerText = p.task;
-            }
-
-            const resGrid = document.getElementById('patient-resources');
-            resGrid.innerHTML = APP_DATA.resources.map(r => {
-                const isVideo = r.type === 'video';
-                const isImg = r.type === 'file' && r.content.startsWith('data:image');
-                const embedUrl = isVideo ? getYouTubeEmbedUrl(r.content) : null;
-
-                return `
-                    <div class="glass-card p-10 rounded-[3.5rem] space-y-8 animate-fade-in flex flex-col items-center">
-                        <h4 class="text-xs font-black tracking-widest uppercase text-kairos-teal">${r.title}</h4>
-                        ${isVideo && embedUrl ? `
-                            <div class="w-full aspect-video rounded-2xl overflow-hidden border border-white/10">
-                                <iframe class="w-full h-full" src="${embedUrl}" frameborder="0" allowfullscreen></iframe>
-                            </div>
-                        ` : ''}
-                        ${isImg ? `<img src="${r.content}" class="w-full rounded-2xl border border-white/10 shadow-2xl">` : ''}
-                        ${(!isVideo && !isImg) ? `
-                            <div class="p-12 bg-white/5 rounded-3xl border border-white/5 text-slate-500">
-                                <i data-lucide="${r.type === 'file' ? 'file-text' : 'link'}" class="w-16 h-16 mx-auto"></i>
-                            </div>
-                        ` : ''}
-                        <a href="${r.content}" ${r.type==='file' ? `download="${r.fileName}"` : 'target="_blank"'} class="bg-kairos-teal/10 text-kairos-teal border border-kairos-teal/30 px-10 py-4 rounded-full text-[9px] font-black uppercase hover:bg-kairos-teal hover:text-white transition-all">
-                            ${r.type==='file' ? 'DESCARGAR ARCHIVO' : 'ABRIR ENLACE'}
-                        </a>
-                    </div>
-                `;
-            }).join('') || '<p class="col-span-full py-20 text-center opacity-10 uppercase text-[10px] tracking-widest">NO HAY RECURSOS ASIGNADOS AÚN</p>';
-            lucide.createIcons();
-        }
 
         window.generateTimeSlots = () => {
             const dateInput = document.getElementById('booking-date').value;
             if(!dateInput) return;
-            
             const date = new Date(dateInput + "T00:00:00");
             const days = ['dom','lun','mar','mie','jue','vie','sab'];
             const dayKey = days[date.getDay()];
             const config = APP_DATA.schedule[dayKey];
-
             const container = document.getElementById('time-slots-container');
             const slotsDiv = document.getElementById('time-slots');
             container.classList.remove('hidden');
             slotsDiv.innerHTML = "";
-
             if(!config?.active) {
                 slotsDiv.innerHTML = '<p class="col-span-full py-10 opacity-40 text-[10px] font-black uppercase">DÍA NO LABORABLE</p>';
                 return;
             }
-
             let current = parseInt(config.start.split(':')[0]);
             const end = parseInt(config.end.split(':')[0]);
-            
             while(current < end) {
                 const time = `${current}:00`;
                 const isTaken = APP_DATA.appointments.some(a => a.date === dateInput && a.time === time);
@@ -625,11 +709,7 @@
 
         window.confirmBooking = () => {
             if(!selectedSlot || !window.portalUser) return;
-            APP_DATA.appointments.push({
-                date: document.getElementById('booking-date').value,
-                time: selectedSlot,
-                patient: window.portalUser
-            });
+            APP_DATA.appointments.push({ date: document.getElementById('booking-date').value, time: selectedSlot, patient: window.portalUser });
             saveToCloud(APP_DATA);
             selectedSlot = null;
             window.generateTimeSlots();
@@ -650,6 +730,39 @@
         window.deleteAppointment = (idx) => {
             APP_DATA.appointments.splice(idx, 1);
             saveToCloud(APP_DATA);
+        };
+
+        function renderPatientPortal() {
+            const p = APP_DATA.patients.find(x => x.name === window.portalUser);
+            if(p?.task) {
+                document.getElementById('patient-task-section').classList.remove('hidden');
+                document.getElementById('patient-task-content').innerText = p.task;
+            }
+            const resGrid = document.getElementById('patient-resources');
+            resGrid.innerHTML = APP_DATA.resources.map(r => {
+                const isVideo = r.type === 'video';
+                const isImg = r.type === 'file' && r.content.startsWith('data:image');
+                const embedUrl = isVideo ? getYouTubeEmbedUrl(r.content) : null;
+                return `
+                    <div class="glass-card p-10 rounded-[3.5rem] space-y-8 animate-fade-in flex flex-col items-center">
+                        <h4 class="text-xs font-black tracking-widest uppercase text-kairos-teal">${r.title}</h4>
+                        ${isVideo && embedUrl ? `<div class="w-full aspect-video rounded-2xl overflow-hidden border border-white/10"><iframe class="w-full h-full" src="${embedUrl}" frameborder="0" allowfullscreen></iframe></div>` : ''}
+                        ${isImg ? `<img src="${r.content}" class="w-full rounded-2xl border border-white/10 shadow-2xl">` : ''}
+                        <a href="${r.content}" ${r.type==='file' ? `download="${r.fileName}"` : 'target="_blank"'} class="bg-kairos-teal/10 text-kairos-teal border border-kairos-teal/30 px-10 py-4 rounded-full text-[9px] font-black uppercase hover:bg-kairos-teal hover:text-white transition-all">
+                            ${r.type==='file' ? 'DESCARGAR' : 'ABRIR'}
+                        </a>
+                    </div>
+                `;
+            }).join('') || '<p class="col-span-full py-20 text-center opacity-10 uppercase text-[10px]">Sin recursos</p>';
+        }
+
+        const getYouTubeEmbedUrl = (url) => {
+            if(!url) return null;
+            let videoId = "";
+            if (url.includes('v=')) videoId = url.split('v=')[1].split('&')[0];
+            else if (url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
+            else if (url.includes('shorts/')) videoId = url.split('shorts/')[1].split('?')[0];
+            return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
         };
 
         function renderScheduleConfig() {
@@ -678,6 +791,16 @@
                 APP_DATA.schedule[d].end = document.getElementById(`se-${d}`).value;
             });
             saveToCloud(APP_DATA);
+        };
+
+        window.registerWhatsAppClick = () => {
+            if(!window.portalUser) return;
+            const p = APP_DATA.patients.find(x => x.name === window.portalUser);
+            if(p) {
+                if(!p.contactLog) p.contactLog = [];
+                p.contactLog.unshift({ date: new Date().toLocaleString(), type: 'WA_CLICK' });
+                saveToCloud(APP_DATA);
+            }
         };
 
         window.onload = init;
