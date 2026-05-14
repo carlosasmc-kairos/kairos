@@ -72,7 +72,7 @@
     <div id="resource-modal-overlay" class="fixed inset-0 z-[400] hidden flex items-center justify-center p-4 md:p-10" onclick="if(event.target === this) window.closeResourceModal()">
         <div class="relative w-full max-w-5xl flex flex-col items-center justify-center animate-reveal pointer-events-none">
             <button onclick="window.closeResourceModal()" class="pointer-events-auto absolute -top-12 md:-top-14 right-0 bg-white/10 hover:bg-red-500/20 text-white hover:text-red-400 px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl transition-all flex items-center gap-2 md:gap-3 font-black text-[10px] md:text-xs uppercase tracking-widest border border-white/10">
-                <i data-lucide="x-circle" class="w-4 h-4 md:w-5 md:h-5"></i> CERRAR
+                <i data-lucide="x-circle" class="w-4 h-4 md:w-5 md:h-5"></i> CERRAR Y REGRESAR
             </button>
             <div id="modal-content-container" class="pointer-events-auto w-full aspect-video bg-black rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-white/10">
             </div>
@@ -135,7 +135,7 @@
                     <input type="date" id="booking-date" class="w-full input-premium p-4 rounded-xl text-center font-bold text-lg" onchange="window.generateTimeSlots()">
                     <div id="time-slots-container" class="hidden animate-reveal space-y-6">
                         <div id="time-slots" class="grid grid-cols-2 gap-3"></div>
-                        <!-- FORMULARIO DE DATOS (REINTEGRADO) -->
+                        <!-- FORMULARIO DE DATOS -->
                         <div id="booking-details-form" class="hidden space-y-4 pt-6 border-t border-white/5">
                             <input type="text" id="patient-full-name" autocomplete="off" class="w-full input-premium p-4 rounded-xl text-sm font-bold uppercase" placeholder="NOMBRE COMPLETO">
                             <input type="tel" id="patient-phone" autocomplete="off" class="w-full input-premium p-4 rounded-xl text-sm font-bold uppercase" placeholder="TELÉFONO">
@@ -605,6 +605,21 @@
                     </div>
                 `;
             }).join('') || '<p class="col-span-full py-20 opacity-20 text-[10px] font-black uppercase text-center tracking-[0.4em]">Sin materiales disponibles</p>';
+            lucide.createIcons();
+        }
+
+        function renderAdminSidebar() {
+            const sidebar = document.getElementById('sidebar-patients');
+            if(!sidebar) return;
+            sidebar.innerHTML = (APP_DATA.patients || []).map(p => `
+                <div class="group relative flex items-center gap-2 mb-2">
+                    <button type="button" onclick="window.openWorkspace('${p.id}')" class="flex-1 text-left p-5 rounded-2xl border transition-all ${activePatientId === p.id ? 'bg-kairos-teal/20 border-kairos-teal/40' : 'bg-white/5 border-white/5 hover:bg-white/10 shadow-lg'}">
+                        <p class="text-[7px] font-black text-kairos-teal uppercase mb-1">${p.id}</p>
+                        <p class="text-xs font-bold text-white uppercase truncate">${p.name}</p>
+                    </button>
+                    <button onclick="window.deletePatient('${p.id}')" class="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white p-2 rounded-full shadow-xl transition-all hover:scale-110"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                </div>
+            `).join('');
             lucide.createIcons();
         }
 
