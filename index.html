@@ -138,7 +138,7 @@
                     <h2 class="text-2xl font-black text-white uppercase italic tracking-tighter">Solicitar Cita</h2>
                     <p class="text-slate-500 font-bold tracking-widest uppercase text-[9px]">Consulta disponibilidad en tiempo real</p>
                 </div>
-                <div class="glass-panel p-8 space-y-8">
+                <div class="glass-panel p-8 space-y-8" id="booking-card-content">
                     <input type="date" id="booking-date" class="w-full input-premium p-4 rounded-xl text-center font-bold text-lg text-white" onchange="window.generateTimeSlots()">
                     <div id="time-slots-container" class="hidden animate-reveal space-y-6">
                         <div id="time-slots" class="grid grid-cols-2 gap-3"></div>
@@ -629,13 +629,34 @@
         window.confirmBooking = () => {
             if(!window.selectedSlot) return;
             if(!APP_DATA.appointments) APP_DATA.appointments = [];
-            APP_DATA.appointments.push({ 
+            
+            const newApp = { 
                 date: document.getElementById('booking-date').value, 
                 time: window.selectedSlot, 
                 patient: visitorName || "Usuario Web" 
-            });
+            };
+            
+            APP_DATA.appointments.push(newApp);
             saveToCloud(APP_DATA);
-            window.fullLogout();
+            
+            // Feedback visual de éxito sin sacar al usuario
+            const container = document.getElementById('booking-card-content');
+            container.innerHTML = `
+                <div class="py-10 animate-reveal flex flex-col items-center space-y-6 text-center">
+                    <div class="w-20 h-20 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center border border-green-500/30">
+                        <i data-lucide="check-circle" class="w-10 h-10"></i>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-xl font-black text-white uppercase">¡SOLICITUD ENVIADA!</h3>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-relaxed">
+                            Psic. Carlos Aguilar ha recibido tu solicitud para el <br>
+                            <span class="text-kairos-teal">${newApp.date} a las ${newApp.time}</span>.
+                        </p>
+                    </div>
+                    <button onclick="location.reload()" class="px-8 py-3 bg-white/5 rounded-xl text-[9px] font-black uppercase text-slate-400 border border-white/10 hover:bg-white/10 transition-all">Nueva Solicitud</button>
+                </div>
+            `;
+            lucide.createIcons();
         };
 
         function renderAdminSidebar() {
