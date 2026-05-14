@@ -357,7 +357,32 @@
         };
 
         window.deleteAppointment = async (id) => {
-            if(confirm("¿ELIMINAR ESTA CITA?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'citas', id));
+            // Reemplazo de confirm() por lógica directa para cumplir reglas de UI
+            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'citas', id));
+        };
+
+        window.deletePatient = async (id) => {
+            // Función para eliminar el expediente completo del paciente en la nube
+            const confirmDelete = document.getElementById('sync-status');
+            confirmDelete.innerText = "ELIMINANDO FOLIO...";
+            confirmDelete.classList.add('text-red-500');
+            
+            try {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'pacientes', id));
+                if(activePatientId === id) {
+                    activePatientId = null;
+                    document.getElementById('ws-clinical-form').innerHTML = `
+                        <div class="h-full flex items-center justify-center opacity-30 italic text-center">
+                            <p class="uppercase font-black tracking-widest">EXPEDIENTE ELIMINADO</p>
+                        </div>`;
+                }
+                setTimeout(() => {
+                    confirmDelete.innerText = "NUBE SINCRONIZADA";
+                    confirmDelete.classList.remove('text-red-500');
+                }, 2000);
+            } catch (e) {
+                confirmDelete.innerText = "ERROR AL ELIMINAR";
+            }
         };
 
         window.saveNote = async (id) => {
@@ -403,7 +428,6 @@
         };
 
         window.deleteNote = async (idx) => {
-            if(!confirm("¿ELIMINAR NOTA?")) return;
             const p = patients.find(pat => pat.id === activePatientId);
             let updatedNotes = [...p.notes];
             updatedNotes.splice(idx, 1);
@@ -494,10 +518,17 @@
         window.renderAdminUI = () => {
             const list = document.getElementById('admin-patient-list');
             list.innerHTML = patients.map(p => `
-                <div class="glass-card p-8 rounded-[2.5rem] flex justify-between items-center group">
+                <div class="glass-card p-8 rounded-[2.5rem] flex justify-between items-center group relative overflow-hidden">
                     <div><span class="text-[8px] font-black text-kairos-teal uppercase mb-2 block">${p.id}</span>
                     <h4 class="text-base font-black text-white uppercase">${p.name}</h4></div>
-                    <button onclick="window.openWorkspace('${p.id}')" class="bg-kairos-teal/10 p-4 rounded-2xl text-kairos-teal hover:bg-kairos-teal hover:text-white transition-all"><i data-lucide="chevron-right"></i></button>
+                    <div class="flex gap-3 relative z-10">
+                        <button onclick="window.deletePatient('${p.id}')" class="bg-red-500/10 p-4 rounded-2xl text-red-500 hover:bg-red-500 hover:text-white transition-all">
+                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                        </button>
+                        <button onclick="window.openWorkspace('${p.id}')" class="bg-kairos-teal/10 p-4 rounded-2xl text-kairos-teal hover:bg-kairos-teal hover:text-white transition-all">
+                            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
                 </div>`).join('');
 
             const wsList = document.getElementById('ws-patient-list');
@@ -610,7 +641,7 @@
         };
 
         window.deleteResource = async (id) => {
-            if(confirm("¿ELIMINAR RECURSO?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'recursos', id));
+            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'recursos', id));
         };
 
         window.handleAddResource = async () => {
