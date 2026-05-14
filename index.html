@@ -7,7 +7,7 @@
     
     <link rel="icon" type="image/png" href="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w128">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <script>
@@ -18,26 +18,19 @@
                         kairos: {
                             deep: '#020617',
                             teal: '#469da3',
-                            ai: '#a855f7',
-                            glass: 'rgba(15, 23, 42, 0.85)',
-                            border: 'rgba(255, 255, 255, 0.08)',
+                            ai: '#8b5cf6',
+                            glass: 'rgba(15, 23, 42, 0.7)',
+                            border: 'rgba(255, 255, 255, 0.1)',
                             whatsapp: '#25D366'
                         }
                     },
                     animation: {
-                        'float': 'floating 6s ease-in-out infinite',
-                        'reveal': 'revealUp 0.8s cubic-bezier(0, 0, 0.2, 1) forwards',
-                        'pulse-soft': 'pulseSoft 4s ease-in-out infinite',
-                        'gradient': 'gradientBG 15s ease infinite',
+                        'float': 'floating 4s ease-in-out infinite',
+                        'reveal': 'revealUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                     },
                     keyframes: {
-                        floating: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-25px)' } },
-                        revealUp: { '0%': { opacity: '0', transform: 'translateY(40px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-                        pulseSoft: { '0%, 100%': { opacity: '0.4' }, '50%': { opacity: '0.7' } },
-                        gradientBG: {
-                            '0%, 100%': { 'background-position': '0% 50%' },
-                            '50%': { 'background-position': '100% 50%' },
-                        }
+                        floating: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-15px)' } },
+                        revealUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
                     }
                 }
             }
@@ -45,277 +38,172 @@
     </script>
 
     <style>
-        body { 
-            background: linear-gradient(-45deg, #020617, #0f172a, #020617, #1e1b4b);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            color: #f8fafc; 
-            font-family: 'Inter', sans-serif; 
-            scroll-behavior: smooth; 
-            overflow-x: hidden; 
-        }
+        body { background: #020617; color: #f1f5f9; font-family: 'Inter', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
+        .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1.5rem; }
+        .input-premium { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; }
+        .input-premium:focus { border-color: #469da3; background: rgba(255, 255, 255, 0.08); outline: none; }
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #469da3; border-radius: 10px; }
         
-        .glass-card { 
-            background: rgba(15, 23, 42, 0.7); 
-            backdrop-filter: blur(30px); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-        .glass-card:hover { transform: translateY(-5px); border-color: rgba(70, 157, 163, 0.3); }
-
-        .premium-input { 
-            background: rgba(255, 255, 255, 0.03); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            transition: all 0.4s; 
-            color: white; 
-        }
-        .premium-input:focus { 
-            border-color: #469da3; 
-            background: rgba(255, 255, 255, 0.07); 
-            outline: none; 
-            box-shadow: 0 0 25px rgba(70, 157, 163, 0.2); 
-        }
-
-        .logo-container {
-            filter: drop-shadow(0 0 40px rgba(70, 157, 163, 0.4));
-            position: relative;
-        }
-        
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #469da3; border-radius: 10px; }
-
-        iframe { border-radius: 2rem; border: 1px solid rgba(255,255,255,0.1); }
-
         @media print {
             .no-print { display: none !important; }
             body { background: white !important; color: black !important; }
-            .print-area { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
-            .note-card { page-break-inside: avoid; border: 2px solid #469da3 !important; margin-bottom: 2rem; border-radius: 1rem; padding: 2rem; }
+            .print-area { display: block !important; padding: 0 !important; width: 100% !important; }
         }
     </style>
 </head>
-<body class="antialiased custom-scrollbar">
+<body class="antialiased custom-scroll">
 
     <div id="welcome-gate" class="fixed inset-0 z-[200] bg-kairos-deep flex items-center justify-center p-6 overflow-y-auto">
-        <div class="max-w-3xl w-full pt-48 pb-20 space-y-16 text-center">
-            
-            <div class="logo-container animate-float inline-block mb-8">
-                <div class="w-64 h-64 md:w-80 md:h-80 bg-white rounded-[4.5rem] p-12 mx-auto shadow-2xl flex items-center justify-center border-4 border-white/10 overflow-hidden">
-                    <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=1000" class="w-full h-full object-contain">
-                </div>
+        <div class="max-w-md w-full flex flex-col items-center text-center space-y-8 py-10 animate-reveal">
+            <div class="w-32 h-32 md:w-48 md:h-48 bg-white rounded-full p-4 md:p-6 shadow-2xl flex items-center justify-center border-4 border-kairos-teal/20 animate-float">
+                <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w1000" class="w-full h-full object-contain" alt="Logo KAIRÓS">
             </div>
-            
-            <div class="space-y-10 animate-reveal">
-                <div class="space-y-4">
-                    <h1 class="text-kairos-teal font-black tracking-[0.5em] uppercase text-base md:text-xl">PSIC. CARLOS AGUILAR SÁNCHEZ</h1>
-                    <h2 class="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none">BIENVENIDO A <br><span class="text-kairos-teal">KAIRÓS</span></h2>
-                    <p class="text-slate-400 text-xl md:text-3xl font-medium uppercase tracking-[0.3em] italic opacity-80">Psicología Especializada</p>
-                </div>
-                
-                <p class="text-slate-500 text-base md:text-xl max-w-2xl mx-auto uppercase tracking-widest leading-relaxed font-semibold">
-                    Un ecosistema digital diseñado para tu bienestar, consulta de recursos e interacción directa con tu terapeuta.
-                </p>
-
-                <div class="max-w-lg mx-auto space-y-10 pt-10">
-                    <div class="space-y-5">
-                        <p class="text-xs font-black text-kairos-teal uppercase tracking-[0.4em]">Ingresa tu nombre para personalizar tu espacio</p>
-                        <input type="text" id="visitor-name-gate" class="w-full premium-input p-8 rounded-[2.5rem] text-center text-3xl font-black uppercase tracking-widest" placeholder="TU NOMBRE AQUÍ" onkeypress="if(event.key === 'Enter') window.enterPortal()">
-                    </div>
-                    <button onclick="window.enterPortal()" class="w-full bg-kairos-teal text-white py-10 rounded-[2.5rem] font-black tracking-[0.4em] text-sm uppercase shadow-2xl hover:scale-[1.03] active:scale-95 transition-all">ACCEDER AL PORTAL</button>
-                    
-                    <button onclick="window.toggleAuth(true)" class="text-[11px] font-black text-slate-600 hover:text-kairos-teal transition-all tracking-[0.4em] uppercase pt-4 flex items-center justify-center gap-3 mx-auto group">
-                        <i data-lucide="shield-check" class="w-5 h-5 group-hover:rotate-12 transition-transform"></i> ACCESO PROFESIONAL
-                    </button>
-                </div>
+            <div class="space-y-4">
+                <h1 class="text-kairos-teal font-black tracking-widest uppercase text-xs">BIENVENIDO A KAIRÓS PSICOLOGÍA ESPECIALIZADA</h1>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white leading-tight uppercase">PSIC. CARLOS <br><span class="text-kairos-teal">AGUILAR SÁNCHEZ</span></h2>
+                <p class="text-slate-400 text-sm font-medium leading-relaxed">Tu portal interactivo para salud mental y bienestar digital.</p>
+            </div>
+            <div class="w-full space-y-4">
+                <input type="text" id="visitor-name-gate" class="w-full input-premium p-4 rounded-xl text-center text-lg font-bold uppercase" placeholder="TU NOMBRE AQUÍ" onkeypress="if(event.key === 'Enter') window.enterPortal()">
+                <button onclick="window.enterPortal()" class="w-full bg-kairos-teal text-white py-4 rounded-xl font-black tracking-widest text-xs uppercase shadow-xl hover:brightness-110 active:scale-95 transition-all">ACCEDER AL PORTAL</button>
+                <button onclick="window.toggleAuth(true)" class="text-[10px] font-black text-slate-600 hover:text-kairos-teal transition-all tracking-[0.2em] uppercase pt-4 flex items-center justify-center gap-2 mx-auto"><i data-lucide="shield-check" class="w-4 h-4"></i> ACCESO PROFESIONAL</button>
             </div>
         </div>
     </div>
 
-    <nav class="fixed top-0 w-full z-[80] bg-kairos-deep/60 backdrop-blur-3xl border-b border-white/5 no-print">
-        <div class="max-w-7xl mx-auto px-6 h-28 flex justify-between items-center">
-            <div class="flex items-center gap-6">
-                <div class="w-16 h-16 bg-white rounded-2xl p-2 flex items-center justify-center overflow-hidden shadow-xl animate-float">
-                    <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=200" class="w-full h-full object-contain">
+    <nav class="fixed top-0 w-full z-[80] bg-kairos-deep/80 backdrop-blur-xl border-b border-white/5 no-print">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white rounded-lg p-1.5 flex items-center justify-center">
+                    <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w200" class="w-full h-full object-contain">
                 </div>
-                <div class="flex flex-col">
-                    <span class="text-xl font-black tracking-[0.2em] uppercase text-white leading-none">KAIRÓS</span>
-                    <span id="nav-welcome" class="text-[11px] font-bold text-kairos-teal uppercase tracking-widest mt-2">Salud Digital</span>
+                <div>
+                    <span class="text-xs font-black tracking-widest uppercase text-white leading-none">KAIRÓS</span>
+                    <p id="nav-welcome" class="text-[9px] font-bold text-kairos-teal uppercase tracking-widest mt-0.5">Portal de Bienvenida</p>
                 </div>
             </div>
-            <div class="flex items-center gap-6">
-                <div id="sync-indicator" class="hidden sm:flex items-center gap-3 bg-white/5 px-6 py-4 rounded-full border border-white/10">
-                    <div id="sync-dot" class="w-2 h-2 rounded-full bg-kairos-teal animate-pulse"></div>
-                    <span id="sync-text" class="text-[10px] font-black tracking-widest text-slate-400 uppercase">En Línea</span>
+            <div class="flex items-center gap-4">
+                <div id="sync-indicator" class="hidden sm:flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
+                    <div id="sync-dot" class="w-2 h-2 rounded-full bg-slate-500"></div>
+                    <span id="sync-text" class="text-[9px] font-bold tracking-widest text-slate-400 uppercase">Sincronizando...</span>
                 </div>
-                <button onclick="window.toggleAuth(true)" class="p-5 bg-white/5 rounded-2xl border border-white/10 text-slate-400 hover:text-kairos-teal hover:bg-white/10 transition-all">
-                    <i data-lucide="lock" class="w-7 h-7"></i>
-                </button>
+                <button onclick="window.toggleAuth(true)" class="p-2.5 bg-white/5 rounded-lg border border-white/10 text-slate-400 hover:text-kairos-teal transition-all"><i data-lucide="lock" class="w-5 h-5"></i></button>
             </div>
         </div>
     </nav>
 
-    <main id="main-content" class="pt-72 pb-32 no-print hidden">
-        <header class="max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div class="space-y-14 animate-reveal">
-                <h1 id="hero-greeting" class="text-7xl md:text-9xl font-black text-white leading-[0.85] uppercase tracking-tighter">
-                    HOLA <br><span class="text-slate-600 italic block mt-4">ESTE ES TU ESPACIO</span>
-                </h1>
-                <p class="text-2xl md:text-4xl text-slate-400 font-medium leading-relaxed max-w-2xl">
-                    Soy el <span class="text-white font-black italic">Psic. Carlos Aguilar Sánchez</span>. He diseñado este portal para que consultes horarios e interactúes conmigo.
-                </p>
-                <div class="flex flex-wrap gap-10 justify-center lg:justify-start pt-6">
-                    <a href="#agenda" class="bg-kairos-teal text-white px-16 py-10 rounded-[2.5rem] font-black tracking-widest text-sm uppercase shadow-2xl hover:scale-105 active:scale-95 transition-all">Agendar Sesión</a>
-                    <a href="https://wa.me/522381239088" target="_blank" class="bg-white/5 border border-white/10 text-white px-16 py-10 rounded-[2.5rem] font-black tracking-widest text-sm uppercase hover:bg-white/10 transition-all flex items-center gap-5 group">
-                        WhatsApp <i data-lucide="message-circle" class="w-8 h-8 text-kairos-whatsapp group-hover:rotate-12 transition-transform"></i>
-                    </a>
-                </div>
+    <main id="main-content" class="hidden pt-32 pb-32 no-print">
+        <header class="max-w-6xl mx-auto px-6 text-center space-y-8 mb-20 animate-reveal">
+            <div class="w-24 h-24 md:w-32 md:h-32 mx-auto bg-white rounded-3xl p-4 shadow-2xl flex items-center justify-center border-2 border-white/5 animate-float">
+                <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w1000" class="w-full h-full object-contain">
             </div>
-            <div class="hidden lg:flex justify-end animate-float">
-                <div class="w-[35rem] h-[35rem] bg-white rounded-[6rem] p-20 logo-container rotate-3 border-8 border-white/5">
-                    <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=1000" class="w-full h-full object-contain">
-                </div>
-            </div>
+            <h1 id="hero-greeting" class="text-3xl md:text-5xl font-black text-white leading-tight uppercase tracking-tighter">HOLA <br><span class="text-kairos-teal">BIENVENIDO</span></h1>
+            <p class="text-base text-slate-400 font-medium max-w-lg mx-auto uppercase italic">Espacio Clínico del Psic. Carlos Aguilar Sánchez</p>
         </header>
 
-        <section id="biblioteca" class="py-32 px-6 border-y border-white/5 bg-white/[0.01]">
-            <div class="max-w-7xl mx-auto space-y-24">
-                <div class="text-center space-y-10">
-                    <h2 class="text-7xl md:text-9xl font-black text-white uppercase italic tracking-tighter">Biblioteca Digital</h2>
-                    <p class="text-kairos-teal font-black tracking-[0.8em] uppercase text-sm">Contenido Multimedia Especializado</p>
+        <section id="biblioteca" class="py-16 px-6 bg-white/[0.02] border-y border-white/5">
+            <div class="max-w-6xl mx-auto space-y-12">
+                <div class="text-center">
+                    <h2 class="text-2xl font-black text-white uppercase italic tracking-tighter">Biblioteca Digital</h2>
+                    <p class="text-kairos-teal font-bold tracking-widest uppercase text-[9px] mt-2">Materiales para tu proceso terapéutico</p>
                 </div>
-                <div id="patient-resources" class="grid grid-cols-1 md:grid-cols-2 gap-20"></div>
+                <div id="patient-resources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             </div>
         </section>
 
-        <section id="agenda" class="py-32 px-6">
-            <div class="max-w-6xl mx-auto space-y-24 text-center">
-                <div class="space-y-8">
-                    <h2 class="text-7xl md:text-9xl font-black text-white uppercase tracking-tighter italic leading-none">Tu Tiempo</h2>
-                    <p class="text-slate-500 font-bold uppercase tracking-[0.6em] text-sm">Consulta Disponibilidad en Tiempo Real</p>
+        <section id="agenda" class="py-16 px-6">
+            <div class="max-w-xl mx-auto text-center space-y-12">
+                <div class="space-y-2">
+                    <h2 class="text-2xl font-black text-white uppercase italic tracking-tighter">Agenda de Sesiones</h2>
+                    <p class="text-slate-500 font-bold tracking-widest uppercase text-[9px]">Consulta disponibilidad en tiempo real</p>
                 </div>
-                <div class="glass-card p-14 md:p-32 rounded-[6rem] space-y-24 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-kairos-teal to-transparent opacity-30"></div>
-                    
-                    <div class="max-w-xl mx-auto space-y-12">
-                        <label class="text-sm font-black text-kairos-teal uppercase tracking-widest block">1. Selecciona una fecha</label>
-                        <input type="date" id="booking-date" class="w-full premium-input p-10 rounded-3xl text-center font-black uppercase text-4xl shadow-inner" onchange="window.generateTimeSlots()">
-                    </div>
-                    
-                    <div id="time-slots-container" class="hidden space-y-20 animate-reveal">
-                        <div class="space-y-10">
-                            <label class="text-sm font-black text-kairos-teal uppercase tracking-widest block">2. Elige un horario disponible</label>
-                            <div id="time-slots" class="grid grid-cols-2 md:grid-cols-4 gap-8"></div>
-                        </div>
-                        
-                        <div id="booking-form" class="hidden pt-20 border-t border-white/5">
-                            <button onclick="window.confirmBooking()" class="w-full max-w-2xl mx-auto bg-kairos-teal py-12 rounded-[3rem] font-black tracking-[0.5em] text-sm uppercase shadow-2xl hover:scale-[1.02] active:scale-95 transition-all">SOLICITAR CITA AHORA</button>
-                        </div>
+                <div class="glass-panel p-8 space-y-8">
+                    <input type="date" id="booking-date" class="w-full input-premium p-4 rounded-xl text-center font-bold text-lg" onchange="window.generateTimeSlots()">
+                    <div id="time-slots-container" class="hidden animate-reveal space-y-6">
+                        <div id="time-slots" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+                        <button id="btn-booking-final" onclick="window.confirmBooking()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[10px] uppercase shadow-lg hidden">Confirmar Cita</button>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <div id="view-admin" class="hidden fixed inset-0 z-[120] bg-kairos-deep overflow-y-auto pt-40 custom-scrollbar">
-        <div class="max-w-7xl mx-auto px-6 space-y-20 pb-40">
-            <div class="flex justify-between items-center border-b border-white/10 pb-12 no-print">
-                <div class="space-y-3">
-                    <h2 class="text-5xl font-black text-kairos-teal uppercase italic tracking-tight">Gestión Clínica KAIRÓS</h2>
-                    <p class="text-slate-500 text-sm font-bold uppercase tracking-[0.4em]">Portal del Psic. Carlos Aguilar Sánchez</p>
+    <div id="view-admin" class="hidden fixed inset-0 z-[120] bg-kairos-deep overflow-y-auto pt-24 custom-scroll">
+        <div class="max-w-7xl mx-auto px-6 pb-20 space-y-8">
+            <div class="flex justify-between items-center border-b border-white/5 pb-8">
+                <div>
+                    <h2 class="text-xl font-black text-kairos-teal uppercase italic">Gestión Clínica KAIRÓS</h2>
+                    <p class="text-slate-500 text-[9px] font-black uppercase tracking-widest">Psic. Carlos Aguilar Sánchez</p>
                 </div>
-                <button onclick="window.toggleAdminMode(false)" class="p-8 bg-white/5 rounded-3xl text-red-500 border border-red-500/10 hover:bg-red-500/10 transition-all">
-                    <i data-lucide="x" class="w-10 h-10"></i>
-                </button>
+                <button onclick="window.toggleAdminMode(false)" class="p-3 bg-red-500/10 rounded-xl text-red-500 border border-red-500/10"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
 
-            <div class="flex gap-6 overflow-x-auto pb-10 no-print custom-scrollbar">
-                <button onclick="window.switchTab('expedientes')" id="tab-expedientes" class="px-12 py-8 rounded-3xl text-[11px] font-black uppercase tracking-widest bg-kairos-teal text-white flex-shrink-0 transition-all shadow-xl">Pacientes</button>
-                <button onclick="window.switchTab('notas')" id="tab-notas" class="px-12 py-8 rounded-3xl text-[11px] font-black uppercase tracking-widest text-slate-500 bg-white/5 flex-shrink-0 transition-all">Notas Médicas</button>
-                <button onclick="window.switchTab('agenda')" id="tab-agenda" class="px-12 py-8 rounded-3xl text-[11px] font-black uppercase tracking-widest text-slate-500 bg-white/5 flex-shrink-0 transition-all">Citas</button>
-                <button onclick="window.switchTab('biblioteca')" id="tab-biblioteca" class="px-12 py-8 rounded-3xl text-[11px] font-black uppercase tracking-widest text-slate-500 bg-white/5 flex-shrink-0 transition-all">Contenidos</button>
-                <button onclick="window.switchTab('config')" id="tab-config" class="px-12 py-8 rounded-3xl text-[11px] font-black uppercase tracking-widest text-slate-500 bg-white/5 flex-shrink-0 transition-all">Horarios</button>
+            <div class="flex gap-2 overflow-x-auto pb-4 no-print custom-scroll">
+                <button onclick="window.switchTab('expedientes')" id="tab-expedientes" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase bg-kairos-teal text-white shadow-md">Pacientes & Notas</button>
+                <button onclick="window.switchTab('agenda')" id="tab-agenda" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5">Citas Registradas</button>
+                <button onclick="window.switchTab('biblioteca')" id="tab-biblioteca" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5">Recursos Multimedia</button>
+                <button onclick="window.switchTab('config')" id="tab-config" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5">Configurar Horarios</button>
             </div>
 
-            <!-- Panel Bibliotecar -->
-            <div id="panel-biblioteca" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-20 animate-reveal">
-                <div class="glass-card p-16 rounded-[4rem] space-y-12">
-                    <h3 class="text-sm font-black text-kairos-teal tracking-[0.5em] uppercase italic">Nuevo Recurso Multimedia</h3>
-                    <div class="space-y-8">
-                        <input type="text" id="res-title" class="premium-input w-full p-8 rounded-3xl text-base font-bold uppercase" placeholder="Título del Material">
-                        <select id="res-type" class="premium-input w-full p-8 rounded-3xl text-base bg-kairos-deep font-bold">
-                            <option value="youtube">Vídeo de YouTube</option>
-                            <option value="drive-video">Vídeo de Google Drive</option>
-                            <option value="drive-pdf">PDF de Google Drive</option>
-                            <option value="image">Imagen / Infografía</option>
-                            <option value="link">Enlace Externo</option>
-                        </select>
-                        <input type="url" id="res-url" class="premium-input w-full p-8 rounded-3xl text-base font-bold" placeholder="URL Completa (YouTube o Drive)">
-                        <button onclick="window.addResource()" class="w-full bg-kairos-teal py-10 rounded-[3rem] font-black text-xs uppercase shadow-xl hover:scale-[1.02] transition-all">SUBIR RECURSO AL PORTAL</button>
+            <div id="panel-expedientes" class="grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-[700px] animate-reveal">
+                <div class="lg:col-span-3 space-y-4 no-print">
+                    <div class="glass-panel p-5 space-y-4">
+                        <h3 class="text-[9px] font-black text-kairos-teal uppercase tracking-widest">Nuevo Paciente</h3>
+                        <input type="text" id="new-p-name" class="input-premium w-full p-3 rounded-lg text-xs font-bold uppercase" placeholder="Nombre Completo">
+                        <input type="date" id="new-p-date" class="input-premium w-full p-3 rounded-lg text-xs">
+                        <button onclick="window.registerPatient()" class="w-full bg-kairos-teal py-3 rounded-lg font-black text-[9px] uppercase">Crear Expediente</button>
                     </div>
+                    <div id="sidebar-patients" class="space-y-2 overflow-y-auto max-h-[500px] custom-scroll"></div>
                 </div>
-                <div id="admin-resources-list" class="space-y-8 overflow-y-auto max-h-[900px] custom-scrollbar pr-4"></div>
-            </div>
-
-            <!-- Panel Expedientes -->
-            <div id="panel-expedientes" class="space-y-20">
-                <div class="glass-card p-16 rounded-[4rem] max-w-4xl no-print">
-                    <h3 class="text-sm font-black text-kairos-teal tracking-[0.5em] mb-14 uppercase italic">Registro de Nuevo Paciente</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                        <input type="text" id="new-p-name" class="premium-input p-10 rounded-3xl text-base font-black uppercase" placeholder="Nombre Completo">
-                        <input type="date" id="new-p-date" class="premium-input p-10 rounded-3xl text-base font-bold">
-                    </div>
-                    <button onclick="window.registerPatient()" class="w-full mt-12 bg-kairos-teal py-10 rounded-[3rem] font-black text-xs uppercase shadow-xl">CREAR EXPEDIENTE KAIRÓS</button>
-                </div>
-                <div id="admin-patients-list" class="grid grid-cols-1 md:grid-cols-3 gap-12"></div>
-            </div>
-
-            <!-- Panel Notas -->
-            <div id="panel-notas" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-12 min-h-[900px]">
-                <div class="lg:col-span-3 glass-card p-10 rounded-[4rem] flex flex-col gap-6 overflow-y-auto max-h-[1000px] no-print custom-scrollbar" id="notas-sidebar"></div>
-                <div class="lg:col-span-9 glass-card p-16 md:p-32 rounded-[6rem] overflow-y-auto print-area custom-scrollbar" id="clinical-workspace">
-                    <div class="flex flex-col items-center justify-center h-full opacity-20 text-center space-y-10">
-                        <i data-lucide="folder-open" class="w-32 h-32 text-kairos-teal"></i>
-                        <p class="text-2xl font-black uppercase tracking-[0.5em]">Selecciona un expediente para trabajar</p>
+                <div class="lg:col-span-9 glass-panel p-6 md:p-10 overflow-y-auto print-area custom-scroll" id="clinical-workspace">
+                    <div class="flex flex-col items-center justify-center h-full opacity-20 text-center space-y-4">
+                        <i data-lucide="folder-search" class="w-16 h-16"></i>
+                        <p class="text-xs font-black uppercase tracking-widest">Selecciona un paciente para iniciar sesión clínica</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Panel Agenda -->
-            <div id="panel-agenda" class="hidden grid grid-cols-1 md:grid-cols-3 gap-12"></div>
+            <div id="panel-biblioteca" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-8 animate-reveal">
+                <div class="glass-panel p-6 space-y-5">
+                    <h3 class="text-[9px] font-black text-kairos-teal tracking-widest uppercase">Subir Material</h3>
+                    <input type="text" id="res-title" class="input-premium w-full p-4 rounded-xl text-xs font-bold uppercase" placeholder="Título">
+                    <select id="res-type" class="input-premium w-full p-4 rounded-xl text-xs bg-kairos-deep font-bold">
+                        <option value="youtube">Video YouTube</option>
+                        <option value="drive">Archivo / PDF (Drive)</option>
+                        <option value="image">Imagen</option>
+                    </select>
+                    <input type="url" id="res-url" class="input-premium w-full p-4 rounded-xl text-xs" placeholder="Enlace Compartido">
+                    <button onclick="window.addResource()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[9px] uppercase">Añadir a Biblioteca</button>
+                </div>
+                <div id="admin-resources-list" class="space-y-3 max-h-[600px] overflow-y-auto custom-scroll"></div>
+            </div>
 
-            <!-- Panel Configuración (Fijado) -->
+            <div id="panel-agenda" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-reveal"></div>
+
             <div id="panel-config" class="hidden animate-reveal">
-                <div class="glass-card p-20 rounded-[6rem] max-w-5xl mx-auto space-y-20">
-                    <div class="text-center">
-                        <h3 class="text-sm font-black text-kairos-teal uppercase tracking-[0.6em] italic">Configuración de Agenda Semanal</h3>
-                        <p class="text-slate-500 text-xs mt-6 font-bold tracking-widest uppercase">Activa los días y define tus horas de consulta</p>
-                    </div>
-                    <div id="schedule-config-container" class="space-y-10"></div>
-                    <button onclick="window.saveScheduleConfig()" class="w-full bg-kairos-teal py-12 rounded-[3.5rem] font-black text-sm uppercase shadow-2xl hover:scale-[1.02] transition-all flex items-center justify-center gap-4">
-                        <i data-lucide="cloud-upload"></i> Guardar Configuración en la Nube
-                    </button>
+                <div class="glass-panel p-8 max-w-2xl mx-auto space-y-8 text-center">
+                    <h3 class="text-[9px] font-black text-kairos-teal uppercase tracking-widest">Ajustes Semanales de Disponibilidad</h3>
+                    <div id="schedule-config-container" class="space-y-3"></div>
+                    <button onclick="window.saveScheduleConfig()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[10px] uppercase">Guardar Cambios en la Nube</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="auth-modal" class="fixed inset-0 z-[220] hidden flex items-center justify-center bg-black/95 backdrop-blur-3xl px-6">
-        <div class="glass-card p-20 rounded-[6rem] max-w-md w-full text-center space-y-20 border border-white/10 shadow-[0_0_120px_rgba(70,157,163,0.3)]">
-            <div class="space-y-6">
-                <h2 class="text-4xl font-black tracking-[0.5em] text-kairos-teal uppercase italic">ACCESO CLÍNICO</h2>
-                <p class="text-xs text-slate-500 font-bold uppercase tracking-widest">Introduzca su PIN Maestro</p>
-            </div>
-            <input type="password" id="admin-pass" placeholder="PIN" class="w-full premium-input py-12 text-center text-8xl tracking-[0.5em] rounded-[4rem] font-black" onkeypress="if(event.key === 'Enter') window.validateAdmin()">
-            <div class="flex gap-8">
-                <button onclick="window.toggleAuth(false)" class="flex-1 py-8 text-xs font-black text-slate-500 uppercase tracking-widest hover:text-white transition-all">Volver</button>
-                <button onclick="window.validateAdmin()" class="flex-1 bg-kairos-teal py-8 rounded-[3rem] font-black text-xs uppercase tracking-widest shadow-xl">Entrar</button>
+    <div id="auth-modal" class="fixed inset-0 z-[220] hidden flex items-center justify-center bg-black/95 backdrop-blur-2xl px-6">
+        <div class="glass-panel p-10 max-w-xs w-full text-center space-y-8">
+            <h2 class="text-lg font-black tracking-widest text-kairos-teal uppercase italic">Acceso Administrador</h2>
+            <input type="password" id="admin-pass" placeholder="PIN" class="w-full input-premium py-4 text-center text-3xl tracking-[1em] rounded-xl font-black" onkeypress="if(event.key === 'Enter') window.validateAdmin()">
+            <div class="flex gap-3">
+                <button onclick="window.toggleAuth(false)" class="flex-1 py-3 text-[9px] font-black text-slate-500 uppercase">Cerrar</button>
+                <button onclick="window.validateAdmin()" class="flex-1 bg-kairos-teal py-3 rounded-xl font-black text-[9px] uppercase">Entrar</button>
             </div>
         </div>
     </div>
 
-    <a href="https://wa.me/522381239088" target="_blank" class="fixed bottom-12 right-12 z-[100] w-28 h-28 bg-kairos-whatsapp rounded-full shadow-[0_20px_60px_rgba(37,211,102,0.4)] flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all border-4 border-kairos-deep no-print animate-float">
-        <i data-lucide="message-circle" class="w-14 h-14"></i>
+    <a href="https://wa.me/522381239088" target="_blank" class="fixed bottom-6 right-6 z-[100] w-14 h-14 bg-kairos-whatsapp rounded-2xl shadow-xl flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all border-2 border-kairos-deep no-print">
+        <i data-lucide="message-circle" class="w-7 h-7"></i>
     </a>
 
     <script type="module">
@@ -323,7 +211,6 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAIu-Vq3jDea3Xr7VRxJckSdXQ5Ja7K_mM",
             authDomain: "kairos-b84d5.firebaseapp.com",
@@ -336,8 +223,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        // Correct path as per Firebase paired segment rules
-        const mainDocRef = doc(db, 'configuracion', 'portal_kairos_master');
+        const mainDocRef = doc(db, 'configuracion', 'portal_kairos_master_v15');
 
         let APP_DATA = { patients: [], resources: [], appointments: [], schedule: {} };
         let visitorName = "";
@@ -361,21 +247,13 @@
                         saveToCloud({ patients: [], resources: [], appointments: [], schedule: defaultSchedule });
                     }
                 });
-            } catch (err) { 
-                console.error("Firebase Sync Error:", err); 
-                updateSyncStatus('error', 'Fallo Nube');
-            }
+            } catch (err) { updateSyncStatus('error', 'Fallo Auth'); }
         }
 
         const saveToCloud = async (data) => {
             updateSyncStatus('sync', 'Guardando...');
-            try { 
-                await setDoc(mainDocRef, data); 
-                updateSyncStatus('success', 'Guardado');
-            } catch (e) { 
-                console.error("Cloud Save Error:", e); 
-                updateSyncStatus('error', 'Error al Guardar');
-            }
+            try { await setDoc(mainDocRef, data); updateSyncStatus('success', 'Guardado'); } 
+            catch (e) { updateSyncStatus('error', 'Error Nube'); }
         };
 
         function updateSyncStatus(type, text) {
@@ -386,29 +264,13 @@
             txt.innerText = text.toUpperCase();
         }
 
-        const transformDriveUrl = (url) => {
-            if (!url.includes('drive.google.com')) return url;
-            let id = "";
-            const match = url.match(/\/d\/(.+?)\//) || url.match(/id=(.+?)(&|$)/);
-            if (match) id = match[1];
-            return id ? `https://drive.google.com/file/d/${id}/preview` : url;
-        };
-
-        const getYouTubeEmbed = (url) => {
-            let id = "";
-            if (url.includes('v=')) id = url.split('v=')[1].split('&')[0];
-            else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1].split('?')[0];
-            else if (url.includes('shorts/')) id = url.split('shorts/')[1].split('?')[0];
-            return id ? `https://www.youtube.com/embed/${id}` : url;
-        };
-
         window.enterPortal = () => {
             visitorName = document.getElementById('visitor-name-gate').value.trim().toUpperCase();
-            if(!visitorName) return;
+            if(visitorName.length < 2) return;
             document.getElementById('welcome-gate').classList.add('hidden');
             document.getElementById('main-content').classList.remove('hidden');
             document.getElementById('hero-greeting').innerHTML = `HOLA <br><span class="text-kairos-teal">${visitorName}</span>`;
-            document.getElementById('nav-welcome').innerText = `Espacio de ${visitorName}`;
+            document.getElementById('nav-welcome').innerText = `Portal de ${visitorName}`;
             lucide.createIcons();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
@@ -422,7 +284,7 @@
                 window.toggleAdminMode(true); 
             } else {
                 document.getElementById('admin-pass').value = "";
-                document.getElementById('admin-pass').placeholder = "PIN INCORRECTO";
+                document.getElementById('admin-pass').placeholder = "PIN ERRÓNEO";
             }
         };
         
@@ -434,25 +296,34 @@
         };
 
         window.switchTab = (tab) => {
-            ['expedientes', 'notas', 'agenda', 'biblioteca', 'config'].forEach(p => {
+            ['expedientes', 'agenda', 'biblioteca', 'config'].forEach(p => {
                 document.getElementById('panel-'+p)?.classList.add('hidden');
                 const t = document.getElementById('tab-'+p);
-                if(t) t.className = "px-12 py-8 rounded-3xl text-[11px] font-black uppercase tracking-widest text-slate-500 bg-white/5 flex-shrink-0 transition-all";
+                if(t) t.className = "px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5";
             });
             document.getElementById('panel-'+tab)?.classList.remove('hidden');
             const target = document.getElementById('tab-'+tab);
-            if(target) target.className = "px-12 py-8 rounded-3xl text-[11px] font-black uppercase tracking-widest bg-kairos-teal text-white shadow-xl transition-all";
+            if(target) target.className = "px-6 py-3 rounded-xl text-[9px] font-black uppercase bg-kairos-teal text-white shadow-md";
         };
 
         const refreshUI = () => {
-            renderAdminPatients();
-            renderSidebar();
             renderPublicResources();
-            renderAdminResources();
-            renderAdminAgenda();
-            renderScheduleConfig();
-            if(activePatientId && isAdminActive) window.openWorkspace(activePatientId);
+            if(isAdminActive) {
+                renderAdminSidebar();
+                renderAdminResources();
+                renderAdminAgenda();
+                renderScheduleConfig();
+                if(activePatientId) window.openWorkspace(activePatientId);
+            }
             lucide.createIcons();
+        };
+
+        const transformDriveUrl = (url) => {
+            if (!url.includes('drive.google.com')) return url;
+            let id = "";
+            const match = url.match(/\/d\/(.+?)\//) || url.match(/id=(.+?)(&|$)/);
+            if (match) id = match[1];
+            return id ? `https://drive.google.com/file/d/${id}/preview` : url;
         };
 
         window.addResource = () => {
@@ -460,9 +331,11 @@
             const type = document.getElementById('res-type').value;
             let content = document.getElementById('res-url').value.trim();
             if(!title || !content) return;
-            if (type.includes('drive')) content = transformDriveUrl(content);
-            if (type === 'youtube') content = getYouTubeEmbed(content);
-            if (!APP_DATA.resources) APP_DATA.resources = [];
+            if (type === 'drive') content = transformDriveUrl(content);
+            if (type === 'youtube') {
+                let id = content.includes('v=') ? content.split('v=')[1].split('&')[0] : content.split('/').pop();
+                content = `https://www.youtube.com/embed/${id}`;
+            }
             APP_DATA.resources.unshift({ title, type, content, id: Date.now() });
             saveToCloud(APP_DATA);
             document.getElementById('res-title').value = "";
@@ -472,33 +345,26 @@
         function renderPublicResources() {
             const list = document.getElementById('patient-resources');
             list.innerHTML = (APP_DATA.resources || []).map(r => `
-                <div class="glass-card p-16 rounded-[5rem] space-y-12 flex flex-col items-center text-center animate-reveal">
-                    <div class="space-y-4">
-                        <span class="text-xs font-black text-kairos-teal tracking-[0.5em] uppercase opacity-70">${r.type.replace('-',' ')}</span>
-                        <h4 class="text-3xl md:text-5xl font-black text-white uppercase tracking-tight leading-tight">${r.title}</h4>
-                    </div>
-                    <div class="w-full aspect-video rounded-[3.5rem] overflow-hidden bg-black/40 border border-white/5 shadow-2xl">
-                        ${r.type === 'youtube' || r.type.includes('drive') 
+                <div class="glass-panel p-6 flex flex-col space-y-4">
+                    <span class="text-[8px] font-black text-kairos-teal uppercase tracking-widest">${r.type}</span>
+                    <h4 class="text-sm font-bold text-white uppercase leading-tight">${r.title}</h4>
+                    <div class="w-full aspect-video rounded-xl overflow-hidden bg-black/40 border border-white/5">
+                        ${r.type === 'youtube' || r.type === 'drive' 
                             ? `<iframe class="w-full h-full" src="${r.content}" allowfullscreen></iframe>`
                             : r.type === 'image' 
                                 ? `<img src="${r.content}" class="w-full h-full object-cover">`
-                                : `<div class="flex flex-col items-center justify-center h-full gap-10">
-                                     <i data-lucide="external-link" class="w-24 h-24 text-kairos-teal"></i>
-                                     <a href="${r.content}" target="_blank" class="bg-kairos-teal text-white px-16 py-6 rounded-full text-xs font-black uppercase tracking-widest shadow-xl">Abrir Material Externo</a>
-                                   </div>`
+                                : `<div class="flex flex-col items-center justify-center h-full"><a href="${r.content}" target="_blank" class="bg-kairos-teal text-white px-6 py-2 rounded-lg text-[8px] font-bold uppercase">Ver Enlace</a></div>`
                         }
                     </div>
                 </div>
-            `).join('') || '<p class="col-span-full py-20 text-center opacity-20 text-xl italic uppercase font-black tracking-widest">Sincronizando contenidos...</p>';
-            lucide.createIcons();
+            `).join('') || '<p class="col-span-full py-10 opacity-20 text-[9px] uppercase font-bold text-center tracking-widest">Sincronizando contenidos...</p>';
         }
 
         window.registerPatient = () => {
             const name = document.getElementById('new-p-name').value.trim().toUpperCase();
             const date = document.getElementById('new-p-date').value;
             if(!name || !date) return;
-            if(!APP_DATA.patients) APP_DATA.patients = [];
-            APP_DATA.patients.unshift({ id: "KAI-"+Math.floor(10000+Math.random()*90000), name, date, notes: [], task: "" });
+            APP_DATA.patients.unshift({ id: "KAI-"+Math.floor(10000+Math.random()*90000), name, date, notes: [] });
             saveToCloud(APP_DATA);
             document.getElementById('new-p-name').value = "";
         };
@@ -508,48 +374,34 @@
             const p = APP_DATA.patients.find(x => x.id === id);
             const ws = document.getElementById('clinical-workspace');
             ws.innerHTML = `
-                <div class="space-y-24 animate-reveal">
-                    <div class="flex justify-between items-center border-b border-white/5 pb-16">
-                        <div class="space-y-6">
-                            <span class="text-xs font-black text-kairos-teal uppercase tracking-widest bg-kairos-teal/10 px-8 py-3 rounded-full">${p.id}</span>
-                            <h2 class="text-7xl font-black text-white uppercase italic tracking-tighter leading-none">${p.name}</h2>
+                <div class="space-y-8 animate-reveal">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/5 pb-6 gap-4">
+                        <div>
+                            <span class="text-[8px] font-black text-kairos-teal uppercase tracking-widest px-3 py-1 bg-kairos-teal/10 rounded-full">${p.id}</span>
+                            <h2 class="text-2xl font-black text-white uppercase italic mt-2">${p.name}</h2>
                         </div>
-                        <button onclick="window.print()" class="p-10 bg-white/5 rounded-[2.5rem] border border-white/10 no-print text-kairos-teal hover:bg-white/10 transition-all">
-                            <i data-lucide="printer" class="w-12 h-12"></i>
-                        </button>
+                        <button onclick="window.print()" class="p-3 bg-white/5 rounded-xl no-print text-kairos-teal"><i data-lucide="printer" class="w-6 h-6"></i></button>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-14 no-print">
-                        <div class="space-y-6">
-                            <div class="flex justify-between items-center px-4">
-                                <label class="text-xs font-black text-slate-500 uppercase tracking-widest">Observaciones Clínicas</label>
-                                <button onclick="window.getAISuggestion('note-mental')" class="text-[9px] bg-kairos-ai/10 text-kairos-ai px-4 py-2 rounded-xl font-black uppercase flex items-center gap-2 border border-kairos-ai/20">
-                                    <i data-lucide="sparkles" class="w-4 h-4"></i> IA
-                                </button>
-                            </div>
-                            <textarea id="note-mental" class="premium-input p-12 h-72 rounded-[4rem] text-xl uppercase leading-relaxed" placeholder="Análisis del estado mental..."></textarea>
-                        </div>
-                        <div class="space-y-6">
-                             <div class="px-4"><label class="text-xs font-black text-slate-500 uppercase tracking-widest">Estrategias Terapéuticas</label></div>
-                            <textarea id="note-strat" class="premium-input p-12 h-72 rounded-[4rem] text-xl uppercase leading-relaxed" placeholder="Intervenciones y tareas..."></textarea>
-                        </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 no-print">
+                        <textarea id="note-mental" class="input-premium p-4 h-32 rounded-xl text-xs uppercase" placeholder="Estado Mental..."></textarea>
+                        <textarea id="note-strat" class="input-premium p-4 h-32 rounded-xl text-xs uppercase" placeholder="Estrategias Terapéuticas..."></textarea>
                     </div>
-                    <button onclick="window.saveNote()" class="w-full bg-kairos-teal py-12 rounded-[3.5rem] font-black text-base no-print shadow-2xl uppercase tracking-[0.5em] hover:scale-[1.01] transition-all">REGISTRAR NOTA DE EVOLUCIÓN PROFESIONAL</button>
-                    <div class="space-y-16">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 no-print">
+                        <textarea id="note-resol" class="input-premium p-4 h-24 rounded-xl text-xs uppercase" placeholder="Resolución de Sesión..."></textarea>
+                        <textarea id="note-sug" class="input-premium p-4 h-24 rounded-xl text-xs uppercase" placeholder="Tareas y Sugerencias..."></textarea>
+                    </div>
+                    <div class="flex gap-4 no-print">
+                        <button onclick="window.professionalizeNote()" class="flex-1 bg-kairos-ai/10 text-kairos-ai py-4 rounded-xl font-black text-[9px] uppercase border border-kairos-ai/20 hover:bg-kairos-ai/20 transition-all">Profesionalizar con IA</button>
+                        <button onclick="window.saveNote()" class="flex-[2] bg-kairos-teal py-4 rounded-xl font-black text-[9px] uppercase shadow-lg">Registrar Nota Clínica</button>
+                    </div>
+                    <div class="space-y-4 pt-10 border-t border-white/5">
+                        <h4 class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Historial de Evolución</h4>
                         ${(p.notes || []).map(n => `
-                            <div class="note-card bg-white/[0.03] p-16 rounded-[5rem] border-l-[16px] border-kairos-teal shadow-xl space-y-10 animate-reveal">
-                                <div class="flex justify-between items-center">
-                                    <p class="text-sm font-black text-kairos-teal uppercase tracking-widest">${n.date}</p>
-                                    <span class="text-[10px] font-black text-slate-600 uppercase tracking-widest">Expediente Clínico Digital</span>
-                                </div>
-                                <div class="space-y-10">
-                                    <div>
-                                        <p class="text-xs font-black text-slate-500 uppercase tracking-widest mb-6">Estado Mental:</p>
-                                        <p class="text-2xl uppercase leading-relaxed text-white font-medium italic">${n.mental}</p>
-                                    </div>
-                                    <div class="pt-10 border-t border-white/5">
-                                        <p class="text-xs font-black text-slate-500 uppercase tracking-widest mb-6">Plan de Acción:</p>
-                                        <p class="text-xl uppercase leading-relaxed text-slate-400 font-medium">${n.strat}</p>
-                                    </div>
+                            <div class="bg-white/5 p-6 rounded-2xl border-l-4 border-kairos-teal space-y-4">
+                                <p class="text-[8px] font-bold text-kairos-teal uppercase">${n.date}</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-[11px] leading-relaxed uppercase">
+                                    <div><p class="font-black text-slate-500 mb-1">Estado:</p><p class="italic text-white">${n.mental}</p></div>
+                                    <div><p class="font-black text-slate-500 mb-1">Plan:</p><p class="text-slate-400">${n.strat}</p></div>
                                 </div>
                             </div>
                         `).join('')}
@@ -557,63 +409,46 @@
                 </div>
             `;
             lucide.createIcons();
-            renderSidebar();
         };
 
         window.saveNote = () => {
             const p = APP_DATA.patients.find(x => x.id === activePatientId);
-            const mentalVal = document.getElementById('note-mental').value.trim().toUpperCase();
-            const stratVal = document.getElementById('note-strat').value.trim().toUpperCase();
-            if(!mentalVal || !stratVal) return;
-            if(!p.notes) p.notes = [];
-            p.notes.unshift({
-                date: new Date().toLocaleString('es-MX', { dateStyle: 'full', timeStyle: 'short' }),
-                mental: mentalVal,
-                strat: stratVal
-            });
+            const note = {
+                date: new Date().toLocaleString(),
+                mental: document.getElementById('note-mental').value.trim().toUpperCase(),
+                strat: document.getElementById('note-strat').value.trim().toUpperCase(),
+                resol: document.getElementById('note-resol').value.trim().toUpperCase(),
+                sug: document.getElementById('note-sug').value.trim().toUpperCase()
+            };
+            if(!note.mental || !note.strat) return;
+            p.notes.unshift(note);
             saveToCloud(APP_DATA);
             window.openWorkspace(activePatientId);
         };
 
-        window.getAISuggestion = async (id) => {
-            const field = document.getElementById(id);
+        window.professionalizeNote = async () => {
+            const field = document.getElementById('note-mental');
             const txt = field.value;
             if(!txt || txt.length < 5) return;
             updateSyncStatus('sync', 'IA Analizando...');
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyA_TU_KEY_REAL`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Profesionaliza esta nota psicológica clínica: " + txt }] }] })
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAIu-Vq3jDea3Xr7VRxJckSdXQ5Ja7K_mM`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Profesionaliza y usa términos clínicos psicológicos para esta nota de estado mental: " + txt }] }] })
                 });
-                const result = await response.json();
-                const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                if(aiText) {
-                    field.value = aiText.toUpperCase();
-                    updateSyncStatus('success', 'IA Lista');
-                }
-            } catch (err) { updateSyncStatus('error', 'Error IA'); }
+                const data = await res.json();
+                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if(aiText) { field.value = aiText.toUpperCase(); updateSyncStatus('success', 'IA Exitosa'); }
+            } catch (e) { updateSyncStatus('error', 'Error IA'); }
         };
 
-        function renderAdminPatients() {
-            const list = document.getElementById('admin-patients-list');
-            list.innerHTML = (APP_DATA.patients || []).map(p => `
-                <div class="glass-card p-12 rounded-[4rem] border-white/5 space-y-8">
-                    <span class="text-[11px] font-black text-kairos-teal uppercase tracking-widest bg-kairos-teal/10 px-6 py-2 rounded-full">${p.id}</span>
-                    <h4 class="text-2xl font-black text-white uppercase truncate">${p.name}</h4>
-                    <p class="text-[11px] text-slate-500 uppercase font-bold tracking-widest">Alta: ${p.date}</p>
-                    <button onclick="window.openWorkspace('${p.id}')" class="mt-6 w-full py-7 bg-white/5 border border-white/10 rounded-3xl text-xs font-black uppercase hover:bg-kairos-teal hover:text-white transition-all">Abrir Expediente</button>
-                </div>
-            `).join('') || '<p class="col-span-full py-20 text-center opacity-10 text-xs font-black uppercase">Sin pacientes registrados</p>';
-        }
-
-        function renderSidebar() {
-            const sidebar = document.getElementById('notas-sidebar');
+        function renderAdminSidebar() {
+            const sidebar = document.getElementById('sidebar-patients');
             if(!sidebar) return;
             sidebar.innerHTML = (APP_DATA.patients || []).map(p => `
-                <button onclick="window.openWorkspace('${p.id}')" class="w-full text-left p-8 rounded-[3rem] border transition-all ${activePatientId === p.id ? 'bg-kairos-teal/20 border-kairos-teal/40' : 'bg-white/5 border-white/5 hover:bg-white/10'}">
-                    <p class="text-[10px] font-black text-kairos-teal uppercase mb-2 tracking-widest">${p.id}</p>
-                    <p class="text-base font-black text-white uppercase truncate">${p.name}</p>
+                <button onclick="window.openWorkspace('${p.id}')" class="w-full text-left p-4 rounded-xl border transition-all ${activePatientId === p.id ? 'bg-kairos-teal/20 border-kairos-teal/40' : 'bg-white/5 border-white/5 hover:bg-white/10'}">
+                    <p class="text-[7px] font-black text-kairos-teal uppercase mb-1">${p.id}</p>
+                    <p class="text-xs font-bold text-white uppercase truncate">${p.name}</p>
                 </button>
             `).join('');
         }
@@ -621,12 +456,12 @@
         function renderAdminResources() {
             const list = document.getElementById('admin-resources-list');
             list.innerHTML = (APP_DATA.resources || []).map((r, idx) => `
-                <div class="bg-white/5 p-10 rounded-[3rem] flex justify-between items-center border border-white/5 hover:bg-white/10 transition-all">
-                    <div class="flex flex-col gap-2">
-                        <p class="text-base font-black text-white uppercase truncate max-w-[400px]">${r.title}</p>
-                        <span class="text-[10px] text-kairos-teal font-black uppercase tracking-[0.4em]">${r.type.replace('-',' ')}</span>
+                <div class="bg-white/5 p-4 rounded-xl flex justify-between items-center border border-white/5">
+                    <div>
+                        <p class="text-xs font-bold text-white uppercase">${r.title}</p>
+                        <span class="text-[8px] text-kairos-teal font-black uppercase">${r.type}</span>
                     </div>
-                    <button onclick="window.deleteResource(${idx})" class="p-5 bg-red-500/10 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all"><i data-lucide="trash-2" class="w-6 h-6"></i></button>
+                    <button onclick="window.deleteResource(${idx})" class="p-2 bg-red-500/10 text-red-500 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                 </div>
             `).join('');
             lucide.createIcons();
@@ -637,15 +472,14 @@
         function renderAdminAgenda() {
             const list = document.getElementById('panel-agenda');
             list.innerHTML = (APP_DATA.appointments || []).map((a, idx) => `
-                <div class="glass-card p-12 rounded-[4rem] relative space-y-8 animate-reveal">
+                <div class="glass-panel p-5 relative space-y-3">
                     <div class="flex justify-between items-start">
-                        <p class="text-[11px] font-black text-kairos-teal uppercase tracking-[0.3em]">${a.date} | ${a.time}</p>
-                        <button onclick="window.deleteApp(${idx})" class="p-4 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all"><i data-lucide="trash" class="w-6 h-6"></i></button>
+                        <p class="text-[8px] font-bold text-kairos-teal uppercase">${a.date} | ${a.time}</p>
+                        <button onclick="window.deleteApp(${idx})" class="p-1.5 bg-red-500/10 text-red-500 rounded-lg"><i data-lucide="trash" class="w-3.5 h-3.5"></i></button>
                     </div>
-                    <h4 class="text-3xl font-black text-white uppercase italic tracking-tight">${a.patient}</h4>
-                    <p class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Solicitud desde Portal Web</p>
+                    <h4 class="text-sm font-bold text-white uppercase">${a.patient}</h4>
                 </div>
-            `).join('') || '<p class="col-span-full py-40 opacity-20 text-xl italic text-center uppercase font-black tracking-[0.5em]">Sin solicitudes de citas pendientes</p>';
+            `).join('') || '<p class="col-span-full py-10 opacity-20 text-[9px] text-center uppercase font-bold">Sin citas registradas</p>';
             lucide.createIcons();
         }
 
@@ -656,27 +490,16 @@
             const days = { lun:'LUNES', mar:'MARTES', mie:'MIÉRCOLES', jue:'JUEVES', vie:'VIERNES', sab:'SÁBADO', dom:'DOMINGO' };
             const sched = APP_DATA.schedule || {};
             container.innerHTML = Object.keys(days).map(d => `
-                <div class="flex flex-wrap items-center gap-10 p-10 bg-white/[0.03] rounded-[4rem] border border-white/5">
-                    <div class="flex items-center gap-8 min-w-[250px]">
-                        <input type="checkbox" id="sc-${d}" ${sched[d]?.active ? 'checked' : ''} class="w-10 h-10 rounded-2xl accent-kairos-teal cursor-pointer">
-                        <span class="text-base font-black uppercase tracking-[0.4em]">${days[d]}</span>
-                    </div>
-                    <div class="flex-1 flex gap-10 min-w-[350px]">
-                        <div class="flex-1 space-y-3">
-                            <label class="text-[10px] font-black text-slate-600 uppercase ml-6 tracking-widest">Entrada</label>
-                            <input type="time" id="ss-${d}" value="${sched[d]?.start || '17:00'}" class="premium-input w-full p-6 rounded-3xl text-sm font-bold">
-                        </div>
-                        <div class="flex-1 space-y-3">
-                            <label class="text-[10px] font-black text-slate-600 uppercase ml-6 tracking-widest">Salida</label>
-                            <input type="time" id="se-${d}" value="${sched[d]?.end || '21:00'}" class="premium-input w-full p-6 rounded-3xl text-sm font-bold">
-                        </div>
-                    </div>
+                <div class="flex items-center gap-4 p-4 bg-white/[0.03] rounded-xl border border-white/5">
+                    <input type="checkbox" id="sc-${d}" ${sched[d]?.active ? 'checked' : ''} class="w-4 h-4 accent-kairos-teal">
+                    <span class="text-[9px] font-black uppercase min-w-[80px]">${days[d]}</span>
+                    <input type="time" id="ss-${d}" value="${sched[d]?.start || '17:00'}" class="input-premium p-2 rounded-lg text-[10px] flex-1">
+                    <input type="time" id="se-${d}" value="${sched[d]?.end || '21:00'}" class="input-premium p-2 rounded-lg text-[10px] flex-1">
                 </div>
             `).join('');
         }
 
         window.saveScheduleConfig = () => {
-            if(!APP_DATA.schedule) APP_DATA.schedule = {};
             ['lun','mar','mie','jue','vie','sab','dom'].forEach(d => {
                 APP_DATA.schedule[d] = {
                     active: document.getElementById(`sc-${d}`).checked,
@@ -699,7 +522,7 @@
             slotsDiv.innerHTML = "";
 
             if(!config || !config.active) { 
-                slotsDiv.innerHTML = '<div class="col-span-full py-20 text-center"><p class="opacity-40 text-base font-black uppercase italic tracking-widest">Sin disponibilidad configurada para este día.</p></div>'; 
+                slotsDiv.innerHTML = '<p class="col-span-full py-6 opacity-40 text-[9px] uppercase font-bold text-center">Día no laborable para el terapeuta</p>'; 
                 return; 
             }
 
@@ -710,18 +533,20 @@
                 const time = `${current}:00`;
                 const isTaken = (APP_DATA.appointments || []).some(a => a.date === dateInput && a.time === time);
                 const btn = document.createElement('button');
-                btn.className = `p-12 rounded-[3.5rem] text-sm font-black transition-all border-2 ${isTaken ? 'opacity-20 cursor-not-allowed bg-red-900/10 border-red-900/20 grayscale' : 'bg-white/5 border-white/5 hover:border-kairos-teal hover:text-kairos-teal shadow-lg hover:translate-y-[-5px]'}`;
-                btn.innerText = time;
-                if(!isTaken) btn.onclick = () => { 
-                    document.querySelectorAll('#time-slots button').forEach(b => {
-                        b.classList.remove('bg-kairos-teal', 'text-white', 'border-kairos-teal');
-                        b.classList.add('bg-white/5', 'border-white/5');
-                    });
-                    btn.classList.add('bg-kairos-teal', 'text-white', 'border-kairos-teal');
-                    window.selectedSlot = time;
-                    document.getElementById('booking-form').classList.remove('hidden');
-                    document.getElementById('booking-form').scrollIntoView({ behavior: 'smooth' });
-                };
+                
+                if(isTaken) {
+                    btn.className = "p-4 rounded-xl text-[10px] font-black opacity-30 cursor-not-allowed bg-red-900/10 border border-red-900/20 text-red-500 uppercase";
+                    btn.innerText = time + " (OCUPADO)";
+                } else {
+                    btn.className = "p-4 rounded-xl text-[10px] font-black transition-all border bg-white/5 border-white/5 hover:border-kairos-teal hover:text-kairos-teal uppercase";
+                    btn.innerText = time + " (DISPONIBLE)";
+                    btn.onclick = () => { 
+                        document.querySelectorAll('#time-slots button').forEach(b => b.classList.remove('bg-kairos-teal', 'text-white'));
+                        btn.classList.add('bg-kairos-teal', 'text-white');
+                        window.selectedSlot = time;
+                        document.getElementById('btn-booking-final').classList.remove('hidden');
+                    };
+                }
                 slotsDiv.appendChild(btn);
                 current++;
             }
@@ -729,10 +554,9 @@
 
         window.confirmBooking = () => {
             if(!window.selectedSlot) return;
-            if(!APP_DATA.appointments) APP_DATA.appointments = [];
             APP_DATA.appointments.push({ date: document.getElementById('booking-date').value, time: window.selectedSlot, patient: visitorName || "Visitante Web" });
             saveToCloud(APP_DATA);
-            alert("TU SOLICITUD DE CITA HA SIDO ENVIADA AL PSIC. CARLOS AGUILAR. SERÁS CONTACTADO POR WHATSAPP A LA BREVEDAD.");
+            alert("Solicitud registrada con éxito. El Psic. Carlos Aguilar se pondrá en contacto contigo vía WhatsApp.");
             location.reload();
         };
 
