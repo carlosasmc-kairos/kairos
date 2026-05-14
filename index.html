@@ -56,13 +56,13 @@
 
     <div id="welcome-gate" class="fixed inset-0 z-[200] bg-kairos-deep flex items-center justify-center p-6 overflow-y-auto">
         <div class="max-w-md w-full flex flex-col items-center text-center space-y-8 py-10 animate-reveal">
-            <div class="w-32 h-32 md:w-48 md:h-48 bg-white rounded-full p-4 md:p-6 shadow-2xl flex items-center justify-center border-4 border-kairos-teal/20 animate-float">
+            <div class="w-32 h-32 md:w-48 md:h-48 bg-white rounded-full p-4 md:p-6 shadow-2xl flex items-center justify-center border-4 border-kairos-teal/20 animate-float overflow-hidden">
                 <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w1000" class="w-full h-full object-contain" alt="Logo KAIRÓS">
             </div>
             <div class="space-y-4">
-                <h1 class="text-kairos-teal font-black tracking-widest uppercase text-xs">BIENVENIDO A KAIRÓS PSICOLOGÍA ESPECIALIZADA</h1>
+                <h1 class="text-kairos-teal font-black tracking-widest uppercase text-xs md:text-sm">BIENVENIDO A KAIRÓS PSICOLOGÍA ESPECIALIZADA</h1>
                 <h2 class="text-2xl md:text-3xl font-extrabold text-white leading-tight uppercase">PSIC. CARLOS <br><span class="text-kairos-teal">AGUILAR SÁNCHEZ</span></h2>
-                <p class="text-slate-400 text-sm font-medium leading-relaxed">Tu portal interactivo para salud mental y bienestar digital.</p>
+                <p class="text-slate-400 text-sm md:text-base font-medium leading-relaxed">Tu portal interactivo para salud mental y bienestar digital.</p>
             </div>
             <div class="w-full space-y-4">
                 <input type="text" id="visitor-name-gate" class="w-full input-premium p-4 rounded-xl text-center text-lg font-bold uppercase" placeholder="TU NOMBRE AQUÍ" onkeypress="if(event.key === 'Enter') window.enterPortal()">
@@ -75,35 +75,35 @@
     <nav class="fixed top-0 w-full z-[80] bg-kairos-deep/80 backdrop-blur-xl border-b border-white/5 no-print">
         <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-white rounded-lg p-1.5 flex items-center justify-center">
+                <div class="w-10 h-10 bg-white rounded-lg p-1.5 flex items-center justify-center overflow-hidden">
                     <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w200" class="w-full h-full object-contain">
                 </div>
                 <div>
                     <span class="text-xs font-black tracking-widest uppercase text-white leading-none">KAIRÓS</span>
-                    <p id="nav-welcome" class="text-[9px] font-bold text-kairos-teal uppercase tracking-widest mt-0.5">Portal de Bienvenida</p>
+                    <p id="nav-welcome" class="text-[9px] font-bold text-kairos-teal uppercase tracking-widest mt-0.5">Portal Clínico</p>
                 </div>
             </div>
             <div class="flex items-center gap-4">
                 <div id="sync-indicator" class="hidden sm:flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
                     <div id="sync-dot" class="w-2 h-2 rounded-full bg-slate-500"></div>
-                    <span id="sync-text" class="text-[9px] font-bold tracking-widest text-slate-400 uppercase">Sincronizando...</span>
+                    <span id="sync-text" class="text-[9px] font-bold tracking-widest text-slate-400 uppercase">Estado...</span>
                 </div>
                 <button onclick="window.toggleAuth(true)" class="p-2.5 bg-white/5 rounded-lg border border-white/10 text-slate-400 hover:text-kairos-teal transition-all"><i data-lucide="lock" class="w-5 h-5"></i></button>
             </div>
         </div>
     </nav>
 
-    <main id="main-content" class="hidden pt-32 pb-32 no-print">
-        <header class="max-w-6xl mx-auto px-6 text-center space-y-8 mb-20 animate-reveal">
-            <div class="w-24 h-24 md:w-32 md:h-32 mx-auto bg-white rounded-3xl p-4 shadow-2xl flex items-center justify-center border-2 border-white/5 animate-float">
+    <main id="main-content" class="hidden pt-32 pb-32 no-print max-w-6xl mx-auto px-6">
+        <header class="text-center space-y-8 mb-20 animate-reveal">
+            <div class="w-24 h-24 md:w-32 md:h-32 mx-auto bg-white rounded-3xl p-4 shadow-2xl flex items-center justify-center border-2 border-white/5 animate-float overflow-hidden">
                 <img src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w1000" class="w-full h-full object-contain">
             </div>
             <h1 id="hero-greeting" class="text-3xl md:text-5xl font-black text-white leading-tight uppercase tracking-tighter">HOLA <br><span class="text-kairos-teal">BIENVENIDO</span></h1>
-            <p class="text-base text-slate-400 font-medium max-w-lg mx-auto uppercase italic">Espacio Clínico del Psic. Carlos Aguilar Sánchez</p>
+            <p class="text-sm md:text-base text-slate-400 font-medium max-w-lg mx-auto uppercase italic">Espacio Clínico del Psic. Carlos Aguilar Sánchez</p>
         </header>
 
-        <section id="biblioteca" class="py-16 px-6 bg-white/[0.02] border-y border-white/5">
-            <div class="max-w-6xl mx-auto space-y-12">
+        <section id="biblioteca" class="py-16 bg-white/[0.02] border-y border-white/5 rounded-[2rem] px-6">
+            <div class="space-y-12">
                 <div class="text-center">
                     <h2 class="text-2xl font-black text-white uppercase italic tracking-tighter">Biblioteca Digital</h2>
                     <p class="text-kairos-teal font-bold tracking-widest uppercase text-[9px] mt-2">Materiales para tu proceso terapéutico</p>
@@ -112,16 +112,16 @@
             </div>
         </section>
 
-        <section id="agenda" class="py-16 px-6">
+        <section id="agenda" class="py-16">
             <div class="max-w-xl mx-auto text-center space-y-12">
                 <div class="space-y-2">
                     <h2 class="text-2xl font-black text-white uppercase italic tracking-tighter">Agenda de Sesiones</h2>
-                    <p class="text-slate-500 font-bold tracking-widest uppercase text-[9px]">Consulta disponibilidad en tiempo real</p>
+                    <p class="text-slate-500 font-bold tracking-widest uppercase text-[9px]">Consulta disponibilidad y solicita tu espacio</p>
                 </div>
                 <div class="glass-panel p-8 space-y-8">
                     <input type="date" id="booking-date" class="w-full input-premium p-4 rounded-xl text-center font-bold text-lg" onchange="window.generateTimeSlots()">
                     <div id="time-slots-container" class="hidden animate-reveal space-y-6">
-                        <div id="time-slots" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+                        <div id="time-slots" class="grid grid-cols-2 gap-3"></div>
                         <button id="btn-booking-final" onclick="window.confirmBooking()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[10px] uppercase shadow-lg hidden">Confirmar Cita</button>
                     </div>
                 </div>
@@ -134,49 +134,34 @@
             <div class="flex justify-between items-center border-b border-white/5 pb-8">
                 <div>
                     <h2 class="text-xl font-black text-kairos-teal uppercase italic">Gestión Clínica KAIRÓS</h2>
-                    <p class="text-slate-500 text-[9px] font-black uppercase tracking-widest">Psic. Carlos Aguilar Sánchez</p>
+                    <p class="text-slate-500 text-[9px] font-black uppercase tracking-widest">Panel de Control Profesional</p>
                 </div>
-                <button onclick="window.toggleAdminMode(false)" class="p-3 bg-red-500/10 rounded-xl text-red-500 border border-red-500/10"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <button onclick="window.toggleAdminMode(false)" class="p-3 bg-red-500/10 rounded-xl text-red-500 border border-red-500/10 hover:bg-red-500/20 transition-all"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
 
             <div class="flex gap-2 overflow-x-auto pb-4 no-print custom-scroll">
                 <button onclick="window.switchTab('expedientes')" id="tab-expedientes" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase bg-kairos-teal text-white shadow-md">Pacientes & Notas</button>
                 <button onclick="window.switchTab('agenda')" id="tab-agenda" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5">Citas Registradas</button>
-                <button onclick="window.switchTab('biblioteca')" id="tab-biblioteca" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5">Recursos Multimedia</button>
+                <button onclick="window.switchTab('biblioteca')" id="tab-biblioteca" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5">Biblioteca</button>
                 <button onclick="window.switchTab('config')" id="tab-config" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5">Configurar Horarios</button>
             </div>
 
             <div id="panel-expedientes" class="grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-[700px] animate-reveal">
                 <div class="lg:col-span-3 space-y-4 no-print">
                     <div class="glass-panel p-5 space-y-4">
-                        <h3 class="text-[9px] font-black text-kairos-teal uppercase tracking-widest">Nuevo Paciente</h3>
-                        <input type="text" id="new-p-name" class="input-premium w-full p-3 rounded-lg text-xs font-bold uppercase" placeholder="Nombre Completo">
+                        <h3 class="text-[9px] font-black text-kairos-teal uppercase tracking-widest">Nuevo Expediente</h3>
+                        <input type="text" id="new-p-name" class="input-premium w-full p-3 rounded-lg text-xs font-bold uppercase" placeholder="Nombre Paciente">
                         <input type="date" id="new-p-date" class="input-premium w-full p-3 rounded-lg text-xs">
-                        <button onclick="window.registerPatient()" class="w-full bg-kairos-teal py-3 rounded-lg font-black text-[9px] uppercase">Crear Expediente</button>
+                        <button onclick="window.registerPatient()" class="w-full bg-kairos-teal py-3 rounded-lg font-black text-[9px] uppercase">Crear Folio</button>
                     </div>
                     <div id="sidebar-patients" class="space-y-2 overflow-y-auto max-h-[500px] custom-scroll"></div>
                 </div>
                 <div class="lg:col-span-9 glass-panel p-6 md:p-10 overflow-y-auto print-area custom-scroll" id="clinical-workspace">
                     <div class="flex flex-col items-center justify-center h-full opacity-20 text-center space-y-4">
                         <i data-lucide="folder-search" class="w-16 h-16"></i>
-                        <p class="text-xs font-black uppercase tracking-widest">Selecciona un paciente para iniciar sesión clínica</p>
+                        <p class="text-xs font-black uppercase tracking-widest">Selecciona un expediente para iniciar sesión clínica</p>
                     </div>
                 </div>
-            </div>
-
-            <div id="panel-biblioteca" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-8 animate-reveal">
-                <div class="glass-panel p-6 space-y-5">
-                    <h3 class="text-[9px] font-black text-kairos-teal tracking-widest uppercase">Subir Material</h3>
-                    <input type="text" id="res-title" class="input-premium w-full p-4 rounded-xl text-xs font-bold uppercase" placeholder="Título">
-                    <select id="res-type" class="input-premium w-full p-4 rounded-xl text-xs bg-kairos-deep font-bold">
-                        <option value="youtube">Video YouTube</option>
-                        <option value="drive">Archivo / PDF (Drive)</option>
-                        <option value="image">Imagen</option>
-                    </select>
-                    <input type="url" id="res-url" class="input-premium w-full p-4 rounded-xl text-xs" placeholder="Enlace Compartido">
-                    <button onclick="window.addResource()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[9px] uppercase">Añadir a Biblioteca</button>
-                </div>
-                <div id="admin-resources-list" class="space-y-3 max-h-[600px] overflow-y-auto custom-scroll"></div>
             </div>
 
             <div id="panel-agenda" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-reveal"></div>
@@ -185,8 +170,23 @@
                 <div class="glass-panel p-8 max-w-2xl mx-auto space-y-8 text-center">
                     <h3 class="text-[9px] font-black text-kairos-teal uppercase tracking-widest">Ajustes Semanales de Disponibilidad</h3>
                     <div id="schedule-config-container" class="space-y-3"></div>
-                    <button onclick="window.saveScheduleConfig()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[10px] uppercase">Guardar Cambios en la Nube</button>
+                    <button onclick="window.saveScheduleConfig()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[10px] uppercase shadow-lg">Guardar Cambios en la Nube</button>
                 </div>
+            </div>
+
+            <div id="panel-biblioteca" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-8 animate-reveal">
+                <div class="glass-panel p-6 space-y-5">
+                    <h3 class="text-[9px] font-black text-kairos-teal tracking-widest uppercase">Subir Material Terapéutico</h3>
+                    <input type="text" id="res-title" class="input-premium w-full p-4 rounded-xl text-xs font-bold uppercase" placeholder="Título del Material">
+                    <select id="res-type" class="input-premium w-full p-4 rounded-xl text-xs bg-kairos-deep font-bold">
+                        <option value="youtube">Video YouTube</option>
+                        <option value="drive">PDF / Documento (Drive)</option>
+                        <option value="image">Imagen Directa</option>
+                    </select>
+                    <input type="url" id="res-url" class="input-premium w-full p-4 rounded-xl text-xs" placeholder="URL o Enlace Compartido">
+                    <button onclick="window.addResource()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[9px] uppercase">Añadir a la Biblioteca</button>
+                </div>
+                <div id="admin-resources-list" class="space-y-3 max-h-[600px] overflow-y-auto custom-scroll"></div>
             </div>
         </div>
     </div>
@@ -202,6 +202,7 @@
         </div>
     </div>
 
+    <!-- Botón WhatsApp Permanente -->
     <a href="https://wa.me/522381239088" target="_blank" class="fixed bottom-6 right-6 z-[100] w-14 h-14 bg-kairos-whatsapp rounded-2xl shadow-xl flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all border-2 border-kairos-deep no-print">
         <i data-lucide="message-circle" class="w-7 h-7"></i>
     </a>
@@ -247,13 +248,13 @@
                         saveToCloud({ patients: [], resources: [], appointments: [], schedule: defaultSchedule });
                     }
                 });
-            } catch (err) { updateSyncStatus('error', 'Fallo Auth'); }
+            } catch (err) { updateSyncStatus('error', 'Fallo de Enlace'); }
         }
 
         const saveToCloud = async (data) => {
             updateSyncStatus('sync', 'Guardando...');
-            try { await setDoc(mainDocRef, data); updateSyncStatus('success', 'Guardado'); } 
-            catch (e) { updateSyncStatus('error', 'Error Nube'); }
+            try { await setDoc(mainDocRef, data); updateSyncStatus('success', 'Nube Actualizada'); } 
+            catch (e) { updateSyncStatus('error', 'Fallo Nube'); }
         };
 
         function updateSyncStatus(type, text) {
@@ -270,7 +271,7 @@
             document.getElementById('welcome-gate').classList.add('hidden');
             document.getElementById('main-content').classList.remove('hidden');
             document.getElementById('hero-greeting').innerHTML = `HOLA <br><span class="text-kairos-teal">${visitorName}</span>`;
-            document.getElementById('nav-welcome').innerText = `Portal de ${visitorName}`;
+            document.getElementById('nav-welcome').innerText = `Espacio de ${visitorName}`;
             lucide.createIcons();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
@@ -345,7 +346,7 @@
         function renderPublicResources() {
             const list = document.getElementById('patient-resources');
             list.innerHTML = (APP_DATA.resources || []).map(r => `
-                <div class="glass-panel p-6 flex flex-col space-y-4">
+                <div class="glass-panel p-6 flex flex-col space-y-4 animate-reveal">
                     <span class="text-[8px] font-black text-kairos-teal uppercase tracking-widest">${r.type}</span>
                     <h4 class="text-sm font-bold text-white uppercase leading-tight">${r.title}</h4>
                     <div class="w-full aspect-video rounded-xl overflow-hidden bg-black/40 border border-white/5">
@@ -353,7 +354,7 @@
                             ? `<iframe class="w-full h-full" src="${r.content}" allowfullscreen></iframe>`
                             : r.type === 'image' 
                                 ? `<img src="${r.content}" class="w-full h-full object-cover">`
-                                : `<div class="flex flex-col items-center justify-center h-full"><a href="${r.content}" target="_blank" class="bg-kairos-teal text-white px-6 py-2 rounded-lg text-[8px] font-bold uppercase">Ver Enlace</a></div>`
+                                : `<div class="flex flex-col items-center justify-center h-full"><a href="${r.content}" target="_blank" class="bg-kairos-teal text-white px-6 py-2 rounded-lg text-[8px] font-bold uppercase">Ver Recurso</a></div>`
                         }
                     </div>
                 </div>
@@ -380,31 +381,31 @@
                             <span class="text-[8px] font-black text-kairos-teal uppercase tracking-widest px-3 py-1 bg-kairos-teal/10 rounded-full">${p.id}</span>
                             <h2 class="text-2xl font-black text-white uppercase italic mt-2">${p.name}</h2>
                         </div>
-                        <button onclick="window.print()" class="p-3 bg-white/5 rounded-xl no-print text-kairos-teal"><i data-lucide="printer" class="w-6 h-6"></i></button>
+                        <button onclick="window.print()" class="p-3 bg-white/5 rounded-xl no-print text-kairos-teal hover:bg-white/10 transition-all"><i data-lucide="printer" class="w-6 h-6"></i></button>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 no-print">
-                        <textarea id="note-mental" class="input-premium p-4 h-32 rounded-xl text-xs uppercase" placeholder="Estado Mental..."></textarea>
-                        <textarea id="note-strat" class="input-premium p-4 h-32 rounded-xl text-xs uppercase" placeholder="Estrategias Terapéuticas..."></textarea>
+                        <textarea id="note-mental" class="input-premium p-4 h-32 rounded-xl text-xs uppercase" placeholder="Estado Mental y Conductual..."></textarea>
+                        <textarea id="note-strat" class="input-premium p-4 h-32 rounded-xl text-xs uppercase" placeholder="Estrategias y Plan Terapéutico..."></textarea>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 no-print">
-                        <textarea id="note-resol" class="input-premium p-4 h-24 rounded-xl text-xs uppercase" placeholder="Resolución de Sesión..."></textarea>
+                        <textarea id="note-resol" class="input-premium p-4 h-24 rounded-xl text-xs uppercase" placeholder="Resolución de la Sesión..."></textarea>
                         <textarea id="note-sug" class="input-premium p-4 h-24 rounded-xl text-xs uppercase" placeholder="Tareas y Sugerencias..."></textarea>
                     </div>
                     <div class="flex gap-4 no-print">
                         <button onclick="window.professionalizeNote()" class="flex-1 bg-kairos-ai/10 text-kairos-ai py-4 rounded-xl font-black text-[9px] uppercase border border-kairos-ai/20 hover:bg-kairos-ai/20 transition-all">Profesionalizar con IA</button>
-                        <button onclick="window.saveNote()" class="flex-[2] bg-kairos-teal py-4 rounded-xl font-black text-[9px] uppercase shadow-lg">Registrar Nota Clínica</button>
+                        <button onclick="window.saveNote()" class="flex-[2] bg-kairos-teal py-4 rounded-xl font-black text-[9px] uppercase shadow-lg">Registrar Evolución</button>
                     </div>
                     <div class="space-y-4 pt-10 border-t border-white/5">
-                        <h4 class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Historial de Evolución</h4>
+                        <h4 class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Historial de Evolución Terapéutica</h4>
                         ${(p.notes || []).map(n => `
                             <div class="bg-white/5 p-6 rounded-2xl border-l-4 border-kairos-teal space-y-4">
                                 <p class="text-[8px] font-bold text-kairos-teal uppercase">${n.date}</p>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-[11px] leading-relaxed uppercase">
-                                    <div><p class="font-black text-slate-500 mb-1">Estado:</p><p class="italic text-white">${n.mental}</p></div>
-                                    <div><p class="font-black text-slate-500 mb-1">Plan:</p><p class="text-slate-400">${n.strat}</p></div>
+                                    <div><p class="font-black text-slate-500 mb-1">Estado Mental:</p><p class="italic text-white">${n.mental}</p></div>
+                                    <div><p class="font-black text-slate-500 mb-1">Plan Acción:</p><p class="text-slate-400">${n.strat}</p></div>
                                 </div>
                             </div>
-                        `).join('')}
+                        `).join('') || '<p class="opacity-20 text-[9px] uppercase">Sin notas previas registradas</p>'}
                     </div>
                 </div>
             `;
@@ -430,16 +431,16 @@
             const field = document.getElementById('note-mental');
             const txt = field.value;
             if(!txt || txt.length < 5) return;
-            updateSyncStatus('sync', 'IA Analizando...');
+            updateSyncStatus('sync', 'IA Procesando...');
             try {
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAIu-Vq3jDea3Xr7VRxJckSdXQ5Ja7K_mM`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Profesionaliza y usa términos clínicos psicológicos para esta nota de estado mental: " + txt }] }] })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Como psicólogo profesional, redacta de forma clínica y técnica el siguiente estado mental: " + txt }] }] })
                 });
                 const data = await res.json();
                 const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                if(aiText) { field.value = aiText.toUpperCase(); updateSyncStatus('success', 'IA Exitosa'); }
-            } catch (e) { updateSyncStatus('error', 'Error IA'); }
+                if(aiText) { field.value = aiText.toUpperCase(); updateSyncStatus('success', 'IA Lista'); }
+            } catch (e) { updateSyncStatus('error', 'Fallo IA'); }
         };
 
         function renderAdminSidebar() {
@@ -461,7 +462,7 @@
                         <p class="text-xs font-bold text-white uppercase">${r.title}</p>
                         <span class="text-[8px] text-kairos-teal font-black uppercase">${r.type}</span>
                     </div>
-                    <button onclick="window.deleteResource(${idx})" class="p-2 bg-red-500/10 text-red-500 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    <button onclick="window.deleteResource(${idx})" class="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                 </div>
             `).join('');
             lucide.createIcons();
@@ -472,18 +473,23 @@
         function renderAdminAgenda() {
             const list = document.getElementById('panel-agenda');
             list.innerHTML = (APP_DATA.appointments || []).map((a, idx) => `
-                <div class="glass-panel p-5 relative space-y-3">
+                <div class="glass-panel p-5 relative space-y-3 animate-reveal">
                     <div class="flex justify-between items-start">
                         <p class="text-[8px] font-bold text-kairos-teal uppercase">${a.date} | ${a.time}</p>
-                        <button onclick="window.deleteApp(${idx})" class="p-1.5 bg-red-500/10 text-red-500 rounded-lg"><i data-lucide="trash" class="w-3.5 h-3.5"></i></button>
+                        <button onclick="window.deleteApp(${idx})" class="p-1.5 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/30 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                     </div>
                     <h4 class="text-sm font-bold text-white uppercase">${a.patient}</h4>
                 </div>
-            `).join('') || '<p class="col-span-full py-10 opacity-20 text-[9px] text-center uppercase font-bold">Sin citas registradas</p>';
+            `).join('') || '<p class="col-span-full py-10 opacity-20 text-[9px] text-center uppercase font-bold">Sin citas registradas en el sistema</p>';
             lucide.createIcons();
         }
 
-        window.deleteApp = (idx) => { APP_DATA.appointments.splice(idx, 1); saveToCloud(APP_DATA); };
+        window.deleteApp = (idx) => { 
+            if(confirm("¿Estás seguro de cancelar esta cita? Se liberará el horario de inmediato.")) {
+                APP_DATA.appointments.splice(idx, 1); 
+                saveToCloud(APP_DATA); 
+            }
+        };
 
         function renderScheduleConfig() {
             const container = document.getElementById('schedule-config-container');
@@ -492,7 +498,7 @@
             container.innerHTML = Object.keys(days).map(d => `
                 <div class="flex items-center gap-4 p-4 bg-white/[0.03] rounded-xl border border-white/5">
                     <input type="checkbox" id="sc-${d}" ${sched[d]?.active ? 'checked' : ''} class="w-4 h-4 accent-kairos-teal">
-                    <span class="text-[9px] font-black uppercase min-w-[80px]">${days[d]}</span>
+                    <span class="text-[9px] font-black uppercase min-w-[80px] text-left">${days[d]}</span>
                     <input type="time" id="ss-${d}" value="${sched[d]?.start || '17:00'}" class="input-premium p-2 rounded-lg text-[10px] flex-1">
                     <input type="time" id="se-${d}" value="${sched[d]?.end || '21:00'}" class="input-premium p-2 rounded-lg text-[10px] flex-1">
                 </div>
@@ -522,7 +528,7 @@
             slotsDiv.innerHTML = "";
 
             if(!config || !config.active) { 
-                slotsDiv.innerHTML = '<p class="col-span-full py-6 opacity-40 text-[9px] uppercase font-bold text-center">Día no laborable para el terapeuta</p>'; 
+                slotsDiv.innerHTML = '<p class="col-span-full py-6 opacity-40 text-[9px] uppercase font-bold text-center">Día no laborable / Sin disponibilidad</p>'; 
                 return; 
             }
 
@@ -554,9 +560,13 @@
 
         window.confirmBooking = () => {
             if(!window.selectedSlot) return;
-            APP_DATA.appointments.push({ date: document.getElementById('booking-date').value, time: window.selectedSlot, patient: visitorName || "Visitante Web" });
+            APP_DATA.appointments.push({ 
+                date: document.getElementById('booking-date').value, 
+                time: window.selectedSlot, 
+                patient: visitorName || "Paciente Web" 
+            });
             saveToCloud(APP_DATA);
-            alert("Solicitud registrada con éxito. El Psic. Carlos Aguilar se pondrá en contacto contigo vía WhatsApp.");
+            alert("Tu solicitud ha sido registrada. El Psic. Carlos Aguilar Sánchez confirmará tu espacio vía WhatsApp.");
             location.reload();
         };
 
