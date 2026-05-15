@@ -16,12 +16,8 @@
                 extend: {
                     colors: {
                         kairos: {
-                            deep: '#020617',
-                            teal: '#469da3',
-                            ai: '#8b5cf6',
-                            glass: 'rgba(15, 23, 42, 0.7)',
-                            border: 'rgba(255, 255, 255, 0.1)',
-                            whatsapp: '#25D366'
+                            deep: '#020617', teal: '#469da3', ai: '#8b5cf6',
+                            glass: 'rgba(15, 23, 42, 0.7)', border: 'rgba(255, 255, 255, 0.1)', whatsapp: '#25D366'
                         }
                     },
                     animation: {
@@ -128,7 +124,7 @@
                     <div id="booking-details-form" class="hidden space-y-4 pt-6 border-t border-white/5">
                         <input type="text" id="patient-full-name" autocomplete="off" class="w-full input-premium p-4 rounded-xl text-sm font-bold uppercase" placeholder="NOMBRE COMPLETO">
                         <input type="tel" id="patient-phone" autocomplete="off" class="w-full input-premium p-4 rounded-xl text-sm font-bold uppercase" placeholder="TELÉFONO">
-                        <button type="button" onclick="window.confirmBooking()" class="w-full bg-kairos-teal text-white py-4 rounded-xl font-black text-[11px] uppercase shadow-lg hover:brightness-110 transition-all">Confirmar Cita Ahora</button>
+                        <button type="button" onclick="window.confirmBooking()" class="w-full bg-kairos-teal text-white py-4 rounded-xl font-black text-[11px] uppercase shadow-lg">Confirmar Cita Ahora</button>
                     </div>
                 </div>
             </div>
@@ -142,9 +138,10 @@
                     <h2 class="text-xl font-black text-kairos-teal uppercase italic">Gestión Clínica Maestro</h2>
                     <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Portal Administrativo KAIRÓS</p>
                 </div>
-                <button type="button" onclick="window.fullLogout()" class="p-3 bg-red-500/10 rounded-xl text-red-500 border border-red-500/10 font-black text-[9px] uppercase flex items-center gap-2 hover:bg-red-500/20 transition-all"><i data-lucide="log-out" class="w-4 h-4"></i> Cerrar Sesión</button>
+                <button type="button" onclick="window.fullLogout()" class="p-3 bg-red-500/10 rounded-xl text-red-500 border border-red-500/10 font-black text-[9px] uppercase flex items-center gap-2"><i data-lucide="log-out" class="w-4 h-4"></i> Cerrar Sesión</button>
             </div>
 
+            <!-- Tabs de Navegación Admin -->
             <div class="flex gap-2 overflow-x-auto pb-4 custom-scroll">
                 <button type="button" onclick="window.switchTab('expedientes')" id="tab-expedientes" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase bg-kairos-teal text-white shadow-md">Pacientes & Seguimiento</button>
                 <button type="button" onclick="window.switchTab('agenda')" id="tab-agenda" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5 flex items-center gap-2">Citas <span id="count-agenda" class="bg-kairos-teal text-white text-[8px] px-1.5 py-0.5 rounded-full hidden">0</span></button>
@@ -152,14 +149,15 @@
                 <button type="button" onclick="window.switchTab('config')" id="tab-config" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5">Ajustes & Marca</button>
             </div>
 
+            <!-- Panel Expedientes -->
             <div id="panel-expedientes" class="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-reveal">
                 <div class="lg:col-span-3 space-y-4 no-print">
                     <div class="glass-panel p-5 space-y-4">
                         <input type="text" id="new-p-name" autocomplete="new-password" class="input-premium p-3 rounded-lg text-xs font-bold uppercase" placeholder="Nombre Paciente">
                         <input type="date" id="new-p-date" class="input-premium w-full p-3 rounded-lg text-xs">
-                        <button type="button" onclick="window.registerPatient()" class="w-full bg-kairos-teal py-3 rounded-lg font-black text-[9px] uppercase shadow-lg hover:brightness-110 transition-all">Crear Folio</button>
+                        <button type="button" onclick="window.registerPatient()" class="w-full bg-kairos-teal py-3 rounded-lg font-black text-[9px] uppercase shadow-lg">Crear Folio</button>
                     </div>
-                    <div id="sidebar-patients" class="space-y-2 overflow-y-auto max-h-[500px] custom-scroll pr-2"></div>
+                    <div id="sidebar-patients" class="space-y-2 overflow-y-auto max-h-[500px] custom-scroll"></div>
                 </div>
                 <div class="lg:col-span-9 glass-panel p-6 md:p-10 overflow-y-auto print-area custom-scroll min-h-[600px]" id="clinical-workspace">
                     <div class="flex flex-col items-center justify-center h-full opacity-20 text-center space-y-4 py-20">
@@ -169,37 +167,40 @@
                 </div>
             </div>
 
-            <div id="panel-agenda" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-reveal"></div>
+            <!-- Panel Agenda -->
+            <div id="panel-agenda" class="hidden grid grid-cols-1 md:grid-cols-3 gap-6 animate-reveal"></div>
 
+            <!-- Panel Biblioteca -->
             <div id="panel-biblioteca" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-8 animate-reveal">
-                <div class="glass-panel p-6 space-y-5 h-fit">
+                <div class="glass-panel p-6 space-y-5">
                     <h3 class="text-[9px] font-black text-kairos-teal tracking-widest uppercase">Publicar Material</h3>
                     <input type="text" id="res-title" autocomplete="off" class="input-premium w-full p-4 rounded-xl text-xs font-bold uppercase" placeholder="Título">
                     <select id="res-type" class="input-premium w-full p-4 rounded-xl text-xs bg-kairos-deep font-bold">
-                        <option value="youtube">YouTube Video</option>
-                        <option value="drive">Enlace Externo (Drive/PDF/Web)</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="drive">Google Drive (PDF/Video)</option>
                     </select>
                     <input type="url" id="res-url" class="input-premium w-full p-4 rounded-xl text-xs" placeholder="URL Enlace">
-                    <button type="button" onclick="window.addResource()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[9px] uppercase shadow-lg hover:brightness-110 transition-all">Publicar</button>
+                    <button type="button" onclick="window.addResource()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[9px] uppercase shadow-lg">Publicar</button>
                 </div>
-                <div id="admin-resources-list" class="space-y-3 max-h-[500px] overflow-y-auto custom-scroll pr-2"></div>
+                <div id="admin-resources-list" class="space-y-3 max-h-[500px] overflow-y-auto custom-scroll"></div>
             </div>
 
+            <!-- Panel Configuración -->
             <div id="panel-config" class="hidden animate-reveal space-y-8">
                 <div class="glass-panel p-8 max-w-2xl mx-auto space-y-6">
                     <h3 class="text-xs font-black text-ai uppercase tracking-widest text-center">Seguridad & Marca Dinámica</h3>
                     <div class="space-y-4">
-                        <input type="password" id="new-admin-pin" class="input-premium p-4 rounded-xl text-center text-xl font-black tracking-widest" placeholder="NUEVO PIN">
-                        <input type="url" id="config-logo-url" class="input-premium p-4 rounded-xl text-xs" placeholder="URL del Logo (Opcional)">
+                        <input type="password" id="new-admin-pin" class="input-premium p-4 rounded-xl text-center text-xl font-black" placeholder="NUEVO PIN">
+                        <input type="url" id="config-logo-url" class="input-premium p-4 rounded-xl text-xs" placeholder="URL del Logo (Google Drive)">
                         <input type="text" id="config-author-name" class="input-premium p-4 rounded-xl text-xs uppercase font-bold" placeholder="Tu Nombre Profesional">
-                        <textarea id="config-trust-msg" class="input-premium p-4 rounded-xl text-xs h-24 uppercase resize-none" placeholder="Mensaje de Confianza..."></textarea>
-                        <button type="button" onclick="window.saveBrandConfig()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[10px] uppercase shadow-lg hover:brightness-110 transition-all">Actualizar Identidad Visual</button>
+                        <textarea id="config-trust-msg" class="input-premium p-4 rounded-xl text-xs h-24 uppercase" placeholder="Mensaje de Confianza..."></textarea>
+                        <button type="button" onclick="window.saveBrandConfig()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[10px] uppercase shadow-lg">Actualizar Identidad Visual</button>
                     </div>
                 </div>
                 <div class="glass-panel p-8 max-w-2xl mx-auto text-center space-y-6">
                     <h3 class="text-xs font-black text-kairos-teal uppercase tracking-widest">Disponibilidad de Atención</h3>
                     <div id="schedule-config-container" class="space-y-3 text-left"></div>
-                    <button type="button" onclick="window.saveScheduleConfig()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[10px] uppercase shadow-lg hover:brightness-110 transition-all">Guardar Cambios de Disponibilidad</button>
+                    <button type="button" onclick="window.saveScheduleConfig()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[10px] uppercase shadow-lg">Guardar Cambios de Disponibilidad</button>
                 </div>
             </div>
         </div>
@@ -210,10 +211,9 @@
             <h2 class="text-lg font-black tracking-widest text-kairos-teal uppercase italic">Acceso Clínico</h2>
             <input type="password" id="admin-pass" placeholder="PIN" class="w-full input-premium py-4 text-center text-3xl tracking-[1em] rounded-xl font-black text-white" onkeypress="if(event.key === 'Enter') window.validateAdmin()">
             <div class="flex gap-3">
-                <button type="button" onclick="window.toggleAuth(false)" class="flex-1 text-[9px] font-black text-slate-500 uppercase hover:text-white transition-all">Cancelar</button>
-                <button type="button" onclick="window.validateAdmin()" class="flex-1 bg-kairos-teal py-3 rounded-xl font-black text-[9px] uppercase shadow-lg hover:brightness-110 transition-all">Entrar</button>
+                <button type="button" onclick="window.toggleAuth(false)" class="flex-1 text-[9px] font-black text-slate-500 uppercase">Cancelar</button>
+                <button type="button" onclick="window.validateAdmin()" class="flex-1 bg-kairos-teal py-3 rounded-xl font-black text-[9px] uppercase shadow-lg">Entrar</button>
             </div>
-            <p id="auth-error" class="text-red-500 text-[10px] font-bold uppercase hidden mt-2">PIN Incorrecto</p>
         </div>
     </div>
 
@@ -222,13 +222,11 @@
     </a>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-        // Setup entorno seguro con Firebase
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'kairos-app-v1';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+        const firebaseConfig = {
             apiKey: "AIzaSyAIu-Vq3jDea3Xr7VRxJckSdXQ5Ja7K_mM",
             authDomain: "kairos-b84d5.firebaseapp.com",
             projectId: "kairos-b84d5",
@@ -241,21 +239,11 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-        // Reglas de entorno exigen usar paths public/data de artifacts
-        let mainDocRef;
-        if (typeof __app_id !== 'undefined') {
-            mainDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'kairos', 'master_v1');
-        } else {
-            mainDocRef = doc(db, 'configuracion', 'portal_kairos_master_v22');
-        }
+        /* RUTAS DE FIREBASE CORREGIDAS (4 Segmentos: coleccion/documento/coleccion/documento) */
+        const mainDocRef = doc(db, 'configuracion', 'portal', 'data', 'master');
 
-        // Estado Global
         let APP_DATA = { 
-            patients: [], 
-            resources: [], 
-            appointments: [], 
-            schedule: {}, 
-            adminPin: "1015",
+            patients: [], resources: [], appointments: [], schedule: {}, adminPin: "1015",
             brand: {
                 logo: "https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w1000",
                 author: "PSIC. CARLOS AGUILAR SÁNCHEZ",
@@ -266,21 +254,13 @@
         let visitorName = "";
         let activePatientId = null;
         let isAdminActive = false;
-        let isDbReady = false;
-
-        // Generador de IDs únicos simple
-        const generateID = () => Math.random().toString(36).substring(2, 10);
+        let editingNoteIdx = null;
 
         async function init() {
             try {
-                if (typeof __initial_auth_token !== 'undefined') {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                isDbReady = true;
-
-                document.getElementById('visitor-name-gate').value = "";
+                await signInAnonymously(auth);
+                const visitorInput = document.getElementById('visitor-name-gate');
+                if(visitorInput) visitorInput.value = "";
 
                 onSnapshot(mainDocRef, (docSnap) => {
                     if (docSnap.exists()) {
@@ -294,23 +274,23 @@
                         APP_DATA.schedule = defaultSchedule;
                         saveToCloud(APP_DATA);
                     }
-                }, (error) => {
-                    console.error("Error al sincronizar con Firebase:", error);
                 });
-            } catch (err) { console.error("Error de Autenticación:", err); }
+            } catch (err) { console.error("Error Firebase:", err); }
         }
 
         const saveToCloud = async (data) => {
-            if(!isDbReady) return;
-            try { await setDoc(mainDocRef, data); } catch (e) { console.error("Error guardando datos:", e); }
+            try { await setDoc(mainDocRef, data); } catch (e) { console.error(e); }
         };
 
         window.enterPortal = () => {
-            visitorName = document.getElementById('visitor-name-gate').value.trim().toUpperCase();
+            const visitorInput = document.getElementById('visitor-name-gate');
+            if(!visitorInput) return;
+            visitorName = visitorInput.value.trim().toUpperCase();
             if(visitorName.length < 2) return;
             document.getElementById('welcome-gate').classList.add('hidden');
             document.getElementById('main-content').classList.remove('hidden');
-            document.getElementById('hero-greeting').innerHTML = `HOLA <br><span class="text-kairos-teal">${visitorName}</span>`;
+            const greeting = document.getElementById('hero-greeting');
+            if(greeting) greeting.innerHTML = `HOLA <br><span class="text-kairos-teal">${visitorName}</span>`;
             lucide.createIcons();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
@@ -320,45 +300,59 @@
             document.getElementById('view-admin').classList.add('hidden');
             document.getElementById('main-content').classList.add('hidden');
             document.getElementById('welcome-gate').classList.remove('hidden');
-            document.getElementById('visitor-name-gate').value = "";
-            document.getElementById('auth-pass')?.setAttribute('value', ''); // Limpiar vista
+            const visitorInput = document.getElementById('visitor-name-gate');
+            if(visitorInput) { visitorInput.value = ""; visitorInput.focus(); }
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => document.getElementById('visitor-name-gate').focus(), 100);
         };
 
-        window.toggleAuth = (show) => {
-            document.getElementById('auth-modal').classList.toggle('hidden', !show);
-            document.getElementById('auth-error').classList.add('hidden');
-            if(show) {
-                document.getElementById('admin-pass').value = '';
-                setTimeout(() => document.getElementById('admin-pass').focus(), 100);
-            }
-        };
+        window.toggleAuth = (show) => document.getElementById('auth-modal').classList.toggle('hidden', !show);
         
         window.validateAdmin = () => { 
-            const pin = document.getElementById('admin-pass').value;
+            const pinInput = document.getElementById('admin-pass');
+            if(!pinInput) return;
+            const pin = pinInput.value;
             if (pin === (APP_DATA.adminPin || "1015")) { 
                 isAdminActive = true; 
                 window.toggleAuth(false); 
                 document.getElementById('view-admin').classList.remove('hidden');
                 document.getElementById('main-content').classList.add('hidden');
                 document.getElementById('welcome-gate').classList.add('hidden');
+                
+                /* ¡ESTA LÍNEA ES LA MAGIA QUE DIBUJA TUS DATOS CADA VEZ QUE ENTRAS DESDE CUALQUIER DISPOSITIVO! */
+                refreshUI(); 
+                
                 window.switchTab('expedientes');
             } else {
-                document.getElementById('admin-pass').value = "";
-                document.getElementById('auth-error').classList.remove('hidden');
+                pinInput.value = "";
             }
+        };
+
+        window.saveBrandConfig = () => {
+            const newPin = document.getElementById('new-admin-pin').value.trim();
+            if(newPin.length >= 4) APP_DATA.adminPin = newPin;
+
+            APP_DATA.brand = {
+                logo: document.getElementById('config-logo-url').value.trim() || APP_DATA.brand.logo,
+                author: document.getElementById('config-author-name').value.trim().toUpperCase() || APP_DATA.brand.author,
+                trust: document.getElementById('config-trust-msg').value.trim().toUpperCase() || APP_DATA.brand.trust
+            };
+            saveToCloud(APP_DATA);
+            const btn = event.currentTarget;
+            btn.innerText = "¡IDENTIDAD ACTUALIZADA!";
+            setTimeout(() => btn.innerText = "Actualizar Identidad Visual", 2000);
         };
 
         window.switchTab = (tab) => {
             ['expedientes', 'agenda', 'biblioteca', 'config'].forEach(p => {
-                document.getElementById('panel-'+p)?.classList.add('hidden');
+                const panel = document.getElementById('panel-'+p);
+                if(panel) panel.classList.add('hidden');
                 const t = document.getElementById('tab-'+p);
                 if(t) t.className = "px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5 flex items-center gap-2 transition-all";
             });
-            document.getElementById('panel-'+tab)?.classList.remove('hidden');
-            const target = document.getElementById('tab-'+tab);
-            if(target) target.className = "px-6 py-3 rounded-xl text-[9px] font-black uppercase bg-kairos-teal text-white shadow-md flex items-center gap-2 transition-all";
+            const targetPanel = document.getElementById('panel-'+tab);
+            if(targetPanel) targetPanel.classList.remove('hidden');
+            const targetTab = document.getElementById('tab-'+tab);
+            if(targetTab) targetTab.className = "px-6 py-3 rounded-xl text-[9px] font-black uppercase bg-kairos-teal text-white shadow-md flex items-center gap-2 transition-all";
             
             if(tab === 'config') window.renderScheduleConfig();
             if(tab === 'agenda') renderAdminAgenda();
@@ -369,10 +363,15 @@
             const b = APP_DATA.brand || {};
             const currentLogo = b.logo || "https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w1000";
             
-            document.getElementById('gate-logo-img').src = currentLogo;
-            document.getElementById('nav-logo-img').src = currentLogo;
-            document.getElementById('gate-author-name').innerText = b.author || "ESPECIALISTA";
-            document.getElementById('hero-trust-message').innerText = b.trust || "";
+            const gateLogo = document.getElementById('gate-logo-img');
+            const navLogo = document.getElementById('nav-logo-img');
+            const authorName = document.getElementById('gate-author-name');
+            const trustMsg = document.getElementById('hero-trust-message');
+
+            if(gateLogo) gateLogo.src = currentLogo;
+            if(navLogo) navLogo.src = currentLogo;
+            if(authorName) authorName.innerText = b.author;
+            if(trustMsg) trustMsg.innerText = b.trust;
 
             renderPublicResources();
             
@@ -380,14 +379,12 @@
                 renderAdminSidebar();
                 renderAdminResources();
                 renderAdminAgenda();
-                
                 const countBadge = document.getElementById('count-agenda');
                 const count = (APP_DATA.appointments || []).length;
                 if(countBadge) { 
                     countBadge.innerText = count; 
                     countBadge.classList.toggle('hidden', count === 0); 
                 }
-                
                 if(activePatientId) window.openWorkspace(activePatientId);
             }
             lucide.createIcons();
@@ -395,53 +392,22 @@
 
         window.generateTimeSlots = () => {
             const di = document.getElementById('booking-date').value; if(!di) return;
-            
-            const [y, m, d] = di.split('-');
-            const dateObj = new Date(y, m - 1, d);
-            const k = ['dom','lun','mar','mie','jue','vie','sab'][dateObj.getDay()];
-            
-            const c = (APP_DATA.schedule || {})[k]; 
-            const sD = document.getElementById('time-slots');
-            
-            document.getElementById('time-slots-container').classList.remove('hidden'); 
-            sD.innerHTML = "";
-            document.getElementById('booking-details-form').classList.add('hidden');
-            window.selectedSlot = null;
-            
-            if(!c || !c.active) { 
-                sD.innerHTML = '<p class="col-span-full py-8 text-[10px] font-black uppercase text-center text-red-400">Sin disponibilidad en este día</p>'; 
-                return; 
-            }
-            
-            let cur = parseInt(c.start.split(':')[0]); 
-            const end = parseInt(c.end.split(':')[0]);
-            
+            const d = new Date(di + "T00:00:00"); const k = ['dom','lun','mar','mie','jue','vie','sab'][d.getDay()];
+            const c = (APP_DATA.schedule || {})[k]; const sD = document.getElementById('time-slots');
+            document.getElementById('time-slots-container').classList.remove('hidden'); sD.innerHTML = "";
+            if(!c || !c.active) { sD.innerHTML = '<p class="col-span-full py-8 text-[10px] font-black uppercase text-center text-red-400">Sin disponibilidad operativa</p>'; return; }
+            let cur = parseInt(c.start.split(':')[0]); const end = parseInt(c.end.split(':')[0]);
             while(cur < end) {
-                const t = `${cur.toString().padStart(2, '0')}:00`; 
-                const isT = (APP_DATA.appointments || []).some(a => a.date === di && a.time === t);
-                
-                const b = document.createElement('button'); 
-                b.type="button";
-                b.className = isT ? 
-                    "p-4 rounded-xl text-[10px] font-black opacity-30 cursor-not-allowed bg-red-900/10 border border-red-900/20 text-red-500 uppercase" : 
-                    "p-4 rounded-xl text-[10px] font-black bg-white/5 border border-white/5 text-white hover:border-kairos-teal hover:text-kairos-teal transition-all active:scale-95";
+                const t = `${cur}:00`; const isT = (APP_DATA.appointments || []).some(a => a.date === di && a.time === t);
+                const b = document.createElement('button'); b.type="button";
+                b.className = isT ? "p-4 rounded-xl text-[10px] font-black opacity-30 cursor-not-allowed bg-red-900/10 border border-red-900/20 text-red-500 uppercase" : "p-4 rounded-xl text-[10px] font-black bg-white/5 border border-white/5 text-white hover:border-kairos-teal hover:text-kairos-teal transition-all active:scale-95";
                 b.innerHTML = isT ? "OCUPADO" : t;
-                
-                if(!isT) {
-                    b.onclick = () => { 
-                        document.querySelectorAll('#time-slots button').forEach(x => {
-                            if(!x.classList.contains('cursor-not-allowed')) {
-                                x.className = "p-4 rounded-xl text-[10px] font-black bg-white/5 border border-white/5 text-white hover:border-kairos-teal hover:text-kairos-teal transition-all active:scale-95";
-                            }
-                        });
-                        b.className = "p-4 rounded-xl text-[10px] font-black bg-kairos-teal border border-kairos-teal text-white shadow-lg shadow-kairos-teal/20 transition-all";
-                        window.selectedSlot = t;
-                        document.getElementById('booking-details-form').classList.remove('hidden');
-                        document.getElementById('patient-full-name').focus();
-                    };
-                }
-                sD.appendChild(b); 
-                cur++;
+                if(!isT) b.onclick = () => { 
+                    document.querySelectorAll('#time-slots button').forEach(x => x.classList.remove('bg-kairos-teal', 'text-white'));
+                    b.classList.add('bg-kairos-teal', 'text-white'); window.selectedSlot = t;
+                    document.getElementById('booking-details-form').classList.remove('hidden');
+                };
+                sD.appendChild(b); cur++;
             }
         };
 
@@ -458,14 +424,7 @@
             }
 
             if(!APP_DATA.appointments) APP_DATA.appointments = [];
-            
-            const newApp = { 
-                id: generateID(),
-                date: document.getElementById('booking-date').value, 
-                time: window.selectedSlot, 
-                patient: n, 
-                phone: p 
-            };
+            const newApp = { date: document.getElementById('booking-date').value, time: window.selectedSlot, patient: n, phone: p };
             
             try {
                 APP_DATA.appointments.push(newApp);
@@ -480,15 +439,26 @@
                         <div>
                             <h3 class="text-xl font-black uppercase text-white">Cita Registrada</h3>
                             <p class="text-[10px] text-slate-500 uppercase mt-2 font-bold tracking-widest">${newApp.date} a las ${newApp.time}</p>
-                            <p class="text-xs text-kairos-teal mt-4 font-bold">${n}</p>
                         </div>
-                        <button onclick="location.reload()" class="mt-8 text-[9px] font-black uppercase text-slate-400 hover:text-white transition-colors">Volver al Inicio</button>
-                    </div>
-                `;
+                        <button type="button" onclick="window.resetBookingCard()" class="px-8 py-3 bg-white/5 rounded-xl text-[9px] font-black uppercase text-slate-400 border border-white/10 hover:bg-white/10 transition-all">Nueva Cita / Continuar</button>
+                    </div>`;
                 lucide.createIcons();
-            } catch(e) {
-                console.error("Error al confirmar cita", e);
-            }
+            } catch (err) { console.error(err); }
+        };
+
+        window.resetBookingCard = () => {
+            const container = document.getElementById('booking-card-content');
+            container.innerHTML = `
+                <input type="date" id="booking-date" class="w-full input-premium p-4 rounded-xl text-center font-bold text-lg" onchange="window.generateTimeSlots()">
+                <div id="time-slots-container" class="hidden animate-reveal space-y-6">
+                    <div id="time-slots" class="grid grid-cols-2 gap-3"></div>
+                    <div id="booking-details-form" class="hidden space-y-4 pt-6 border-t border-white/5">
+                        <input type="text" id="patient-full-name" autocomplete="off" class="w-full input-premium p-4 rounded-xl text-sm font-bold uppercase" placeholder="NOMBRE COMPLETO">
+                        <input type="tel" id="patient-phone" autocomplete="off" class="w-full input-premium p-4 rounded-xl text-sm font-bold uppercase" placeholder="TELÉFONO">
+                        <button type="button" onclick="window.confirmBooking()" class="w-full bg-kairos-teal text-white py-4 rounded-xl font-black text-[11px] uppercase shadow-lg">Confirmar Cita Ahora</button>
+                    </div>
+                </div>`;
+            lucide.createIcons();
         };
 
         window.registerPatient = () => {
@@ -496,416 +466,307 @@
             const dateEl = document.getElementById('new-p-date');
             const name = nameEl.value.trim().toUpperCase();
             const date = dateEl.value;
-
             if(!name || !date) return;
-
             if(!APP_DATA.patients) APP_DATA.patients = [];
-            const newId = 'EXP-' + generateID().toUpperCase();
-            
-            APP_DATA.patients.push({
-                id: newId,
-                name: name,
-                date: date,
-                notes: []
-            });
-
+            APP_DATA.patients.unshift({ id: "KAI-"+Math.floor(10000+Math.random()*90000), name, date, notes: [], files: [] });
             saveToCloud(APP_DATA);
-            nameEl.value = '';
-            dateEl.value = '';
-            window.openWorkspace(newId);
+            nameEl.value = ""; dateEl.value = "";
         };
 
-        const renderAdminSidebar = () => {
-            const container = document.getElementById('sidebar-patients');
-            container.innerHTML = '';
-            
-            if(!APP_DATA.patients || APP_DATA.patients.length === 0) {
-                container.innerHTML = '<p class="text-center text-[10px] text-slate-500 py-4 uppercase tracking-widest font-bold">Sin expedientes</p>';
-                return;
-            }
-
-            // Ordenar alfabéticamente
-            const sorted = [...APP_DATA.patients].sort((a,b) => a.name.localeCompare(b.name));
-
-            sorted.forEach(p => {
-                const isActive = activePatientId === p.id;
-                const baseClass = "p-4 rounded-xl cursor-pointer transition-all border flex items-center justify-between group ";
-                const activeClass = isActive ? "bg-kairos-teal/20 border-kairos-teal/50" : "bg-white/5 border-white/5 hover:border-kairos-teal/30 hover:bg-white/10";
-                
-                container.innerHTML += `
-                    <div class="${baseClass} ${activeClass}" onclick="window.openWorkspace('${p.id}')">
-                        <div class="overflow-hidden">
-                            <h4 class="text-xs font-black text-white uppercase truncate">${p.name}</h4>
-                            <p class="text-[9px] text-slate-400 uppercase tracking-widest truncate mt-1">Folio: ${p.id.substring(4, 10)}</p>
-                        </div>
-                        <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-kairos-teal transition-colors"></i>
-                    </div>
-                `;
-            });
+        window.deletePatient = (id) => {
+            if(!confirm("¿CONFIRMAS ELIMINAR ESTE EXPEDIENTE?")) return;
+            APP_DATA.patients = APP_DATA.patients.filter(p => p.id !== id);
+            if(activePatientId === id) activePatientId = null;
+            saveToCloud(APP_DATA);
+            document.getElementById('clinical-workspace').innerHTML = `<div class="flex flex-col items-center justify-center h-full opacity-20 text-center space-y-4 py-20"><i data-lucide="search" class="w-16 h-16"></i><p class="text-xs font-black uppercase tracking-widest">Selecciona un expediente para operar</p></div>`;
+            lucide.createIcons();
         };
 
         window.openWorkspace = (id) => {
-            activePatientId = id;
-            renderAdminSidebar(); // Actualizar clases activas
-            
-            const ws = document.getElementById('clinical-workspace');
+            activePatientId = id; editingNoteIdx = null;
             const p = APP_DATA.patients.find(x => x.id === id);
-            
-            if(!p) {
-                ws.innerHTML = '<div class="flex h-full items-center justify-center opacity-50"><p>Expediente no encontrado</p></div>';
-                return;
-            }
-
-            const notesHtml = (p.notes || []).sort((a,b) => new Date(b.date) - new Date(a.date)).map(n => `
-                <div class="note-card bg-white/5 border border-white/5 p-6 rounded-2xl relative group">
-                    <div class="flex justify-between items-start mb-4">
-                        <span class="text-[10px] font-black text-kairos-teal bg-kairos-teal/10 px-3 py-1 rounded-full uppercase flex items-center gap-2"><i data-lucide="calendar" class="w-3 h-3"></i> ${new Date(n.date).toLocaleString()}</span>
-                        <button onclick="window.deleteNote('${p.id}', '${n.id}')" class="text-red-500 opacity-0 group-hover:opacity-100 transition-opacity no-print p-2 hover:bg-red-500/20 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </div>
-                    <p class="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap justified-text">${n.text}</p>
-                </div>
-            `).join('') || '<p class="text-center text-slate-500 text-xs font-black tracking-widest uppercase py-10">Sin notas clínicas registradas</p>';
-
+            if(!p) return;
+            const ws = document.getElementById('clinical-workspace');
             ws.innerHTML = `
-                <!-- Cabecera para Impresión -->
                 <div class="print-header">
-                    <div>
-                        <h2 class="text-2xl font-black text-kairos-teal uppercase">${APP_DATA.brand?.author || 'ESPECIALISTA'}</h2>
-                        <p class="text-xs uppercase tracking-widest text-slate-500">Expediente Clínico Oficial</p>
-                    </div>
-                    <div class="text-right">
-                        <h1 class="text-xl font-black uppercase">${p.name}</h1>
-                        <p class="text-xs font-bold uppercase text-slate-500 mt-1">Folio: ${p.id.substring(4,10)} | Ingreso: ${p.date}</p>
-                    </div>
-                </div>
-
-                <!-- Cabecera de Interfaz -->
-                <div class="flex justify-between items-center mb-10 no-print animate-reveal">
-                    <div>
-                        <h2 class="text-2xl font-black text-white uppercase tracking-tighter">${p.name}</h2>
-                        <p class="text-[10px] text-kairos-teal font-black uppercase tracking-widest mt-1">Alta: ${p.date}</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="window.print()" class="p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 text-white transition-all shadow-sm"><i data-lucide="printer" class="w-5 h-5"></i></button>
-                        <button onclick="window.deletePatient('${p.id}')" class="p-3 bg-red-500/10 border border-red-500/10 rounded-xl hover:bg-red-500/20 text-red-500 transition-all shadow-sm"><i data-lucide="trash" class="w-5 h-5"></i></button>
+                    <div class="flex items-center gap-6">
+                        <img src="${APP_DATA.brand?.logo}" class="print-logo" style="width: 70px;">
+                        <div>
+                            <h2 style="font-size: 20px; font-weight: 900; color: #469da3; text-transform: uppercase;">Reporte Clínico de Evolución</h2>
+                            <p style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">${APP_DATA.brand?.author}</p>
+                        </div>
                     </div>
                 </div>
+                <div class="space-y-12 animate-reveal">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-8 no-print">
+                        <div><h2 class="text-3xl font-black text-white uppercase italic tracking-tighter">${p.name}</h2><p class="text-[9px] text-slate-500 font-bold uppercase mt-1">FOLIO: ${p.id}</p></div>
+                        <button type="button" onclick="window.print()" class="p-4 bg-white/5 rounded-2xl text-kairos-teal font-black text-[9px] uppercase border border-white/5 flex items-center gap-2 shadow-xl"><i data-lucide="printer" class="w-4 h-4"></i> Imprimir Reporte</button>
+                    </div>
 
-                <div class="space-y-4 no-print mb-12 animate-reveal" style="animation-delay: 0.1s;">
-                    <h3 class="text-xs font-black uppercase tracking-widest text-slate-400">Nueva Nota Clínica</h3>
-                    <textarea id="note-input" class="w-full input-premium p-5 rounded-2xl text-sm min-h-[120px] resize-none" placeholder="Escribir evolución, análisis o plan de acción..."></textarea>
-                    <button type="button" onclick="window.saveNote('${p.id}')" class="w-full bg-kairos-teal text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-lg hover:brightness-110 transition-all">Guardar Nota en Expediente</button>
-                </div>
+                    <!-- ANEXOS -->
+                    <div class="glass-panel p-6 space-y-6 no-print border-white/5">
+                        <h4 class="text-[9px] font-black text-kairos-teal uppercase tracking-widest flex items-center gap-2"><i data-lucide="paperclip" class="w-4 h-4"></i> Anexos Documentales</h4>
+                        <div class="flex gap-4">
+                            <input type="text" id="anexo-title" class="flex-1 input-premium p-3 rounded-xl text-[10px] uppercase" placeholder="Título">
+                            <input type="url" id="anexo-url" class="flex-1 input-premium p-3 rounded-xl text-[10px]" placeholder="URL Enlace (Drive)">
+                            <button type="button" onclick="window.addAnexo()" class="bg-white/10 p-3 rounded-xl text-white font-black text-[9px] uppercase">Vincular</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${(p.files || []).map((f, i) => `<div class="flex items-center justify-between bg-white/5 p-3 rounded-xl border border-white/5"><a href="${f.url}" target="_blank" class="text-[9px] font-bold text-slate-400 uppercase truncate flex items-center gap-2"><i data-lucide="file-text" class="w-3 h-3"></i>${f.title}</a><button onclick="window.removeAnexo(${i})" class="text-red-500/50 hover:text-red-500"><i data-lucide="x" class="w-3 h-3"></i></button></div>`).join('')}
+                        </div>
+                    </div>
 
-                <div class="space-y-6 print-area animate-reveal" style="animation-delay: 0.2s;" id="notes-container">
-                    <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-6 border-b border-white/5 pb-2">Historial Clínico</h3>
-                    ${notesHtml}
+                    <!-- EDITOR NOTAS -->
+                    <div class="glass-panel p-8 space-y-8 no-print border-kairos-teal/20 shadow-xl">
+                        <h4 id="note-header" class="text-[9px] font-black text-kairos-teal uppercase tracking-widest">Nueva Entrada Evolutiva</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <textarea id="note-mental" class="input-premium w-full p-5 h-44 rounded-2xl text-[11px] uppercase leading-relaxed" placeholder="Estado Mental..."></textarea>
+                            <textarea id="note-strat" class="input-premium w-full p-5 h-44 rounded-2xl text-[11px] uppercase leading-relaxed" placeholder="Estrategias..."></textarea>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <textarea id="note-resol" class="input-premium w-full p-5 h-32 rounded-2xl text-[11px] uppercase leading-relaxed" placeholder="Resolución..."></textarea>
+                            <textarea id="note-sug" class="input-premium w-full p-5 h-32 rounded-2xl text-[11px] uppercase font-bold border-kairos-teal/10" placeholder="Recomendaciones..."></textarea>
+                        </div>
+                        <div class="flex gap-4 pt-4">
+                            <button type="button" onclick="window.professionalizeNote()" class="flex-1 bg-kairos-ai/10 text-ai py-5 rounded-2xl font-black text-[10px] uppercase border border-ai/20 shadow-lg flex items-center justify-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> IA</button>
+                            <button type="button" id="btn-save-note" onclick="window.saveNote()" class="flex-[3] bg-kairos-teal py-5 rounded-2xl font-black text-[10px] uppercase shadow-2xl">Guardar Registro Clínico</button>
+                        </div>
+                    </div>
+
+                    <div class="print-area space-y-12">
+                        ${(p.notes || []).map((n, idx) => `
+                            <div class="note-card">
+                                <div class="flex justify-between items-center mb-6 no-print">
+                                    <p class="text-[10px] font-black text-kairos-teal uppercase">${n.date}</p>
+                                    <button type="button" onclick="window.editNote(${idx})" class="p-2 text-slate-500 hover:text-ai transition-all bg-white/5 rounded-lg border border-white/5"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                                </div>
+                                <div class="justified-text text-[12px] uppercase leading-loose text-gray-800 print:text-black space-y-8">
+                                    <p class="hidden print:block font-black text-[10px] text-kairos-teal mb-6 border-b-2 border-kairos-teal/20 pb-2">${n.date} - NOTA DE EVOLUCIÓN</p>
+                                    <div><p class="font-black text-[10px] mb-3 text-slate-700">I. VALORACIÓN DEL ESTADO MENTAL:</p><p class="pl-4">${n.mental}</p></div>
+                                    <div><p class="font-black text-[10px] mb-3 text-slate-700">II. ESTRATEGIAS E INTERVENCIÓN TERAPÉUTICA:</p><p class="pl-4">${n.strat}</p></div>
+                                    <div><p class="font-black text-[10px] mb-3 text-slate-700">III. RESOLUCIÓN Y SÍNTESIS DE LA SESIÓN:</p><p class="pl-4">${n.resol}</p></div>
+                                    <div><p class="font-black text-[10px] mb-3 text-slate-700">IV. RECOMENDACIONES Y SEGUIMIENTO:</p><p class="bg-gray-50 print:bg-white p-6 rounded-2xl border border-gray-100 font-bold">${n.sug}</p></div>
+                                </div>
+                            </div>
+                        `).join('') || '<p class="text-center py-20 opacity-20 uppercase font-black text-xs">Sin registros previos</p>'}
+                        <div class="hidden print:block pt-32 text-center space-y-3">
+                             <div class="w-40 h-px bg-gray-400 mx-auto"></div>
+                             <p style="font-size: 11px; font-weight: 900; text-transform: uppercase;">${APP_DATA.brand?.author}</p>
+                             <p style="font-size: 8px; color: #64748b; text-transform: uppercase;">Firma Autorizada</p>
+                        </div>
+                    </div>
                 </div>
             `;
             lucide.createIcons();
         };
 
-        window.saveNote = (patientId) => {
-            const input = document.getElementById('note-input');
-            const text = input.value.trim();
-            if(!text) return;
-
-            const pIndex = APP_DATA.patients.findIndex(x => x.id === patientId);
-            if(pIndex === -1) return;
-
-            if(!APP_DATA.patients[pIndex].notes) APP_DATA.patients[pIndex].notes = [];
-            
-            APP_DATA.patients[pIndex].notes.push({
-                id: generateID(),
-                date: new Date().toISOString(),
-                text: text
-            });
-
+        window.saveNote = () => {
+            const p = APP_DATA.patients.find(x => x.id === activePatientId);
+            const note = {
+                date: editingNoteIdx !== null ? p.notes[editingNoteIdx].date : new Date().toLocaleString(),
+                mental: document.getElementById('note-mental').value.trim().toUpperCase(),
+                strat: document.getElementById('note-strat').value.trim().toUpperCase(),
+                resol: document.getElementById('note-resol').value.trim().toUpperCase(),
+                sug: document.getElementById('note-sug').value.trim().toUpperCase()
+            };
+            if(!note.mental) return;
+            if(editingNoteIdx !== null) { p.notes[editingNoteIdx] = note; } else { p.notes.unshift(note); }
             saveToCloud(APP_DATA);
-            input.value = '';
-            window.openWorkspace(patientId);
+            window.openWorkspace(activePatientId);
         };
 
-        window.deleteNote = (patientId, noteId) => {
-            const pIndex = APP_DATA.patients.findIndex(x => x.id === patientId);
-            if(pIndex === -1) return;
-            
-            APP_DATA.patients[pIndex].notes = APP_DATA.patients[pIndex].notes.filter(n => n.id !== noteId);
+        window.editNote = (idx) => {
+            editingNoteIdx = idx;
+            const n = APP_DATA.patients.find(x => x.id === activePatientId).notes[idx];
+            document.getElementById('note-mental').value = n.mental;
+            document.getElementById('note-strat').value = n.strat;
+            document.getElementById('note-resol').value = n.resol;
+            document.getElementById('note-sug').value = n.sug;
+            document.getElementById('btn-save-note').innerText = "Actualizar Registro";
+            document.getElementById('note-header').innerText = "Editando Registro: " + n.date;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.addAnexo = () => {
+            const t = document.getElementById('anexo-title').value.trim().toUpperCase();
+            const u = document.getElementById('anexo-url').value.trim();
+            if(!t || !u) return;
+            const p = APP_DATA.patients.find(x => x.id === activePatientId);
+            if(!p.files) p.files = [];
+            p.files.unshift({ title: t, url: u });
             saveToCloud(APP_DATA);
-            window.openWorkspace(patientId);
+            window.openWorkspace(activePatientId);
         };
 
-        window.deletePatient = (patientId) => {
-            APP_DATA.patients = APP_DATA.patients.filter(p => p.id !== patientId);
-            activePatientId = null;
+        window.removeAnexo = (i) => {
+            const p = APP_DATA.patients.find(x => x.id === activePatientId);
+            p.files.splice(i, 1);
             saveToCloud(APP_DATA);
-            document.getElementById('clinical-workspace').innerHTML = `
-                <div class="flex flex-col items-center justify-center h-full opacity-20 text-center space-y-4 py-20">
-                    <i data-lucide="search" class="w-16 h-16"></i>
-                    <p class="text-xs font-black uppercase tracking-widest">Selecciona un expediente para operar</p>
-                </div>
-            `;
-            lucide.createIcons();
-            renderAdminSidebar();
+            window.openWorkspace(activePatientId);
         };
 
-        window.addResource = () => {
-            const titleEl = document.getElementById('res-title');
-            const typeEl = document.getElementById('res-type');
-            const urlEl = document.getElementById('res-url');
-            
-            const title = titleEl.value.trim().toUpperCase();
-            const type = typeEl.value;
-            const url = urlEl.value.trim();
-
-            if(!title || !url) return;
-            if(!APP_DATA.resources) APP_DATA.resources = [];
-
-            APP_DATA.resources.push({
-                id: generateID(),
-                title, type, url,
-                date: new Date().toISOString()
-            });
-
-            saveToCloud(APP_DATA);
-            titleEl.value = ''; urlEl.value = '';
+        window.professionalizeNote = async () => {
+            const f = document.getElementById('note-mental');
+            const t = f.value; if(!t || t.length < 5) return;
+            try {
+                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAIu-Vq3jDea3Xr7VRxJckSdXQ5Ja7K_mM`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Como psicólogo clínico formal, redacta el siguiente estado mental de forma técnica y profesional (español y todo en mayúsculas): " + t }] }] })
+                });
+                const d = await r.json(); const ai = d.candidates?.[0]?.content?.parts?.[0]?.text;
+                if(ai) f.value = ai.toUpperCase();
+            } catch(e) { console.error(e); }
         };
 
-        const renderAdminResources = () => {
-            const container = document.getElementById('admin-resources-list');
-            if(!container) return;
-            container.innerHTML = '';
-
-            if(!APP_DATA.resources || APP_DATA.resources.length === 0) {
-                container.innerHTML = '<p class="text-center text-[10px] text-slate-500 py-10 uppercase tracking-widest font-bold">Sin recursos publicados</p>';
-                return;
-            }
-
-            const sorted = [...APP_DATA.resources].sort((a,b) => new Date(b.date) - new Date(a.date));
-
-            sorted.forEach(r => {
-                container.innerHTML += `
-                    <div class="glass-panel p-4 flex items-center justify-between">
-                        <div class="flex items-center gap-4 overflow-hidden pr-4">
-                            <div class="w-8 h-8 rounded-full bg-kairos-teal/20 text-kairos-teal flex items-center justify-center flex-shrink-0">
-                                <i data-lucide="${r.type === 'youtube' ? 'youtube' : 'link'}" class="w-4 h-4"></i>
-                            </div>
-                            <div class="overflow-hidden">
-                                <h4 class="text-xs font-black text-white uppercase truncate">${r.title}</h4>
-                                <p class="text-[8px] text-slate-400 uppercase tracking-widest truncate mt-1">${r.url}</p>
-                            </div>
-                        </div>
-                        <button onclick="window.deleteResource('${r.id}')" class="p-2 text-red-500 bg-red-500/10 rounded-lg hover:bg-red-500/20 transition-all flex-shrink-0">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                `;
-            });
-        };
-
-        window.deleteResource = (id) => {
-            APP_DATA.resources = APP_DATA.resources.filter(r => r.id !== id);
-            saveToCloud(APP_DATA);
-        };
-
-        const renderPublicResources = () => {
-            const container = document.getElementById('patient-resources');
-            if(!container) return;
-            container.innerHTML = '';
-            
-            if(!APP_DATA.resources || APP_DATA.resources.length === 0) {
-                container.innerHTML = '<div class="col-span-full py-16 flex flex-col items-center justify-center opacity-30"><i data-lucide="folder-open" class="w-12 h-12 mb-4 text-kairos-teal"></i><p class="text-xs uppercase tracking-widest font-black text-white">Próximamente nuevo material</p></div>';
-                return;
-            }
-            
-            const sorted = [...APP_DATA.resources].sort((a,b) => new Date(b.date) - new Date(a.date));
-            
-            sorted.forEach(r => {
-                // Escape simple para strings
-                const safeTitle = r.title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                container.innerHTML += `
-                    <div class="glass-panel p-6 hover:-translate-y-2 transition-transform cursor-pointer border-t-2 border-t-kairos-teal group" onclick="window.openResourceModal('${r.url}', '${r.type}', '${safeTitle}')">
-                        <div class="flex justify-between items-start mb-6">
-                            <div class="w-12 h-12 rounded-full bg-kairos-teal/10 text-kairos-teal flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <i data-lucide="${r.type === 'youtube' ? 'youtube' : 'book-open'}" class="w-6 h-6"></i>
-                            </div>
-                            <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-500 group-hover:text-white transition-colors"></i>
-                        </div>
-                        <h3 class="text-sm font-black text-white uppercase mb-2 line-clamp-2">${r.title}</h3>
-                        <p class="text-[9px] text-kairos-teal uppercase tracking-widest font-bold mt-4 flex items-center gap-2">
-                            ${r.type === 'youtube' ? 'VER VIDEO' : 'ACCEDER AL MATERIAL'}
-                        </p>
-                    </div>
-                `;
-            });
-        };
-
-        window.openResourceModal = (url, type, title) => {
+        window.openResourceModal = (type, content, title) => {
             const overlay = document.getElementById('resource-modal-overlay');
             const container = document.getElementById('modal-content-container');
             document.getElementById('modal-resource-title').innerText = title;
-
-            let embedUrl = url;
-            
+            container.innerHTML = "";
             if(type === 'youtube') {
-                // Extraer ID de video YouTube
-                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-                const match = url.match(regExp);
-                const id = (match && match[2].length === 11) ? match[2] : null;
-                if(id) embedUrl = `https://www.youtube.com/embed/${id}?autoplay=1`;
-            } else if (url.includes('drive.google.com/file/d/')) {
-                // Transformar enlaces de drive a preview
-                embedUrl = url.replace(/\/view.*$/, '/preview');
+                const vidId = content.split('v=')[1]?.split('&')[0] || content.split('/').pop();
+                container.innerHTML = `<iframe class="w-full h-full border-0" src="https://www.youtube.com/embed/${vidId}?autoplay=1" allowfullscreen></iframe>`;
+            } else if(type === 'drive') {
+                container.innerHTML = `<iframe class="w-full h-full border-0" src="${content.replace('/view', '/preview')}"></iframe>`;
+            } else {
+                container.innerHTML = `<div class="w-full h-full flex items-center justify-center p-2 bg-white/5"><img src="${content}" class="max-w-full max-h-full object-contain rounded-xl"></div>`;
             }
-
-            container.innerHTML = `<iframe src="${embedUrl}" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
             overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
         };
 
         window.closeResourceModal = () => {
             document.getElementById('resource-modal-overlay').classList.add('hidden');
-            document.getElementById('modal-content-container').innerHTML = ''; // Detener reproducción
+            document.getElementById('modal-content-container').innerHTML = "";
+            document.body.style.overflow = 'auto';
         };
 
-        const renderAdminAgenda = () => {
-            const container = document.getElementById('panel-agenda');
-            if(!container) return;
-            container.innerHTML = '';
-
-            const apps = APP_DATA.appointments || [];
-            
-            if(apps.length === 0) {
-                container.innerHTML = '<div class="col-span-full py-20 flex flex-col items-center justify-center opacity-30"><i data-lucide="calendar-x" class="w-16 h-16 mb-4"></i><p class="text-xs uppercase tracking-widest font-black">Agenda Vacía</p></div>';
-                return;
-            }
-
-            // Agrupar citas por fecha
-            const grouped = apps.reduce((acc, curr) => {
-                if(!acc[curr.date]) acc[curr.date] = [];
-                acc[curr.date].push(curr);
-                return acc;
-            }, {});
-
-            // Ordenar fechas más recientes a futuras
-            const sortedDates = Object.keys(grouped).sort((a,b) => new Date(a) - new Date(b));
-
-            sortedDates.forEach(dateStr => {
-                const dayApps = grouped[dateStr].sort((a,b) => a.time.localeCompare(b.time));
-                
-                let dayHtml = `
-                    <div class="glass-panel p-6 space-y-4">
-                        <div class="border-b border-white/10 pb-4 mb-4">
-                            <h3 class="text-sm font-black text-kairos-teal uppercase tracking-widest flex items-center gap-2"><i data-lucide="calendar-days" class="w-4 h-4"></i> ${dateStr}</h3>
+        function renderPublicResources() {
+            const l = document.getElementById('patient-resources');
+            if(!l) return;
+            l.innerHTML = (APP_DATA.resources || []).map(r => {
+                let thumb = "https://placehold.co/600x400/020617/469da3?text=KAIRÓS";
+                if(r.type === 'youtube') {
+                    const vidId = r.content.split('v=')[1]?.split('&')[0] || r.content.split('/').pop();
+                    thumb = `https://img.youtube.com/vi/${vidId}/maxresdefault.jpg`;
+                }
+                return `
+                    <div class="glass-panel p-6 flex flex-col space-y-4 hover:scale-[1.02] transition-all group shadow-xl">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[8px] font-black text-kairos-teal uppercase tracking-widest">${r.type}</span>
+                            <button onclick="window.openResourceModal('${r.type}', '${r.content}', '${r.title}')" class="p-2 bg-white/5 rounded-lg border border-white/10 text-slate-400 hover:text-kairos-teal transition-all flex items-center gap-2 text-[8px] font-black uppercase"><i data-lucide="maximize" class="w-3 h-3"></i> Ampliar</button>
                         </div>
-                        <div class="space-y-3">
-                `;
-
-                dayApps.forEach(a => {
-                    dayHtml += `
-                        <div class="bg-white/5 border border-white/5 p-4 rounded-xl flex items-center justify-between group">
-                            <div>
-                                <span class="text-xs font-black text-white flex items-center gap-2 bg-kairos-deep px-2 py-1 rounded w-fit mb-2">${a.time} hrs</span>
-                                <h4 class="text-[10px] font-black uppercase text-slate-300 truncate max-w-[150px]">${a.patient}</h4>
-                                <p class="text-[9px] text-kairos-teal uppercase tracking-widest font-bold mt-1">${a.phone}</p>
+                        <h4 class="text-sm font-bold text-white uppercase leading-tight truncate">${r.title}</h4>
+                        <div class="video-container cursor-pointer group" onclick="window.openResourceModal('${r.type}', '${r.content}', '${r.title}')">
+                            <img src="${thumb}" class="opacity-60 group-hover:opacity-100 transition-all duration-500" onerror="this.src='https://placehold.co/600x400/020617/469da3?text=RECURSO'">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-12 h-12 bg-kairos-teal/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 group-hover:scale-125 transition-all">
+                                    <i data-lucide="play" class="w-6 h-6 text-white fill-white"></i>
+                                </div>
                             </div>
-                            <button onclick="window.deleteAppointment('${a.id}')" class="p-2 text-red-500 bg-red-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all flex-shrink-0">
-                                <i data-lucide="x" class="w-4 h-4"></i>
-                            </button>
                         </div>
-                    `;
-                });
+                    </div>
+                `;
+            }).join('') || '<p class="col-span-full py-16 opacity-20 text-[9px] font-black uppercase text-center tracking-[0.4em]">Sin materiales públicos actualmente</p>';
+            lucide.createIcons();
+        }
 
-                dayHtml += `</div></div>`;
-                container.innerHTML += dayHtml;
-            });
-        };
-
-        window.deleteAppointment = (id) => {
-            APP_DATA.appointments = APP_DATA.appointments.filter(a => a.id !== id);
-            saveToCloud(APP_DATA);
-            renderAdminAgenda();
-        };
+        function renderAdminSidebar() {
+            const sidebar = document.getElementById('sidebar-patients');
+            if(!sidebar) return;
+            sidebar.innerHTML = (APP_DATA.patients || []).map(p => `
+                <div class="group relative flex items-center gap-2 mb-2">
+                    <button type="button" onclick="window.openWorkspace('${p.id}')" class="flex-1 text-left p-5 rounded-2xl border transition-all ${activePatientId === p.id ? 'bg-kairos-teal/20 border-kairos-teal/40' : 'bg-white/5 border-white/5 hover:bg-white/10 shadow-lg'}">
+                        <p class="text-[7px] font-black text-kairos-teal uppercase mb-1">${p.id}</p>
+                        <p class="text-xs font-bold text-white uppercase truncate">${p.name}</p>
+                    </button>
+                    <button onclick="window.deletePatient('${p.id}')" class="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 bg-red-500 text-white p-2 rounded-full shadow-xl transition-all hover:scale-110"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
 
         window.renderScheduleConfig = () => {
             const container = document.getElementById('schedule-config-container');
             if(!container) return;
-            container.innerHTML = '';
+            const days = { lun:'LUNES', mar:'MARTES', mie:'MIÉRCOLES', jue:'JUEVES', vie:'VIERNES', sab:'SÁBADO', dom:'DOMINGO' };
+            const sched = APP_DATA.schedule || {};
             
-            const days = [
-                {k:'lun', l:'Lunes'}, {k:'mar', l:'Martes'}, {k:'mie', l:'Miércoles'}, 
-                {k:'jue', l:'Jueves'}, {k:'vie', l:'Viernes'}, {k:'sab', l:'Sábado'}, {k:'dom', l:'Domingo'}
-            ];
-
-            const current = APP_DATA.schedule || {};
-
-            days.forEach(d => {
-                const conf = current[d.k] || { active: false, start: '09:00', end: '18:00' };
-                container.innerHTML += `
-                    <div class="flex items-center justify-between bg-white/5 p-3 rounded-lg border border-white/5">
-                        <div class="flex items-center gap-3 w-1/3">
-                            <input type="checkbox" id="chk-${d.k}" ${conf.active ? 'checked' : ''} class="w-4 h-4 accent-kairos-teal rounded bg-white/10 border-white/20">
-                            <label for="chk-${d.k}" class="text-[10px] font-black uppercase text-white">${d.l}</label>
-                        </div>
-                        <div class="flex items-center gap-2 w-2/3">
-                            <input type="time" id="start-${d.k}" value="${conf.start}" class="input-premium p-2 text-xs rounded text-center" step="3600">
-                            <span class="text-slate-500 text-xs font-bold">a</span>
-                            <input type="time" id="end-${d.k}" value="${conf.end}" class="input-premium p-2 text-xs rounded text-center" step="3600">
-                        </div>
+            container.innerHTML = Object.keys(days).map(d => `
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-white/[0.03] rounded-2xl border border-white/5">
+                    <div class="flex items-center gap-4 min-w-[120px]">
+                        <input type="checkbox" id="sc-${d}" ${sched[d]?.active ? 'checked' : ''} class="w-5 h-5 accent-kairos-teal cursor-pointer">
+                        <span class="text-[10px] font-black uppercase text-slate-300">${days[d]}</span>
                     </div>
-                `;
-            });
+                    <div class="flex items-center gap-2 flex-1 w-full">
+                        <input type="time" id="ss-${d}" value="${sched[d]?.start || '17:00'}" class="input-premium p-2 rounded-xl text-[10px] flex-1">
+                        <span class="text-[8px] font-bold text-slate-600">A</span>
+                        <input type="time" id="se-${d}" value="${sched[d]?.end || '21:00'}" class="input-premium p-2 rounded-xl text-[10px] flex-1">
+                    </div>
+                </div>
+            `).join('');
         };
 
-        window.saveScheduleConfig = () => {
-            const days = ['lun','mar','mie','jue','vie','sab','dom'];
+        window.saveScheduleConfig = async () => {
+            const keys = ['lun', 'mar', 'mie', 'jue', 'vie', 'sab', 'dom'];
             const newSchedule = {};
-            
-            days.forEach(d => {
-                newSchedule[d] = {
-                    active: document.getElementById('chk-'+d).checked,
-                    start: document.getElementById('start-'+d).value,
-                    end: document.getElementById('end-'+d).value
-                };
+            keys.forEach(k => {
+                const check = document.getElementById(`sc-${k}`);
+                const start = document.getElementById(`ss-${k}`);
+                const end = document.getElementById(`se-${k}`);
+                if(check && start && end) {
+                    newSchedule[k] = { active: check.checked, start: start.value, end: end.value };
+                }
             });
-
             APP_DATA.schedule = newSchedule;
-            saveToCloud(APP_DATA);
-
+            await saveToCloud(APP_DATA);
             const btn = event.currentTarget;
-            const originalText = btn.innerText;
-            btn.innerText = "¡HORARIOS ACTUALIZADOS!";
-            btn.classList.add('bg-green-500', 'text-white');
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.classList.remove('bg-green-500');
-            }, 2000);
+            btn.innerText = "¡GUARDADO!";
+            setTimeout(() => btn.innerText = "Guardar Cambios de Disponibilidad", 2000);
         };
 
-        window.saveBrandConfig = () => {
-            const newPin = document.getElementById('new-admin-pin').value.trim();
-            if(newPin.length >= 4) APP_DATA.adminPin = newPin;
+        function renderAdminAgenda() {
+            const l = document.getElementById('panel-agenda');
+            if(!l) return;
+            l.innerHTML = (APP_DATA.appointments || []).map((a, i) => `
+                <div class="glass-panel p-6 space-y-5 relative animate-reveal border-white/5 shadow-xl">
+                    <button type="button" onclick="window.deleteApp(${i})" class="absolute top-4 right-4 text-red-500/30 hover:text-red-500 transition-all"><i data-lucide="trash" class="w-4 h-4"></i></button>
+                    <div class="flex items-center gap-2 px-3 py-1 bg-kairos-teal/10 rounded-full border border-kairos-teal/20 w-max">
+                         <span class="text-[8px] font-black text-kairos-teal uppercase">${a.date} | ${a.time}</span>
+                    </div>
+                    <div class="space-y-1">
+                        <h4 class="text-sm font-black text-white uppercase tracking-tight leading-none">${a.patient}</h4>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest"><i data-lucide="phone" class="w-3 h-3 inline mr-1 text-kairos-teal"></i> ${a.phone || 'SIN TELÉFONO'}</p>
+                    </div>
+                    <a href="https://wa.me/${(a.phone || '').replace(/\D/g,'')}" target="_blank" class="block w-full py-3 bg-kairos-whatsapp/10 rounded-xl text-[9px] font-black text-kairos-whatsapp text-center border border-kairos-whatsapp/20 uppercase hover:bg-kairos-whatsapp/20 transition-all">WhatsApp</a>
+                </div>
+            `).join('') || '<p class="col-span-full py-24 opacity-20 text-center uppercase font-black text-xs tracking-widest">Agenda vacía</p>';
+            lucide.createIcons();
+        }
 
-            APP_DATA.brand = {
-                logo: document.getElementById('config-logo-url').value.trim() || APP_DATA.brand.logo,
-                author: document.getElementById('config-author-name').value.trim().toUpperCase() || APP_DATA.brand.author,
-                trust: document.getElementById('config-trust-msg').value.trim() || APP_DATA.brand.trust
-            };
-            
+        window.deleteApp = (i) => { APP_DATA.appointments.splice(i, 1); saveToCloud(APP_DATA); };
+        window.deleteResource = (i) => { APP_DATA.resources.splice(i, 1); saveToCloud(APP_DATA); };
+        window.addResource = () => {
+            const t = document.getElementById('res-title').value.trim().toUpperCase();
+            const y = document.getElementById('res-type').value;
+            const c = document.getElementById('res-url').value.trim();
+            if(!t || !c) return;
+            if(!APP_DATA.resources) APP_DATA.resources = [];
+            APP_DATA.resources.unshift({ title: t, type: y, content: c });
             saveToCloud(APP_DATA);
-            
-            const btn = event.currentTarget;
-            btn.innerText = "¡IDENTIDAD ACTUALIZADA!";
-            btn.classList.add('bg-green-500', 'text-white');
-            document.getElementById('new-admin-pin').value = '';
-            
-            setTimeout(() => {
-                btn.innerText = "Actualizar Identidad Visual";
-                btn.classList.remove('bg-green-500');
-            }, 2000);
+            document.getElementById('res-title').value = ""; document.getElementById('res-url').value = "";
         };
 
-        // Ejecutar inicialización
-        init();
+        function renderAdminResources() {
+            const l = document.getElementById('admin-resources-list');
+            if(!l) return;
+            l.innerHTML = (APP_DATA.resources || []).map((r, i) => `<div class="bg-white/5 p-4 rounded-xl flex justify-between items-center border border-white/5 shadow-sm"><p class="text-[10px] font-bold uppercase text-white truncate max-w-[70%]">${r.title}</p><button type="button" onclick="window.deleteResource(${i})" class="text-red-500 hover:bg-red-500/10 p-2 rounded-lg transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>`).join('');
+            lucide.createIcons();
+        }
+
+        window.onload = init;
     </script>
 </body>
 </html>
