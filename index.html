@@ -16,8 +16,12 @@
                 extend: {
                     colors: {
                         kairos: {
-                            deep: '#020617', teal: '#469da3', ai: '#8b5cf6',
-                            glass: 'rgba(15, 23, 42, 0.7)', border: 'rgba(255, 255, 255, 0.1)', whatsapp: '#25D366'
+                            deep: '#020617',
+                            teal: '#469da3',
+                            ai: '#8b5cf6',
+                            glass: 'rgba(15, 23, 42, 0.7)',
+                            border: 'rgba(255, 255, 255, 0.1)',
+                            whatsapp: '#25D366'
                         }
                     },
                     animation: {
@@ -93,8 +97,8 @@
                     <img id="nav-logo-img" src="https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w200" class="w-full h-full object-contain" onerror="this.src='https://placehold.co/200x200/FFFFFF/469da3?text=K'">
                 </div>
                 <div>
-                    <span class="text-xs font-black tracking-widest uppercase text-white leading-none">KAIRÓS</span>
-                    <p class="text-[9px] font-bold text-kairos-teal uppercase tracking-widest mt-0.5">Espacio Clínico</p>
+                    <span id="nav-brand-text" class="text-xs font-black tracking-widest uppercase text-white leading-none">KAIRÓS</span>
+                    <p id="nav-sub-text" class="text-[9px] font-bold text-kairos-teal uppercase tracking-widest mt-0.5">Espacio Clínico</p>
                 </div>
             </div>
             <div class="flex items-center gap-4">
@@ -141,15 +145,13 @@
                 <button type="button" onclick="window.fullLogout()" class="p-3 bg-red-500/10 rounded-xl text-red-500 border border-red-500/10 font-black text-[9px] uppercase flex items-center gap-2"><i data-lucide="log-out" class="w-4 h-4"></i> Cerrar Sesión</button>
             </div>
 
-            <!-- Tabs de Navegación Admin -->
             <div class="flex gap-2 overflow-x-auto pb-4 custom-scroll">
                 <button type="button" onclick="window.switchTab('expedientes')" id="tab-expedientes" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase bg-kairos-teal text-white shadow-md">Pacientes & Seguimiento</button>
                 <button type="button" onclick="window.switchTab('agenda')" id="tab-agenda" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5 flex items-center gap-2">Citas <span id="count-agenda" class="bg-kairos-teal text-white text-[8px] px-1.5 py-0.5 rounded-full hidden">0</span></button>
                 <button type="button" onclick="window.switchTab('biblioteca')" id="tab-biblioteca" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5">Biblioteca</button>
-                <button type="button" onclick="window.switchTab('config')" id="tab-config" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5">Ajustes & Marca</button>
+                <button type="button" onclick="window.switchTab('config')" id="tab-config" class="px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5">Constructor & Ajustes</button>
             </div>
 
-            <!-- Panel Expedientes -->
             <div id="panel-expedientes" class="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-reveal">
                 <div class="lg:col-span-3 space-y-4 no-print">
                     <div class="glass-panel p-5 space-y-4">
@@ -167,10 +169,8 @@
                 </div>
             </div>
 
-            <!-- Panel Agenda -->
             <div id="panel-agenda" class="hidden grid grid-cols-1 md:grid-cols-3 gap-6 animate-reveal"></div>
 
-            <!-- Panel Biblioteca -->
             <div id="panel-biblioteca" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-8 animate-reveal">
                 <div class="glass-panel p-6 space-y-5">
                     <h3 class="text-[9px] font-black text-kairos-teal tracking-widest uppercase">Publicar Material</h3>
@@ -185,22 +185,39 @@
                 <div id="admin-resources-list" class="space-y-3 max-h-[500px] overflow-y-auto custom-scroll"></div>
             </div>
 
-            <!-- Panel Configuración -->
             <div id="panel-config" class="hidden animate-reveal space-y-8">
                 <div class="glass-panel p-8 max-w-2xl mx-auto space-y-6">
-                    <h3 class="text-xs font-black text-ai uppercase tracking-widest text-center">Seguridad & Marca Dinámica</h3>
+                    <h3 class="text-xs font-black text-ai uppercase tracking-widest text-center">Constructor del Sitio (Sin Código)</h3>
+                    <p class="text-[9px] text-center text-slate-400 font-bold mb-4">Edita los textos y configuraciones de tu portal. Los cambios se aplicarán en vivo.</p>
+                    
                     <div class="space-y-4">
-                        <input type="password" id="new-admin-pin" class="input-premium p-4 rounded-xl text-center text-xl font-black" placeholder="NUEVO PIN">
+                        <h4 class="text-[9px] font-black text-kairos-teal uppercase border-b border-white/10 pb-2">1. Seguridad</h4>
+                        <input type="password" id="new-admin-pin" class="input-premium p-4 rounded-xl text-center text-xl font-black" placeholder="CAMBIAR PIN (Min. 4 dígitos)">
+                        
+                        <h4 class="text-[9px] font-black text-kairos-teal uppercase border-b border-white/10 pb-2 mt-6">2. Textos Principales</h4>
+                        <input type="text" id="config-author-name" class="input-premium p-4 rounded-xl text-xs uppercase font-bold" placeholder="Nombre Profesional (Ej. Psic. Carlos)">
+                        <input type="text" id="config-gate-title" class="input-premium p-4 rounded-xl text-xs uppercase font-bold" placeholder="Título de Bienvenida Principal">
+                        <textarea id="config-trust-msg" class="input-premium p-4 rounded-xl text-xs h-20 uppercase" placeholder="Mensaje de confianza (Hero)..."></textarea>
+                        
+                        <h4 class="text-[9px] font-black text-kairos-teal uppercase border-b border-white/10 pb-2 mt-6">3. Navegación y Contacto</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="config-nav-title" class="input-premium p-4 rounded-xl text-xs uppercase font-bold" placeholder="Marca Navegación">
+                            <input type="text" id="config-nav-sub" class="input-premium p-4 rounded-xl text-xs uppercase font-bold" placeholder="Subtítulo Navegación">
+                        </div>
+                        <input type="text" id="config-whatsapp" class="input-premium p-4 rounded-xl text-xs uppercase font-bold" placeholder="Número WhatsApp (Ej. 522381239088)">
+                        
+                        <h4 class="text-[9px] font-black text-kairos-teal uppercase border-b border-white/10 pb-2 mt-6">4. Identidad Visual</h4>
                         <input type="url" id="config-logo-url" class="input-premium p-4 rounded-xl text-xs" placeholder="URL del Logo (Google Drive)">
-                        <input type="text" id="config-author-name" class="input-premium p-4 rounded-xl text-xs uppercase font-bold" placeholder="Tu Nombre Profesional">
-                        <textarea id="config-trust-msg" class="input-premium p-4 rounded-xl text-xs h-24 uppercase" placeholder="Mensaje de Confianza..."></textarea>
-                        <button type="button" onclick="window.saveBrandConfig()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[10px] uppercase shadow-lg">Actualizar Identidad Visual</button>
+                        
+                        <!-- Botón de Guardar Marca -->
+                        <button type="button" onclick="window.saveBrandConfig(event)" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[10px] uppercase shadow-lg mt-4">Guardar Textos e Identidad</button>
                     </div>
                 </div>
+                
                 <div class="glass-panel p-8 max-w-2xl mx-auto text-center space-y-6">
                     <h3 class="text-xs font-black text-kairos-teal uppercase tracking-widest">Disponibilidad de Atención</h3>
                     <div id="schedule-config-container" class="space-y-3 text-left"></div>
-                    <button type="button" onclick="window.saveScheduleConfig()" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[10px] uppercase shadow-lg">Guardar Cambios de Disponibilidad</button>
+                    <button type="button" onclick="window.saveScheduleConfig(event)" class="w-full bg-kairos-teal py-4 rounded-xl font-black text-[10px] uppercase shadow-lg">Guardar Cambios de Disponibilidad</button>
                 </div>
             </div>
         </div>
@@ -217,7 +234,7 @@
         </div>
     </div>
 
-    <a href="https://wa.me/522381239088" target="_blank" class="fixed bottom-6 right-6 z-[100] w-14 h-14 bg-kairos-whatsapp rounded-2xl shadow-xl flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all border-2 border-kairos-deep no-print">
+    <a id="fab-whatsapp" href="#" target="_blank" class="fixed bottom-6 right-6 z-[100] w-14 h-14 bg-kairos-whatsapp rounded-2xl shadow-xl flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all border-2 border-kairos-deep no-print">
         <i data-lucide="message-circle" class="w-7 h-7"></i>
     </a>
 
@@ -239,15 +256,23 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-        /* RUTAS DE FIREBASE CORREGIDAS (4 Segmentos: coleccion/documento/coleccion/documento) */
-        const mainDocRef = doc(db, 'configuracion', 'portal', 'data', 'master');
+        /* RUTA SEGURA DE 4 SEGMENTOS: artifacts / appId / public / config_master */
+        const mainDocRef = doc(db, 'artifacts', firebaseConfig.appId, 'public', 'config_master');
 
         let APP_DATA = { 
-            patients: [], resources: [], appointments: [], schedule: {}, adminPin: "1015",
+            patients: [], 
+            resources: [], 
+            appointments: [], 
+            schedule: {}, 
+            adminPin: "1015",
             brand: {
                 logo: "https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w1000",
                 author: "PSIC. CARLOS AGUILAR SÁNCHEZ",
-                trust: "Comprometidos con tu bienestar emocional mediante un acompañamiento profesional, ético y humano."
+                trust: "Comprometidos con tu bienestar emocional mediante un acompañamiento profesional, ético y humano.",
+                gateTitle: "BIENVENIDO A KAIRÓS PSICOLOGÍA ESPECIALIZADA",
+                navTitle: "KAIRÓS",
+                navSubtitle: "Espacio Clínico",
+                whatsapp: "522381239088"
             }
         };
 
@@ -260,12 +285,26 @@
             try {
                 await signInAnonymously(auth);
                 const visitorInput = document.getElementById('visitor-name-gate');
-                if(visitorInput) visitorInput.value = "";
+                if (visitorInput) visitorInput.value = "";
 
                 onSnapshot(mainDocRef, (docSnap) => {
                     if (docSnap.exists()) {
                         APP_DATA = { ...APP_DATA, ...docSnap.data() };
+                        
+                        /* RECONSTRUCCIÓN AUTOMÁTICA DEL HORARIO SI ESTÁ VACÍO */
+                        if (!APP_DATA.schedule || Object.keys(APP_DATA.schedule).length === 0) {
+                            const defaultSchedule = {};
+                            ['lun','mar','mie','jue','vie','sab','dom'].forEach(d => {
+                                defaultSchedule[d] = { active: (d !== 'dom'), start: '17:00', end: '21:00' };
+                            });
+                            APP_DATA.schedule = defaultSchedule;
+                        }
+                        
+                        /* AL RECIBIR DATOS NUEVOS DE LA NUBE, ACTUALIZA LA INTERFAZ EN TODOS LOS DISPOSITIVOS */
                         refreshUI();
+                        
+                        const pConf = document.getElementById('panel-config');
+                        if (pConf && !pConf.classList.contains('hidden')) { window.renderScheduleConfig(); }
                     } else {
                         const defaultSchedule = {};
                         ['lun','mar','mie','jue','vie','sab','dom'].forEach(d => {
@@ -275,11 +314,11 @@
                         saveToCloud(APP_DATA);
                     }
                 });
-            } catch (err) { console.error("Error Firebase:", err); }
+            } catch (err) { console.error("Error iniciando Firebase:", err); }
         }
 
         const saveToCloud = async (data) => {
-            try { await setDoc(mainDocRef, data); } catch (e) { console.error(e); }
+            try { await setDoc(mainDocRef, data); } catch (e) { console.error("Error guardando en la nube:", e); }
         };
 
         window.enterPortal = () => {
@@ -289,8 +328,7 @@
             if(visitorName.length < 2) return;
             document.getElementById('welcome-gate').classList.add('hidden');
             document.getElementById('main-content').classList.remove('hidden');
-            const greeting = document.getElementById('hero-greeting');
-            if(greeting) greeting.innerHTML = `HOLA <br><span class="text-kairos-teal">${visitorName}</span>`;
+            document.getElementById('hero-greeting').innerHTML = `HOLA <br><span class="text-kairos-teal">${visitorName}</span>`;
             lucide.createIcons();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
@@ -308,51 +346,73 @@
         window.toggleAuth = (show) => document.getElementById('auth-modal').classList.toggle('hidden', !show);
         
         window.validateAdmin = () => { 
-            const pinInput = document.getElementById('admin-pass');
-            if(!pinInput) return;
-            const pin = pinInput.value;
+            const pin = document.getElementById('admin-pass').value;
             if (pin === (APP_DATA.adminPin || "1015")) { 
                 isAdminActive = true; 
                 window.toggleAuth(false); 
+                document.getElementById('admin-pass').value = "";
                 document.getElementById('view-admin').classList.remove('hidden');
                 document.getElementById('main-content').classList.add('hidden');
                 document.getElementById('welcome-gate').classList.add('hidden');
-                
-                /* ¡ESTA LÍNEA ES LA MAGIA QUE DIBUJA TUS DATOS CADA VEZ QUE ENTRAS DESDE CUALQUIER DISPOSITIVO! */
-                refreshUI(); 
-                
+                refreshUI(); /* DIBUJA LA INFO EN PANTALLA INMEDIATAMENTE */
                 window.switchTab('expedientes');
             } else {
-                pinInput.value = "";
+                document.getElementById('admin-pass').value = "";
             }
         };
 
-        window.saveBrandConfig = () => {
+        window.saveBrandConfig = (e) => {
             const newPin = document.getElementById('new-admin-pin').value.trim();
             if(newPin.length >= 4) APP_DATA.adminPin = newPin;
 
             APP_DATA.brand = {
                 logo: document.getElementById('config-logo-url').value.trim() || APP_DATA.brand.logo,
                 author: document.getElementById('config-author-name').value.trim().toUpperCase() || APP_DATA.brand.author,
-                trust: document.getElementById('config-trust-msg').value.trim().toUpperCase() || APP_DATA.brand.trust
+                trust: document.getElementById('config-trust-msg').value.trim().toUpperCase() || APP_DATA.brand.trust,
+                gateTitle: document.getElementById('config-gate-title').value.trim().toUpperCase() || APP_DATA.brand.gateTitle || "BIENVENIDO A KAIRÓS PSICOLOGÍA ESPECIALIZADA",
+                navTitle: document.getElementById('config-nav-title').value.trim().toUpperCase() || APP_DATA.brand.navTitle || "KAIRÓS",
+                navSubtitle: document.getElementById('config-nav-sub').value.trim() || APP_DATA.brand.navSubtitle || "Espacio Clínico",
+                whatsapp: document.getElementById('config-whatsapp').value.trim().replace(/\D/g, '') || APP_DATA.brand.whatsapp || "522381239088"
             };
             saveToCloud(APP_DATA);
-            const btn = event.currentTarget;
-            btn.innerText = "¡IDENTIDAD ACTUALIZADA!";
-            setTimeout(() => btn.innerText = "Actualizar Identidad Visual", 2000);
+            
+            if(e && e.currentTarget) {
+                const btn = e.currentTarget;
+                btn.innerText = "¡SITIO ACTUALIZADO!";
+                setTimeout(() => btn.innerText = "Guardar Textos e Identidad", 2000);
+            }
+        };
+
+        window.saveScheduleConfig = async (e) => {
+            const keys = ['lun', 'mar', 'mie', 'jue', 'vie', 'sab', 'dom'];
+            const newSchedule = {};
+            keys.forEach(k => {
+                const check = document.getElementById(`sc-${k}`);
+                const start = document.getElementById(`ss-${k}`);
+                const end = document.getElementById(`se-${k}`);
+                if(check && start && end) {
+                    newSchedule[k] = { active: check.checked, start: start.value, end: end.value };
+                }
+            });
+            APP_DATA.schedule = newSchedule;
+            await saveToCloud(APP_DATA);
+            
+            if(e && e.currentTarget) {
+                const btn = e.currentTarget;
+                btn.innerText = "¡GUARDADO!";
+                setTimeout(() => btn.innerText = "Guardar Cambios de Disponibilidad", 2000);
+            }
         };
 
         window.switchTab = (tab) => {
             ['expedientes', 'agenda', 'biblioteca', 'config'].forEach(p => {
-                const panel = document.getElementById('panel-'+p);
-                if(panel) panel.classList.add('hidden');
+                document.getElementById('panel-'+p)?.classList.add('hidden');
                 const t = document.getElementById('tab-'+p);
                 if(t) t.className = "px-6 py-3 rounded-xl text-[9px] font-black uppercase text-slate-500 bg-white/5 flex items-center gap-2 transition-all";
             });
-            const targetPanel = document.getElementById('panel-'+tab);
-            if(targetPanel) targetPanel.classList.remove('hidden');
-            const targetTab = document.getElementById('tab-'+tab);
-            if(targetTab) targetTab.className = "px-6 py-3 rounded-xl text-[9px] font-black uppercase bg-kairos-teal text-white shadow-md flex items-center gap-2 transition-all";
+            document.getElementById('panel-'+tab)?.classList.remove('hidden');
+            const target = document.getElementById('tab-'+tab);
+            if(target) target.className = "px-6 py-3 rounded-xl text-[9px] font-black uppercase bg-kairos-teal text-white shadow-md flex items-center gap-2 transition-all";
             
             if(tab === 'config') window.renderScheduleConfig();
             if(tab === 'agenda') renderAdminAgenda();
@@ -361,17 +421,40 @@
 
         const refreshUI = () => {
             const b = APP_DATA.brand || {};
-            const currentLogo = b.logo || "https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w1000";
             
-            const gateLogo = document.getElementById('gate-logo-img');
-            const navLogo = document.getElementById('nav-logo-img');
-            const authorName = document.getElementById('gate-author-name');
-            const trustMsg = document.getElementById('hero-trust-message');
+            // Variables por defecto si están vacías
+            const currentLogo = b.logo || "https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w1000";
+            const author = b.author || "PSIC. CARLOS AGUILAR SÁNCHEZ";
+            const trust = b.trust || "Comprometidos con tu bienestar emocional mediante un acompañamiento profesional, ético y humano.";
+            const gateTitle = b.gateTitle || "BIENVENIDO A KAIRÓS PSICOLOGÍA ESPECIALIZADA";
+            const navTitle = b.navTitle || "KAIRÓS";
+            const navSub = b.navSubtitle || "Espacio Clínico";
+            const waNum = b.whatsapp || "522381239088";
+            
+            // Actualizar vista pública
+            const elGateLogo = document.getElementById('gate-logo-img'); if(elGateLogo) elGateLogo.src = currentLogo;
+            const elNavLogo = document.getElementById('nav-logo-img'); if(elNavLogo) elNavLogo.src = currentLogo;
+            const elGateAuthor = document.getElementById('gate-author-name'); if(elGateAuthor) elGateAuthor.innerText = author;
+            const elHeroTrust = document.getElementById('hero-trust-message'); if(elHeroTrust) elHeroTrust.innerText = trust;
+            const elGateBrand = document.getElementById('gate-brand-title'); if(elGateBrand) elGateBrand.innerText = gateTitle;
+            const elNavBrand = document.getElementById('nav-brand-text'); if(elNavBrand) elNavBrand.innerText = navTitle;
+            const elNavSub = document.getElementById('nav-sub-text'); if(elNavSub) elNavSub.innerText = navSub;
+            
+            // Botón Inteligente WhatsApp
+            const elFabWa = document.getElementById('fab-whatsapp'); 
+            if(elFabWa) {
+                const textEnc = encodeURIComponent(`Hola ${author}, me gustaría solicitar información para una consulta.`);
+                elFabWa.href = `https://wa.me/${waNum}?text=${textEnc}`;
+            }
 
-            if(gateLogo) gateLogo.src = currentLogo;
-            if(navLogo) navLogo.src = currentLogo;
-            if(authorName) authorName.innerText = b.author;
-            if(trustMsg) trustMsg.innerText = b.trust;
+            // Actualizar inputs del panel constructor
+            const inLogo = document.getElementById('config-logo-url'); if(inLogo) inLogo.value = currentLogo;
+            const inAuthor = document.getElementById('config-author-name'); if(inAuthor) inAuthor.value = author;
+            const inTrust = document.getElementById('config-trust-msg'); if(inTrust) inTrust.value = trust;
+            const inGate = document.getElementById('config-gate-title'); if(inGate) inGate.value = gateTitle;
+            const inNavT = document.getElementById('config-nav-title'); if(inNavT) inNavT.value = navTitle;
+            const inNavS = document.getElementById('config-nav-sub'); if(inNavS) inNavS.value = navSub;
+            const inWa = document.getElementById('config-whatsapp'); if(inWa) inWa.value = waNum;
 
             renderPublicResources();
             
@@ -478,22 +561,35 @@
             APP_DATA.patients = APP_DATA.patients.filter(p => p.id !== id);
             if(activePatientId === id) activePatientId = null;
             saveToCloud(APP_DATA);
-            document.getElementById('clinical-workspace').innerHTML = `<div class="flex flex-col items-center justify-center h-full opacity-20 text-center space-y-4 py-20"><i data-lucide="search" class="w-16 h-16"></i><p class="text-xs font-black uppercase tracking-widest">Selecciona un expediente para operar</p></div>`;
-            lucide.createIcons();
+            
+            if(activePatientId === null) {
+                document.getElementById('clinical-workspace').innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full opacity-20 text-center space-y-4 py-20">
+                        <i data-lucide="search" class="w-16 h-16"></i>
+                        <p class="text-xs font-black uppercase tracking-widest">Selecciona un expediente para operar</p>
+                    </div>`;
+                lucide.createIcons();
+            }
         };
 
         window.openWorkspace = (id) => {
             activePatientId = id; editingNoteIdx = null;
             const p = APP_DATA.patients.find(x => x.id === id);
             if(!p) return;
+            
+            // Rescatar marca actual
+            const b = APP_DATA.brand || {};
+            const currentLogo = b.logo || "https://drive.google.com/thumbnail?id=1RuSM5mRrXr7JtBh70dp0d7C2-KScxsU9&sz=w1000";
+            const author = b.author || "PSIC. CARLOS AGUILAR SÁNCHEZ";
+
             const ws = document.getElementById('clinical-workspace');
             ws.innerHTML = `
                 <div class="print-header">
                     <div class="flex items-center gap-6">
-                        <img src="${APP_DATA.brand?.logo}" class="print-logo" style="width: 70px;">
+                        <img src="${currentLogo}" class="print-logo" style="width: 70px;" onerror="this.src='https://placehold.co/100x100/FFFFFF/469da3?text=K'">
                         <div>
                             <h2 style="font-size: 20px; font-weight: 900; color: #469da3; text-transform: uppercase;">Reporte Clínico de Evolución</h2>
-                            <p style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">${APP_DATA.brand?.author}</p>
+                            <p style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">${author}</p>
                         </div>
                     </div>
                 </div>
@@ -551,7 +647,7 @@
                         `).join('') || '<p class="text-center py-20 opacity-20 uppercase font-black text-xs">Sin registros previos</p>'}
                         <div class="hidden print:block pt-32 text-center space-y-3">
                              <div class="w-40 h-px bg-gray-400 mx-auto"></div>
-                             <p style="font-size: 11px; font-weight: 900; text-transform: uppercase;">${APP_DATA.brand?.author}</p>
+                             <p style="font-size: 11px; font-weight: 900; text-transform: uppercase;">${author}</p>
                              <p style="font-size: 8px; color: #64748b; text-transform: uppercase;">Firma Autorizada</p>
                         </div>
                     </div>
@@ -609,13 +705,17 @@
             const f = document.getElementById('note-mental');
             const t = f.value; if(!t || t.length < 5) return;
             try {
+                f.value = "PROCESANDO CON INTELIGENCIA ARTIFICIAL...";
                 const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAIu-Vq3jDea3Xr7VRxJckSdXQ5Ja7K_mM`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ contents: [{ parts: [{ text: "Como psicólogo clínico formal, redacta el siguiente estado mental de forma técnica y profesional (español y todo en mayúsculas): " + t }] }] })
                 });
                 const d = await r.json(); const ai = d.candidates?.[0]?.content?.parts?.[0]?.text;
                 if(ai) f.value = ai.toUpperCase();
-            } catch(e) { console.error(e); }
+            } catch(e) { 
+                console.error(e);
+                f.value = t; 
+            }
         };
 
         window.openResourceModal = (type, content, title) => {
@@ -709,24 +809,6 @@
             `).join('');
         };
 
-        window.saveScheduleConfig = async () => {
-            const keys = ['lun', 'mar', 'mie', 'jue', 'vie', 'sab', 'dom'];
-            const newSchedule = {};
-            keys.forEach(k => {
-                const check = document.getElementById(`sc-${k}`);
-                const start = document.getElementById(`ss-${k}`);
-                const end = document.getElementById(`se-${k}`);
-                if(check && start && end) {
-                    newSchedule[k] = { active: check.checked, start: start.value, end: end.value };
-                }
-            });
-            APP_DATA.schedule = newSchedule;
-            await saveToCloud(APP_DATA);
-            const btn = event.currentTarget;
-            btn.innerText = "¡GUARDADO!";
-            setTimeout(() => btn.innerText = "Guardar Cambios de Disponibilidad", 2000);
-        };
-
         function renderAdminAgenda() {
             const l = document.getElementById('panel-agenda');
             if(!l) return;
@@ -748,6 +830,7 @@
 
         window.deleteApp = (i) => { APP_DATA.appointments.splice(i, 1); saveToCloud(APP_DATA); };
         window.deleteResource = (i) => { APP_DATA.resources.splice(i, 1); saveToCloud(APP_DATA); };
+        
         window.addResource = () => {
             const t = document.getElementById('res-title').value.trim().toUpperCase();
             const y = document.getElementById('res-type').value;
